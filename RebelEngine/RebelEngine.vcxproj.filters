@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Engine\Main\Main.cpp" />
+    <ClCompile Include="Engine\Utils\log.cpp" />
+    <ClCompile Include="Engine\Main\Application.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleInput.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleRender.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Main\Application.h" />
+    <ClInclude Include="Engine\Utils\Globals.h" />
+    <ClInclude Include="Engine\CoreModules\Module.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleInput.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleRender.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core Modules">
+      <UniqueIdentifier>{5fe8d783-ebec-4b4c-b9ee-f65e83af4fe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{5db346b0-a889-47f3-85da-e536befb33f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{151565c5-8510-435a-8c1a-6b23df993bac}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
