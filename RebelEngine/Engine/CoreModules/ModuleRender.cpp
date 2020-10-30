@@ -64,17 +64,22 @@ update_status ModuleRender::PreUpdate() {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	if (App->editorCamera->projectionChange()) {
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(*(App->editorCamera->GetMatrix(PROJECTION_MATRIX)).v);
+		App->editorCamera->setUpdated(false);
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(*(App->editorCamera->GetMatrix(VIEW_MATRIX)).v);
+
 	return UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleRender::Update() {
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(*(App->editorCamera->GetMatrix(PROJECTION_MATRIX)).v);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(*(App->editorCamera->GetMatrix(VIEW_MATRIX)).v);
+#pragma region wireframe
 
 	glLineWidth(1.0f);
 	float d = 200.0f;
@@ -112,8 +117,56 @@ update_status ModuleRender::Update() {
 	glEnd();
 	glLineWidth(1.0f);
 
+#pragma endregion wireframe
+
+#pragma region cube
+
+	// Render a cube
+	glBegin(GL_QUADS);
+	//glBegin(GL_LINE);
+	// Top face
+	glColor3f(1.0f, 1.0f, 1.0f);  // white
+	glVertex3f(0.5f, 0.5f, -0.5f);  // Top-right of top face
+	glVertex3f(-0.5f, 0.5f, -0.5f);  // Top-left of top face
+	glVertex3f(-0.5f, 0.5f, 0.5f);  // Bottom-left of top face
+	glVertex3f(0.5f, 0.5f, 0.5f);  // Bottom-right of top face
+
+	// Bottom face
+	glVertex3f(0.5f, -0.5f, -0.5f); // Top-right of bottom face
+	glVertex3f(-0.5f, -0.5f, -0.5f); // Top-left of bottom face
+	glVertex3f(-0.5f, -0.5f, 0.5f); // Bottom-left of bottom face
+	glVertex3f(0.5f, -0.5f, 0.5f); // Bottom-right of bottom face
+
+	// Front face
+	glVertex3f(0.5f, 0.5f, 0.5f);  // Top-Right of front face
+	glVertex3f(-0.5f, 0.5f, 0.5f);  // Top-left of front face
+	glVertex3f(-0.5f, -0.5f, 0.5f);  // Bottom-left of front face
+	glVertex3f(0.5f, -0.5f, 0.5f);  // Bottom-right of front face
+
+	// Back face
+	glVertex3f(0.5f, -0.5f, -0.5f); // Bottom-Left of back face
+	glVertex3f(-0.5f, -0.5f, -0.5f); // Bottom-Right of back face
+	glVertex3f(-0.5f, 0.5f, -0.5f); // Top-Right of back face
+	glVertex3f(0.5f, 0.5f, -0.5f); // Top-Left of back face
+
+	// Left face
+	glVertex3f(-0.5f, 0.5f, 0.5f);  // Top-Right of left face
+	glVertex3f(-0.5f, 0.5f, -0.5f);  // Top-Left of left face
+	glVertex3f(-0.5f, -0.5f, -0.5f);  // Bottom-Left of left face
+	glVertex3f(-0.5f, -0.5f, 0.5f);  // Bottom-Right of left face
+
+	// Right face
+	glVertex3f(0.5f, 0.5f, 0.5f);  // Top-Right of left face
+	glVertex3f(0.5f, 0.5f, -0.5f);  // Top-Left of left face
+	glVertex3f(0.5f, -0.5f, -0.5f);  // Bottom-Left of left face
+	glVertex3f(0.5f, -0.5f, 0.5f);  // Bottom-Right of left face
+	glEnd();
+
+#pragma endregion cube
+
 	return UPDATE_CONTINUE;
 }
+
 
 update_status ModuleRender::PostUpdate() {
 
@@ -134,7 +187,6 @@ bool ModuleRender::CleanUp() {
 
 void ModuleRender::WindowResized(unsigned width, unsigned height) {
 
-	LOG("Resizing the window");
 	glViewport(0, 0, width, height);
 }
 

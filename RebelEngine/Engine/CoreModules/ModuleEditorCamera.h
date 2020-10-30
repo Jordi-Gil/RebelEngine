@@ -21,8 +21,21 @@ public:
 
 	update_status Update();
 
-
 	float4x4 GetMatrix(matrix_type _mType);
+
+	void WindowResized(unsigned width, unsigned height);
+
+	void updateProjectMatrix() {
+		projectionGL = frustum.ProjectionMatrix().Transposed();
+	}
+
+	bool projectionChange() const {
+		return updated;
+	};
+
+	void setUpdated(bool _val) {
+		updated = _val;
+	};
 
 	void SetFov();
 	void SetAspectRatio();
@@ -36,5 +49,5 @@ private:
 	Frustum frustum;
 	float4x4 projectionGL;
 	float4x4 viewGL;
+	bool updated = false;
 };
-
