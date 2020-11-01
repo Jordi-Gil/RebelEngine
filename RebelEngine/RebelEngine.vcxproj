@@ -156,6 +156,7 @@
     <ClInclude Include="Engine\CoreModules\ModuleWindow.h" />
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Utils\Globals.h" />
+    <ClInclude Include="Engine\Utils\Timer.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\GJK.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\GJK2D.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\Random\LCG.h" />

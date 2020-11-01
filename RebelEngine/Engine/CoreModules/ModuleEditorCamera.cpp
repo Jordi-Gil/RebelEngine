@@ -1,33 +1,80 @@
 #include "ModuleEditorCamera.h"
+#include "ModuleInput.h"
+#include "Main/Application.h"
 #include "Math/float3x3.h"
+#include "Math/Quat.h"
+#include <SDL/SDL.h>
 #include <cmath>
 
-ModuleEditorCamera::ModuleEditorCamera() {
-
-}
-
-float4x4 ModuleEditorCamera::GetMatrix(matrix_type _mType) {
+void ModuleEditorCamera::GetMatrix(matrix_type _mType, float4x4& matrix) {
 
 	switch (_mType) {
-	case PROJECTION_MATRIX:
-		return projectionGL;
-		break;
-	case VIEW_MATRIX:
-		return viewGL;
-		break;
+		case PROJECTION_MATRIX:
+		{
+			matrix = frustum.ProjectionMatrix().Transposed();
+			break;
+		}
+		case VIEW_MATRIX:
+		{
+			matrix = frustum.ViewMatrix();
+			matrix.Transpose();
+		}
 	}
+}
 
-	return float4x4::identity;
+#pragma region transforms
+
+void ModuleEditorCamera::TranslateKeyboard() {
+
+	float3 movement = float3::zero;
+
+	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	movement += frustum.Front();
+	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	movement -= frustum.WorldRight();
+	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	movement -= frustum.Front();
+	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) movement += frustum.WorldRight();
+
+	frustum.Translate(movement * App->deltaTime * movSpeed);
 
 }
 
+void ModuleEditorCamera::RotateKeyboard() {
+
+	float roll = 0.0f; float pitch = 0.0f; float yaw = 0.0f;
+
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)
+		roll += 1;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)
+		roll -= 1;
+
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)
+		pitch -= 1;
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
+		pitch += 1;
+
+	Quat quaternionX(frustum.WorldRight(), roll * App->deltaTime * rotSpeed);
+	Quat quaternionY(float3::unitY, pitch * App->deltaTime * rotSpeed);
+
+	float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
+	float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
+	float3x3 rotationMatrix = rotationMatrixX * rotationMatrixY;
+
+	vec oldFront = frustum.Front().Normalized();
+	frustum.SetFront(rotationMatrix.MulDir(oldFront));
+	vec oldUp = frustum.Up().Normalized();
+	frustum.SetUp(rotationMatrix.MulDir(oldUp));
+
+}
+
+#pragma endregion transforms
+
 update_status ModuleEditorCamera::Update() {
+
+	TranslateKeyboard();
+	RotateKeyboard();
 
 	return UPDATE_CONTINUE;
 
 }
-
-ModuleEditorCamera::~ModuleEditorCamera() {}
 
 bool ModuleEditorCamera::Init() {
 
@@ -38,32 +85,15 @@ bool ModuleEditorCamera::Init() {
 	frustum.SetFront(float3::unitZ);
 	frustum.SetUp(float3::unitY);
 
-	float3x3 rotationMatrix = frustum.ViewMatrix().RotatePart().RotateX((float)DEGTORAD * 45.0f);
-	rotationMatrix = rotationMatrix.RotateY((float)DEGTORAD * -15.0f);
-	vec oldFront = frustum.Front().Normalized();
-	frustum.SetFront(rotationMatrix.MulDir(oldFront));
-	vec oldUp = frustum.Up().Normalized();
-	frustum.SetUp(rotationMatrix.MulDir(oldUp));
-
-	frustum.Translate(vec{ 15,0,0 });
-
-	projectionGL = frustum.ProjectionMatrix().Transposed(); //<-- Important to transpose!
-	viewGL = frustum.ViewMatrix();
-	viewGL.Transpose();
-
-	updated = true;
-
 	return true;
 }
 
 void ModuleEditorCamera::WindowResized(unsigned width, unsigned height) {
 
-	LOG("Resizing the window");
-	float FOV = frustum.VerticalFov();
-	float aspectRatio = float(width) / height;
-	frustum.SetHorizontalFovAndAspectRatio(2 * atan(tan(FOV / 2) * aspectRatio), aspectRatio);
-
-	updateProjectMatrix();
+	if (width != 0 && height != 0) {
+		float aspectRatio = float(width) / height;
+		frustum.SetVerticalFovAndAspectRatio(frustum.VerticalFov(), aspectRatio);
+	}
 
 	updated = true;
 

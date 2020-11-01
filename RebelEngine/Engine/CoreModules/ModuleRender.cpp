@@ -7,7 +7,6 @@
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
-
 ModuleRender::ModuleRender() {
 
 }
@@ -64,14 +63,19 @@ update_status ModuleRender::PreUpdate() {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
 	if (App->editorCamera->projectionChange()) {
 		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(*(App->editorCamera->GetMatrix(PROJECTION_MATRIX)).v);
+		float4x4 projection;
+		App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
+		glLoadMatrixf((float*)projection.v);
 		App->editorCamera->setUpdated(false);
 	}
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(*(App->editorCamera->GetMatrix(VIEW_MATRIX)).v);
+	float4x4 view;
+	App->editorCamera->GetMatrix(VIEW_MATRIX, view);
+	glLoadMatrixf((float*)view.v);
 
 	return UPDATE_CONTINUE;
 }
@@ -82,7 +86,7 @@ update_status ModuleRender::Update() {
 #pragma region wireframe
 
 	glLineWidth(1.0f);
-	float d = 200.0f;
+	float d = 1500.0f;
 	glBegin(GL_LINES);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	for (float i = -d; i <= d; i += 1.0f)
@@ -98,22 +102,22 @@ update_status ModuleRender::Update() {
 	glBegin(GL_LINES);
 	// red X
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
-	glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(2.0f, 0.0f, 0.0f);
+	glVertex3f(2.0f, 0.1f, 0.0f); glVertex3f(2.1f, -0.1f, 0.0f);
+	glVertex3f(2.1f, 0.1f, 0.0f); glVertex3f(2.0f, -0.1f, 0.0f);
 	// green Y
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 2.0f, 0.0f);
+	glVertex3f(-0.05f, 2.25f, 0.0f); glVertex3f(0.0f, 2.15f, 0.0f);
+	glVertex3f(0.05f, 2.25f, 0.0f); glVertex3f(0.0f, 2.15f, 0.0f);
+	glVertex3f(0.0f, 2.15f, 0.0f); glVertex3f(0.0f, 2.05f, 0.0f);
 
 	// blue Z
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
-	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
-	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 2.0f);
+	glVertex3f(-0.05f, 0.1f, 2.05f); glVertex3f(0.05f, 0.1f, 2.05f);
+	glVertex3f(0.05f, 0.1f, 2.05f); glVertex3f(-0.05f, -0.1f, 2.05f);
+	glVertex3f(-0.05f, -0.1f, 2.05f); glVertex3f(0.05f, -0.1f, 2.05f);
 	glEnd();
 	glLineWidth(1.0f);
 
@@ -123,50 +127,47 @@ update_status ModuleRender::Update() {
 
 	// Render a cube
 	glBegin(GL_QUADS);
-	//glBegin(GL_LINE);
 	// Top face
-	glColor3f(1.0f, 1.0f, 1.0f);  // white
-	glVertex3f(0.5f, 0.5f, -0.5f);  // Top-right of top face
-	glVertex3f(-0.5f, 0.5f, -0.5f);  // Top-left of top face
-	glVertex3f(-0.5f, 0.5f, 0.5f);  // Bottom-left of top face
-	glVertex3f(0.5f, 0.5f, 0.5f);  // Bottom-right of top face
+	glColor3f(0.8f, 0.8f, 0.8f);  // Green
+	glVertex3f(1.0f, 1.0f, -1.0f);  // Top-right of top face
+	glVertex3f(-1.0f, 1.0f, -1.0f);  // Top-left of top face
+	glVertex3f(-1.0f, 1.0f, 1.0f);  // Bottom-left of top face
+	glVertex3f(1.0f, 1.0f, 1.0f);  // Bottom-right of top face
 
 	// Bottom face
-	glVertex3f(0.5f, -0.5f, -0.5f); // Top-right of bottom face
-	glVertex3f(-0.5f, -0.5f, -0.5f); // Top-left of bottom face
-	glVertex3f(-0.5f, -0.5f, 0.5f); // Bottom-left of bottom face
-	glVertex3f(0.5f, -0.5f, 0.5f); // Bottom-right of bottom face
+	glVertex3f(1.0f, -1.0f, -1.0f); // Top-right of bottom face
+	glVertex3f(-1.0f, -1.0f, -1.0f); // Top-left of bottom face
+	glVertex3f(-1.0f, -1.0f, 1.0f); // Bottom-left of bottom face
+	glVertex3f(1.0f, -1.0f, 1.0f); // Bottom-right of bottom face
 
 	// Front face
-	glVertex3f(0.5f, 0.5f, 0.5f);  // Top-Right of front face
-	glVertex3f(-0.5f, 0.5f, 0.5f);  // Top-left of front face
-	glVertex3f(-0.5f, -0.5f, 0.5f);  // Bottom-left of front face
-	glVertex3f(0.5f, -0.5f, 0.5f);  // Bottom-right of front face
+	glVertex3f(1.0f, 1.0f, 1.0f);  // Top-Right of front face
+	glVertex3f(-1.0f, 1.0f, 1.0f);  // Top-left of front face
+	glVertex3f(-1.0f, -1.0f, 1.0f);  // Bottom-left of front face
+	glVertex3f(1.0f, -1.0f, 1.0f);  // Bottom-right of front face
 
 	// Back face
-	glVertex3f(0.5f, -0.5f, -0.5f); // Bottom-Left of back face
-	glVertex3f(-0.5f, -0.5f, -0.5f); // Bottom-Right of back face
-	glVertex3f(-0.5f, 0.5f, -0.5f); // Top-Right of back face
-	glVertex3f(0.5f, 0.5f, -0.5f); // Top-Left of back face
+	glVertex3f(1.0f, -1.0f, -1.0f); // Bottom-Left of back face
+	glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom-Right of back face
+	glVertex3f(-1.0f, 1.0f, -1.0f); // Top-Right of back face
+	glVertex3f(1.0f, 1.0f, -1.0f); // Top-Left of back face
 
 	// Left face
-	glVertex3f(-0.5f, 0.5f, 0.5f);  // Top-Right of left face
-	glVertex3f(-0.5f, 0.5f, -0.5f);  // Top-Left of left face
-	glVertex3f(-0.5f, -0.5f, -0.5f);  // Bottom-Left of left face
-	glVertex3f(-0.5f, -0.5f, 0.5f);  // Bottom-Right of left face
+	glVertex3f(-1.0f, 1.0f, 1.0f);  // Top-Right of left face
+	glVertex3f(-1.0f, 1.0f, -1.0f);  // Top-Left of left face
+	glVertex3f(-1.0f, -1.0f, -1.0f);  // Bottom-Left of left face
+	glVertex3f(-1.0f, -1.0f, 1.0f);  // Bottom-Right of left face
 
 	// Right face
-	glVertex3f(0.5f, 0.5f, 0.5f);  // Top-Right of left face
-	glVertex3f(0.5f, 0.5f, -0.5f);  // Top-Left of left face
-	glVertex3f(0.5f, -0.5f, -0.5f);  // Bottom-Left of left face
-	glVertex3f(0.5f, -0.5f, 0.5f);  // Bottom-Right of left face
+	glVertex3f(1.0f, 1.0f, 1.0f);  // Top-Right of left face
+	glVertex3f(1.0f, 1.0f, -1.0f);  // Top-Left of left face
+	glVertex3f(1.0f, -1.0f, -1.0f);  // Bottom-Left of left face
+	glVertex3f(1.0f, -1.0f, 1.0f);  // Bottom-Right of left face
 	glEnd();
-
 #pragma endregion cube
 
 	return UPDATE_CONTINUE;
 }
-
 
 update_status ModuleRender::PostUpdate() {
 
@@ -189,4 +190,3 @@ void ModuleRender::WindowResized(unsigned width, unsigned height) {
 
 	glViewport(0, 0, width, height);
 }
-

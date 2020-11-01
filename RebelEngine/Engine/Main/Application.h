@@ -3,7 +3,7 @@
 #include<list>
 #include "Utils/Globals.h"
 #include "CoreModules/Module.h"
-#include "CoreModules/ModuleEditorCamera.h"
+#include "Utils/Timer.h"
 
 class ModuleRender;
 class ModuleWindow;
@@ -12,8 +12,8 @@ class ModuleInput;
 class ModuleRenderExercise;
 class ModuleEditorCamera;
 
-class Application
-{
+class Application {
+
 public:
 
 	Application();
@@ -24,13 +24,17 @@ public:
 	bool CleanUp();
 
 public:
+
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleEditorCamera* editorCamera = nullptr;
 
+	float deltaTime;
+
 private:
 
+	Timer applicationTimer;
 	std::list<Module*> modules;
 
 };

@@ -2,14 +2,20 @@
 #include "Main/Application.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
+#include "ModuleEditorCamera.h"
 #include <SDL/SDL.h>
 
-ModuleInput::ModuleInput()
-{}
+#define MAX_KEYS 300
+
+ModuleInput::ModuleInput(){
+	keyboard = new KeyState[MAX_KEYS];
+	memset(keyboard, (int)KeyState::KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
+}
 
 // Destructor
-ModuleInput::~ModuleInput()
-{}
+ModuleInput::~ModuleInput(){
+	delete[] keyboard;
+}
 
 // Called before render is available
 bool ModuleInput::Init()
@@ -30,6 +36,27 @@ bool ModuleInput::Init()
 // Called every draw update
 update_status ModuleInput::Update()
 {
+
+	const Uint8* keys = SDL_GetKeyboardState(NULL);
+
+	for (int i = 0; i < MAX_KEYS; ++i)
+	{
+		if (keys[i] == 1)
+		{
+			if (keyboard[i] == KeyState::KEY_IDLE)
+				keyboard[i] = KeyState::KEY_DOWN;
+			else
+				keyboard[i] = KeyState::KEY_REPEAT;
+		}
+		else
+		{
+			if (keyboard[i] == KeyState::KEY_REPEAT || keyboard[i] == KeyState::KEY_DOWN)
+				keyboard[i] = KeyState::KEY_UP;
+			else
+				keyboard[i] = KeyState::KEY_IDLE;
+		}
+	}
+
     SDL_Event sdlEvent;
 
     while (SDL_PollEvent(&sdlEvent) != 0)
@@ -46,8 +73,6 @@ update_status ModuleInput::Update()
                 break;
         }
     }
-
-    keyboard = SDL_GetKeyboardState(NULL);
 
     return UPDATE_CONTINUE;
 }
