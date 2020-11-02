@@ -15,7 +15,10 @@ class ModuleEditorCamera : public Module
 private:
 
 	void TranslateKeyboard();
+	void TranslateMouse(int x, int y);
+	void TranslateMouseWheel();
 	void RotateKeyboard();
+	void RotateMouse(int x, int y);
 
 public:
 

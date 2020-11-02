@@ -34,8 +34,7 @@ bool ModuleInput::Init()
 }
 
 // Called every draw update
-update_status ModuleInput::Update()
-{
+update_status ModuleInput::Update() {
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
@@ -57,6 +56,15 @@ update_status ModuleInput::Update()
 		}
 	}
 
+	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
+	{
+		if (mouse_buttons[i] == KeyState::KEY_DOWN)
+			mouse_buttons[i] = KeyState::KEY_REPEAT;
+
+		if (mouse_buttons[i] == KeyState::KEY_UP)
+			mouse_buttons[i] = KeyState::KEY_IDLE;
+	}
+
     SDL_Event sdlEvent;
 
     while (SDL_PollEvent(&sdlEvent) != 0)
@@ -71,6 +79,15 @@ update_status ModuleInput::Update()
                     App->editorCamera->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
                 }
                 break;
+			case SDL_MOUSEBUTTONDOWN:
+				mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_DOWN;
+				break;
+			case SDL_MOUSEBUTTONUP:
+				mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_UP;
+				break;
+			case SDL_MOUSEWHEEL:
+				mouseWheel = sdlEvent.wheel.y;
+				break;
         }
     }
 

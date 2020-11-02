@@ -37,6 +37,44 @@ void ModuleEditorCamera::TranslateKeyboard() {
 
 }
 
+void ModuleEditorCamera::TranslateMouse(int x, int y) {
+
+	float3 movement = float3::zero;
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && x != 0 && y != 0) {
+
+		LOG("Move mouse");
+
+		movement += frustum.WorldRight();
+		movement += frustum.Up();
+
+		movement.x -= (float)x;
+		movement.y -= (float)y;
+
+	}
+
+	frustum.Translate(movement * App->deltaTime * 0.5);
+
+}
+
+void ModuleEditorCamera::TranslateMouseWheel() {
+
+	float3 movement = float3::zero;
+
+	int dir = App->input->GetMouseWheel();
+
+	if (dir != 0) {
+
+		if (dir > 0)	movement += frustum.Front() * 2;
+		else movement -= frustum.Front() * 2;
+
+		App->input->SetMouseWheel(0);
+	}
+
+	frustum.Translate(movement * App->deltaTime * movSpeed);
+
+}
+
 void ModuleEditorCamera::RotateKeyboard() {
 
 	float roll = 0.0f; float pitch = 0.0f; float yaw = 0.0f;
@@ -47,12 +85,37 @@ void ModuleEditorCamera::RotateKeyboard() {
 		roll -= 1;
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)
-		pitch -= 1;
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
 		pitch += 1;
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
+		pitch -= 1;
 
 	Quat quaternionX(frustum.WorldRight(), roll * App->deltaTime * rotSpeed);
 	Quat quaternionY(float3::unitY, pitch * App->deltaTime * rotSpeed);
+
+	float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
+	float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
+	float3x3 rotationMatrix = rotationMatrixX * rotationMatrixY;
+
+	vec oldFront = frustum.Front().Normalized();
+	frustum.SetFront(rotationMatrix.MulDir(oldFront));
+	vec oldUp = frustum.Up().Normalized();
+	frustum.SetUp(rotationMatrix.MulDir(oldUp));
+}
+
+void ModuleEditorCamera::RotateMouse(int x, int y) {
+
+	float roll = 0.0f; float pitch = 0.0f; float yaw = 0.0f;
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_IDLE && x != 0 && y != 0) {
+
+		pitch = -(float)y * App->deltaTime * rotSpeed;
+		yaw = -(float)x * App->deltaTime * rotSpeed;
+
+	}
+
+	Quat quaternionX(frustum.WorldRight(), pitch * App->deltaTime * rotSpeed);
+	Quat quaternionY(float3::unitY, yaw * App->deltaTime * rotSpeed);
+
 
 	float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
 	float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
@@ -69,8 +132,14 @@ void ModuleEditorCamera::RotateKeyboard() {
 
 update_status ModuleEditorCamera::Update() {
 
+	int x, y;
+	SDL_GetRelativeMouseState(&x, &y);
+
 	TranslateKeyboard();
+	TranslateMouse(x, y);
+	TranslateMouseWheel();
 	RotateKeyboard();
+	RotateMouse(x, y);
 
 	return UPDATE_CONTINUE;
 
