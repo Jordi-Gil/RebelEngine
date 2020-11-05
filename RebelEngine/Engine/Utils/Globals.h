@@ -18,4 +18,4 @@ enum update_status
 #define SCREEN_HEIGHT 1080
 #define FULLSCREEN false
 #define VSYNC true
-#define TITLE "Super Awesome Engine"
+#define TITLE "Rebel Engine"

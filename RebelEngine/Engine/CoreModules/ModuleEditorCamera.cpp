@@ -51,8 +51,6 @@ void ModuleEditorCamera::TranslateMouse(int x, int y) {
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && x != 0 && y != 0) {
 
-		LOG("Move mouse");
-
 		movement += frustum.WorldRight();
 		movement += frustum.Up();
 
