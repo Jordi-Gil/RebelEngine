@@ -152,6 +152,7 @@
     <ClInclude Include="Engine\CoreModules\Module.h" />
     <ClInclude Include="Engine\CoreModules\ModuleEditorCamera.h" />
     <ClInclude Include="Engine\CoreModules\ModuleInput.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleProgram.h" />
     <ClInclude Include="Engine\CoreModules\ModuleRender.h" />
     <ClInclude Include="Engine\CoreModules\ModuleWindow.h" />
     <ClInclude Include="Engine\Main\Application.h" />
@@ -238,6 +239,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleInput.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleProgram.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleRender.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Main\Application.cpp" />

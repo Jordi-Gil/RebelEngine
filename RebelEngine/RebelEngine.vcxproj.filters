@@ -50,6 +50,7 @@
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\GJK2D.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\SAT.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\SAT.h" />
     <ClInclude Include="Engine\CoreModules\ModuleEditorCamera.h" />
     <ClInclude Include="Engine\Utils\Timer.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleProgram.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">
