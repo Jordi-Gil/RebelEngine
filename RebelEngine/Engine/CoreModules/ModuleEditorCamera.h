@@ -41,11 +41,42 @@ public:
 		updated = _val;
 	};
 
-	void SetFov();
-	void SetAspectRatio();
-	void SetPlaneDistances();
-	void SetPosition();
+#pragma region setters
+	void SetHorizontalFov(float fov);
+	void SetVerticalFov(float fov);
+	void SetAspectRatio(float aspectRatio);
+	
+	void SetPlaneDistances(float znear, float zfar);
+	void SetZNear(float znear);
+	void SetZFar(float zfar);
+	
+	void SetPosition(float x, float y, float z);
 	void SetOrientation();
+
+#pragma endregion setters
+
+#pragma region getters
+
+	float GetHorizontalFov();
+	float GetVerticalFov();
+	float GetAspectRatio();
+
+	void GetPlaneDistances(float &znear, float &zfar);
+	float2 GetPlaneDistances();
+	float GetZNear();
+	float GetZFar();
+
+	void GetPosition(float &x, float &y, float &z);
+	float3 GetPosition() { return frustum.Pos(); }
+
+
+	
+
+	float4x4 GetProjectionMatrix();
+	float4x4 GetViewMatrix();
+
+#pragma endregion getts
+
 	void LookAt(float x, float y, float z);
 
 private:
