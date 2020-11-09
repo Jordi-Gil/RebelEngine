@@ -22,4 +22,3 @@ private:
 	void DrawAbout(bool& show_about);
 
 };
-

@@ -83,9 +83,14 @@ update_status ModuleInput::Update() {
 				case SDL_QUIT:
 					return UPDATE_STOP;
 				case SDL_WINDOWEVENT:
-					if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-						App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
-						App->editorCamera->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+					switch (sdlEvent.window.event) {
+						case SDL_WINDOWEVENT_RESIZED:
+						case SDL_WINDOWEVENT_SIZE_CHANGED:
+							App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+							App->editorCamera->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+							break;
+						case SDL_WINDOWEVENT_CLOSE:
+							return UPDATE_STOP;
 					}
 					break;
 				case SDL_MOUSEBUTTONDOWN:
