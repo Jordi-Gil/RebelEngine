@@ -37,10 +37,6 @@ public:
 		return mouseWheel;
 	}
 
-	void SetMouseWheel(int _val) {
-		mouseWheel = _val;
-	}
-
 private:
 
 	KeyState* keyboard;

@@ -3,6 +3,10 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleWindow.h"
+
+#include "ImGui/imgui_impl_sdl.h"
+
 #include <SDL/SDL.h>
 
 #define MAX_KEYS 300
@@ -67,34 +71,39 @@ update_status ModuleInput::Update() {
 
     SDL_Event sdlEvent;
 
+	mouseWheel = 0;
+
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
-        switch (sdlEvent.type)
-        {
-            case SDL_QUIT:
-                return UPDATE_STOP;
-            case SDL_WINDOWEVENT:
-                if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                    App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
-                    App->editorCamera->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
-                }
-                break;
-			case SDL_MOUSEBUTTONDOWN:
-				mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_DOWN;
-				break;
-			case SDL_MOUSEBUTTONUP:
-				mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_UP;
-				break;
-			case SDL_MOUSEWHEEL:
-				mouseWheel = sdlEvent.wheel.y;
-				break;
-        }
+		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+
+		if (sdlEvent.window.windowID == App->window->GetWindowID()) {
+			switch (sdlEvent.type)
+			{
+				case SDL_QUIT:
+					return UPDATE_STOP;
+				case SDL_WINDOWEVENT:
+					if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+						App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+						App->editorCamera->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+					}
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_DOWN;
+					break;
+				case SDL_MOUSEBUTTONUP:
+					mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_UP;
+					break;
+				case SDL_MOUSEWHEEL:
+					mouseWheel = sdlEvent.wheel.y;
+					break;
+			}
+		}
     }
 
     return UPDATE_CONTINUE;
 }
 
-// Called before quitting
 bool ModuleInput::CleanUp()
 {
 	LOG("Quitting SDL input event subsystem");

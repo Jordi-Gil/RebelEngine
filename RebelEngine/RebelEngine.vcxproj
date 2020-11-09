@@ -74,7 +74,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -112,7 +112,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -158,6 +158,14 @@
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Utils\Globals.h" />
     <ClInclude Include="Engine\Utils\Timer.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui_impl_sdl.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imstb_truetype.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\GJK.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\GJK2D.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\Random\LCG.h" />
@@ -235,6 +243,7 @@
     <ClInclude Include="MathGeoLib-1.5\Include\Math\TransformOps.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Math\vec2d.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Time\Clock.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
@@ -245,6 +254,12 @@
     <ClCompile Include="Engine\Main\Application.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Utils\log.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\GJK.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\GJK2D.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\Random\LCG.cpp" />
@@ -287,6 +302,7 @@
     <ClCompile Include="MathGeoLib-1.5\Include\Math\SSEMath.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Time\Clock.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib-1.5\Include\Geometry\KDTree.inl" />

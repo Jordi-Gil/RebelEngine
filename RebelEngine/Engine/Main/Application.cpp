@@ -4,6 +4,7 @@
 #include "CoreModules/ModuleRender.h"
 #include "CoreModules/ModuleInput.h"
 #include "CoreModules/ModuleEditorCamera.h"
+#include "CoreModules/ModuleEditor.h"
 
 #define TIME_PER_FRAME 1000.0f / 60.f // Approx. 60 fps
 
@@ -15,20 +16,21 @@ Application::Application()
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(renderer = new ModuleRender());
+	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(editorCamera = new ModuleEditorCamera());
 	modules.push_back(input = new ModuleInput());
 }
 
-Application::~Application()
-{
+Application::~Application() {
+
 	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
 	{
 		delete* it;
 	}
 }
 
-bool Application::Init()
-{
+bool Application::Init() {
+
 	bool ret = true;
 
 	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)

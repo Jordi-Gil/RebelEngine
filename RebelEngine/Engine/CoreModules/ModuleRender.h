@@ -9,6 +9,7 @@ struct SDL_Rect;
 class ModuleRender : public Module
 {
 public:
+
 	ModuleRender();
 	~ModuleRender();
 
@@ -18,6 +19,8 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	void WindowResized(unsigned width, unsigned height);
+
+	void* GetContext() { return mainContext; }
 
 private:
 	void* mainContext;

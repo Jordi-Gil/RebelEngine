@@ -11,6 +11,7 @@ class ModuleTextures;
 class ModuleInput;
 class ModuleRenderExercise;
 class ModuleEditorCamera;
+class ModuleEditor;
 
 class Application {
 
@@ -29,6 +30,7 @@ public:
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleEditorCamera* editorCamera = nullptr;
+	ModuleEditor* editor = nullptr;
 
 	float deltaTime;
 

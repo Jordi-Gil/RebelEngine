@@ -76,8 +76,6 @@ void ModuleEditorCamera::TranslateMouseWheel() {
 
 		if (dir > 0)	movement += frustum.Front() * 2;
 		else movement -= frustum.Front() * 2;
-
-		App->input->SetMouseWheel(0);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;

@@ -51,6 +51,13 @@
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\SAT.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleProgram.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="ImGui\Include\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -139,6 +146,15 @@
     <ClInclude Include="Engine\CoreModules\ModuleEditorCamera.h" />
     <ClInclude Include="Engine\Utils\Timer.h" />
     <ClInclude Include="Engine\CoreModules\ModuleProgram.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui_impl_sdl.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

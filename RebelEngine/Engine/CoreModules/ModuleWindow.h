@@ -11,15 +11,12 @@ class ModuleWindow : public Module
 public:
 
 	ModuleWindow();
-
-	// Destructor
 	virtual ~ModuleWindow();
 
-	// Called before quitting
 	bool Init();
-
-	// Called before quitting
 	bool CleanUp();
+
+	Uint32 GetWindowID() { return SDL_GetWindowID(window); }
 
 public:
 	//The window we'll be rendering to
