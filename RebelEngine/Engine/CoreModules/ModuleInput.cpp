@@ -86,7 +86,6 @@ update_status ModuleInput::Update() {
 					switch (sdlEvent.window.event) {
 						case SDL_WINDOWEVENT_RESIZED:
 						case SDL_WINDOWEVENT_SIZE_CHANGED:
-							App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
 							App->editorCamera->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
 							break;
 						case SDL_WINDOWEVENT_CLOSE:

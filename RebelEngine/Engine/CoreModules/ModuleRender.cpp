@@ -1,7 +1,8 @@
-#include "Utils/Globals.h"
 #include "Main/Application.h"
+
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
+#include "ModuleProgram.h"
 #include "ModuleEditorCamera.h"
 
 #include <SDL/SDL.h>
@@ -14,6 +15,37 @@ ModuleRender::ModuleRender() {
 // Destructor
 ModuleRender::~ModuleRender() {
 
+}
+
+void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	const char* tmp_source = "", * tmp_type = "", * tmp_severity = "";
+	switch (source) {
+	case GL_DEBUG_SOURCE_API: tmp_source = "API"; break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM: tmp_source = "Window System"; break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER: tmp_source = "Shader Compiler"; break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY: tmp_source = "Third Party"; break;
+	case GL_DEBUG_SOURCE_APPLICATION: tmp_source = "Application"; break;
+	case GL_DEBUG_SOURCE_OTHER: tmp_source = "Other"; break;
+	};
+	switch (type) {
+	case GL_DEBUG_TYPE_ERROR: tmp_type = "Error"; break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: tmp_type = "Deprecated Behaviour"; break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: tmp_type = "Undefined Behaviour"; break;
+	case GL_DEBUG_TYPE_PORTABILITY: tmp_type = "Portability"; break;
+	case GL_DEBUG_TYPE_PERFORMANCE: tmp_type = "Performance"; break;
+	case GL_DEBUG_TYPE_MARKER: tmp_type = "Marker"; break;
+	case GL_DEBUG_TYPE_PUSH_GROUP: tmp_type = "Push Group"; break;
+	case GL_DEBUG_TYPE_POP_GROUP: tmp_type = "Pop Group"; break;
+	case GL_DEBUG_TYPE_OTHER: tmp_type = "Other"; break;
+	};
+	switch (severity) {
+	case GL_DEBUG_SEVERITY_HIGH: tmp_severity = "high"; break;
+	case GL_DEBUG_SEVERITY_MEDIUM: tmp_severity = "medium"; break;
+	case GL_DEBUG_SEVERITY_LOW: tmp_severity = "low"; break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION: tmp_severity = "notification"; break;
+	};
+	LOG("<Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>\n", tmp_source, tmp_type, tmp_severity, id, message);
 }
 
 // Called before render is available
@@ -51,6 +83,24 @@ bool ModuleRender::Init() {
 	glEnable(GL_CULL_FACE); // Enable cull backward faces
 	glFrontFace(GL_CCW); // Front faces will be counter clockwise
 
+#ifdef  _DEBUG
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageCallback(&OurOpenGLErrorFunction, nullptr);
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
+#endif //  _DEBUG
+
+	GLuint vertexSahder = App->program->CompileShader(GL_VERTEX_SHADER, (App->program->readFile("shaders/vertex.vert")).c_str());
+	GLuint fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, (App->program->readFile("shaders/fragment.frag")).c_str());
+
+	program = App->program->CreateProgram(vertexSahder, fragmentShader);
+
+	float vertices[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
 	return true;
 }
 
@@ -63,7 +113,8 @@ update_status ModuleRender::PreUpdate() {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+	//Change to uniforms
+	/*
 	if (App->editorCamera->projectionChange()) {
 		glMatrixMode(GL_PROJECTION);
 		float4x4 projection;
@@ -76,6 +127,7 @@ update_status ModuleRender::PreUpdate() {
 	float4x4 view;
 	App->editorCamera->GetMatrix(VIEW_MATRIX, view);
 	glLoadMatrixf((float*)view.v);
+	*/
 
 	return UPDATE_CONTINUE;
 }
@@ -83,88 +135,11 @@ update_status ModuleRender::PreUpdate() {
 // Called every draw update
 update_status ModuleRender::Update() {
 
-#pragma region wireframe
-
-	glLineWidth(1.0f);
-	float d = 1500.0f;
-	glBegin(GL_LINES);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	for (float i = -d; i <= d; i += 1.0f)
-	{
-		glVertex3f(i, 0.0f, -d);
-		glVertex3f(i, 0.0f, d);
-		glVertex3f(-d, 0.0f, i);
-		glVertex3f(d, 0.0f, i);
-	}
-	glEnd();
-
-	glLineWidth(2.0f);
-	glBegin(GL_LINES);
-	// red X
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(2.0f, 0.0f, 0.0f);
-	glVertex3f(2.0f, 0.1f, 0.0f); glVertex3f(2.1f, -0.1f, 0.0f);
-	glVertex3f(2.1f, 0.1f, 0.0f); glVertex3f(2.0f, -0.1f, 0.0f);
-	// green Y
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 2.0f, 0.0f);
-	glVertex3f(-0.05f, 2.25f, 0.0f); glVertex3f(0.0f, 2.15f, 0.0f);
-	glVertex3f(0.05f, 2.25f, 0.0f); glVertex3f(0.0f, 2.15f, 0.0f);
-	glVertex3f(0.0f, 2.15f, 0.0f); glVertex3f(0.0f, 2.05f, 0.0f);
-
-	// blue Z
-	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 2.0f);
-	glVertex3f(-0.05f, 0.1f, 2.05f); glVertex3f(0.05f, 0.1f, 2.05f);
-	glVertex3f(0.05f, 0.1f, 2.05f); glVertex3f(-0.05f, -0.1f, 2.05f);
-	glVertex3f(-0.05f, -0.1f, 2.05f); glVertex3f(0.05f, -0.1f, 2.05f);
-	glEnd();
-	glLineWidth(1.0f);
-
-#pragma endregion wireframe
-
-#pragma region cube
-
-	// Render a cube
-	glBegin(GL_QUADS);
-	// Top face
-	glColor3f(0.8f, 0.8f, 0.8f);  // Green
-	glVertex3f(1.0f, 1.0f, -1.0f);  // Top-right of top face
-	glVertex3f(-1.0f, 1.0f, -1.0f);  // Top-left of top face
-	glVertex3f(-1.0f, 1.0f, 1.0f);  // Bottom-left of top face
-	glVertex3f(1.0f, 1.0f, 1.0f);  // Bottom-right of top face
-
-	// Bottom face
-	glVertex3f(1.0f, -1.0f, -1.0f); // Top-right of bottom face
-	glVertex3f(-1.0f, -1.0f, -1.0f); // Top-left of bottom face
-	glVertex3f(-1.0f, -1.0f, 1.0f); // Bottom-left of bottom face
-	glVertex3f(1.0f, -1.0f, 1.0f); // Bottom-right of bottom face
-
-	// Front face
-	glVertex3f(1.0f, 1.0f, 1.0f);  // Top-Right of front face
-	glVertex3f(-1.0f, 1.0f, 1.0f);  // Top-left of front face
-	glVertex3f(-1.0f, -1.0f, 1.0f);  // Bottom-left of front face
-	glVertex3f(1.0f, -1.0f, 1.0f);  // Bottom-right of front face
-
-	// Back face
-	glVertex3f(1.0f, -1.0f, -1.0f); // Bottom-Left of back face
-	glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom-Right of back face
-	glVertex3f(-1.0f, 1.0f, -1.0f); // Top-Right of back face
-	glVertex3f(1.0f, 1.0f, -1.0f); // Top-Left of back face
-
-	// Left face
-	glVertex3f(-1.0f, 1.0f, 1.0f);  // Top-Right of left face
-	glVertex3f(-1.0f, 1.0f, -1.0f);  // Top-Left of left face
-	glVertex3f(-1.0f, -1.0f, -1.0f);  // Bottom-Left of left face
-	glVertex3f(-1.0f, -1.0f, 1.0f);  // Bottom-Right of left face
-
-	// Right face
-	glVertex3f(1.0f, 1.0f, 1.0f);  // Top-Right of left face
-	glVertex3f(1.0f, 1.0f, -1.0f);  // Top-Left of left face
-	glVertex3f(1.0f, -1.0f, -1.0f);  // Bottom-Left of left face
-	glVertex3f(1.0f, -1.0f, 1.0f);  // Bottom-Right of left face
-	glEnd();
-#pragma endregion cube
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glUseProgram(program);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	return UPDATE_CONTINUE;
 }
@@ -180,13 +155,10 @@ bool ModuleRender::CleanUp() {
 
 	LOG("Destroying renderer");
 
+	glDeleteBuffers(1, &VBO);
+
 	//Destroy window
 	SDL_GL_DeleteContext(mainContext);
 
 	return true;
-}
-
-void ModuleRender::WindowResized(unsigned width, unsigned height) {
-
-	glViewport(0, 0, width, height);
 }

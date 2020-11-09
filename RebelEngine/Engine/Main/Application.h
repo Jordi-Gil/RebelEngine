@@ -12,6 +12,7 @@ class ModuleInput;
 class ModuleRenderExercise;
 class ModuleEditorCamera;
 class ModuleEditor;
+class ModuleProgram;
 
 class Application {
 
@@ -31,6 +32,7 @@ public:
 	ModuleInput* input = nullptr;
 	ModuleEditorCamera* editorCamera = nullptr;
 	ModuleEditor* editor = nullptr;
+	ModuleProgram* program = nullptr;
 
 	float deltaTime;
 
