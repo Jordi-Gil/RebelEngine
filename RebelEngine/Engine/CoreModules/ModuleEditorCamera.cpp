@@ -6,20 +6,16 @@
 #include <SDL/SDL.h>
 #include <cmath>
 
-void ModuleEditorCamera::GetMatrix(matrix_type _mType, float4x4& matrix) {
+bool ModuleEditorCamera::Init() {
 
-	switch (_mType) {
-		case PROJECTION_MATRIX:
-		{
-			matrix = frustum.ProjectionMatrix().Transposed();
-			break;
-		}
-		case VIEW_MATRIX:
-		{
-			matrix = frustum.ViewMatrix();
-			matrix.Transpose();
-		}
-	}
+	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
+	frustum.SetViewPlaneDistances(0.1f, 100.0f);
+	frustum.SetHorizontalFovAndAspectRatio((float)DEGTORAD * 90.0f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
+	frustum.SetPos(float3(0, 4, 10));
+	frustum.SetFront(-float3::unitZ);
+	frustum.SetUp(float3::unitY);
+
+	return true;
 }
 
 #pragma region transforms
@@ -155,18 +151,6 @@ update_status ModuleEditorCamera::Update() {
 
 }
 
-bool ModuleEditorCamera::Init() {
-
-	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-	frustum.SetViewPlaneDistances(0.1f, 200.0f);
-	frustum.SetHorizontalFovAndAspectRatio((float)DEGTORAD * 90.0f, 1.3f);
-	frustum.SetPos(float3(0, 5, -10));
-	frustum.SetFront(float3::unitZ);
-	frustum.SetUp(float3::unitY);
-
-	return true;
-}
-
 void ModuleEditorCamera::WindowResized(unsigned width, unsigned height) {
 
 	if (width != 0 && height != 0) {
@@ -175,5 +159,40 @@ void ModuleEditorCamera::WindowResized(unsigned width, unsigned height) {
 	}
 
 	updated = true;
+
+}
+
+void ModuleEditorCamera::GetMatrix(matrix_type _mType, float4x4& matrix) {
+
+	switch (_mType) {
+		case PROJECTION_MATRIX:
+		{
+			matrix = frustum.ProjectionMatrix();
+			break;
+		}
+		case VIEW_MATRIX:
+		{
+			matrix = frustum.ViewMatrix();
+			break;
+		}
+	}
+}
+
+void ModuleEditorCamera::GetOpenGLMatrix(matrix_type _mType, float4x4& matrix) {
+
+	switch (_mType) {
+		case PROJECTION_MATRIX:
+		{
+			matrix = frustum.ProjectionMatrix();
+			break;
+		}
+		case VIEW_MATRIX:
+		{
+			matrix = frustum.ViewMatrix();
+			break;
+		}
+	}
+
+	matrix.Transpose();
 
 }

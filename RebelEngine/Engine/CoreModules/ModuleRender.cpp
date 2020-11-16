@@ -1,11 +1,10 @@
 #include "Main/Application.h"
 
-#include "Utils/Console.h"
-
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleDebugDraw.h"
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
@@ -95,10 +94,10 @@ bool ModuleRender::Init() {
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif //  _DEBUG
 
-	GLuint vertexSahder = App->program->CompileShader(GL_VERTEX_SHADER, (App->program->readFile("shaders/vertex.vert")).c_str());
-	GLuint fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, (App->program->readFile("shaders/fragment.frag")).c_str());
+	return true;
+}
 
-	program = App->program->CreateProgram(vertexSahder, fragmentShader);
+bool ModuleRender::Start() {
 
 	float vertices[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
 
@@ -106,7 +105,9 @@ bool ModuleRender::Init() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+
 	return true;
+
 }
 
 update_status ModuleRender::PreUpdate() {
@@ -130,11 +131,9 @@ update_status ModuleRender::PreUpdate() {
 // Called every draw update
 update_status ModuleRender::Update() {
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glUseProgram(program);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	int width, height;
+	SDL_GetWindowSize(App->window->window, &width, &height);
+	Draw(width, height);
 
 	return UPDATE_CONTINUE;
 }
@@ -143,6 +142,31 @@ update_status ModuleRender::PostUpdate() {
 
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
+}
+
+void ModuleRender::Draw(float width, float height) {
+
+
+	unsigned int program = App->program->GetMainProgram();
+
+	float4x4 model = float4x4::identity;
+	float4x4 view; App->editorCamera->GetMatrix(VIEW_MATRIX, view);
+	float4x4 projection; App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
+
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&model);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, (const float*)&view);
+	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, (const float*)&projection);
+	glUniform1i(glGetUniformLocation(program, "textureEnabled"), false);
+	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glUseProgram(program);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	App->debugDraw->Draw(view, projection, width, height);
 }
 
 // Called before quitting
