@@ -104,12 +104,14 @@ update_status ModuleEditor::DrawMainMenu() {
 
 	static bool show_about = false;
 	static bool show_console = false;
+	static bool show_config = false;
 
 	if (show_about) DrawAbout(&show_about);
 	if (show_console) console->Draw(ICON_FA_TERMINAL "Console", &show_console);
+	if (show_config) DrawConfiguration(&show_config);
 
-	if (ImGui::BeginMainMenuBar())
-	{
+	if (ImGui::BeginMainMenuBar()){
+
 		if (ImGui::BeginMenu("File")) {
 			ImGui::Separator();
 			if (ImGui::MenuItem("Exit", "ALT+F4")) {
@@ -120,6 +122,7 @@ update_status ModuleEditor::DrawMainMenu() {
 
 		if (ImGui::BeginMenu("Windows")) {
 			ImGui::MenuItem("Console", NULL, &show_console, &show_console);
+			ImGui::MenuItem("Configuration", NULL, &show_config, &show_config);
 			ImGui::EndMenu();
 		}
 
@@ -175,6 +178,29 @@ void ModuleEditor::DrawAbout(bool* show_about) {
 
 		ImGui::EndPopup();
 	}
+}
+
+void ModuleEditor::DrawConfiguration(bool* show_config) {
+
+	ImGui::Begin(ICON_FA_COGS " Configuration", show_config, ImGuiWindowFlags_NoCollapse);
+
+	static int width = App->window->GetCurrentWidth();
+	static int height = App->window->GetCurrentHeight();
+	static float brightness = App->window->GetWindowBrightness();
+	static bool fullscreen = FULLSCREEN;
+	static bool resizable = RESIZABLE;
+
+	if (ImGui::CollapsingHeader("Renderer")) {
+
+	}
+
+	if (ImGui::CollapsingHeader("Window")) {
+		if (ImGui::SliderFloat("Brightness", &brightness, 0.2f, 1.0f)) App->window->SetWindowBrightness(brightness);
+		if (ImGui::SliderInt("Width", &width, App->window->minWidth, App->window->maxWidth)) App->window->SetWindowWidth(width);
+		if (ImGui::SliderInt("Height", &height, App->window->minHeight, App->window->maxHeight)) App->window->SetWindowHeight(height);
+	}
+
+	ImGui::End();
 }
 
 void ModuleEditor::PhotosopLikeStyle() {
