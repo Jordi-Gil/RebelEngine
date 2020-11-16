@@ -1,39 +1,62 @@
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleEditorCamera.h"
 
 #include "Main/Application.h"
 
+#include "Utils/Console.h"
+
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
+#include "ImGui/imgui_utils.h"
 
-ModuleEditor::ModuleEditor() {}
+ModuleEditor::ModuleEditor() {
+
+	FILE* pTextFile;
+
+	pTextFile = fopen("Windows/libraries.txt", "r");
+
+	if (pTextFile) {
+
+		fseek(pTextFile, 0, SEEK_END);
+		libSize = ftell(pTextFile);
+		libraries_info = (char*)malloc(sizeof(char) * libSize + 1);
+		fseek(pTextFile, 0, SEEK_SET);
+		fread(libraries_info, 1, libSize, pTextFile);
+		libraries_info[libSize] = 0;
+		fclose(pTextFile);
+	}
+}
 
 bool ModuleEditor::Init() {
 
-	LOG("Init WindowEditor");
+	LOG(_INFO, "Init WindowEditor");
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// Enable Docking
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable Keyboard Controls
-	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;    // Enable Gamepad Controls
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	ImGui::GetIO().WantSetMousePos = true;
-
-	//ImGui::StyleColorsDark();
-
-	//ImGuiStyle& style = ImGui::GetStyle();
-	//if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	//{
-	//	style.WindowRounding = 0.0f;
-	//	style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	//
-	//}
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
+	io.WantCaptureMouse = true;
+	io.WantCaptureKeyboard = false;
 
 	PhotosopLikeStyle();
+
+	ImGui::GetIO().Fonts->AddFontDefault();
+	// merge in icons from Font Awesome
+	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+	ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/" FONT_ICON_FILE_NAME_FAS, 12.0f, &icons_config, icons_ranges);
+
+	return true;
+}
+
+bool ModuleEditor::Start() {
 
 	const char* glsl_version = "#version 460";
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->GetContext());
@@ -80,8 +103,10 @@ update_status ModuleEditor::DrawMainMenu() {
 	update_status ret = UPDATE_CONTINUE;
 
 	static bool show_about = false;
+	static bool show_console = false;
 
-	if (show_about) DrawAbout(show_about);
+	if (show_about) DrawAbout(&show_about);
+	if (show_console) console->Draw(ICON_FA_TERMINAL "Console", &show_console);
 
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -93,7 +118,16 @@ update_status ModuleEditor::DrawMainMenu() {
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Windows")) {
+			ImGui::MenuItem("Console", NULL, &show_console, &show_console);
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Help")) {
+			if (ImGui::MenuItem("Documentation")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/wiki");
+			if (ImGui::MenuItem("Download latest")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/releases");
+			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/issues");
+			ImGui::Separator();
 			ImGui::MenuItem("About Rebel", NULL, &show_about);
 			ImGui::EndMenu();
 		}
@@ -103,32 +137,48 @@ update_status ModuleEditor::DrawMainMenu() {
 	return ret;
 }
 
-void ModuleEditor::DrawAbout(bool &show_about) {
+void ModuleEditor::DrawAbout(bool* show_about) {
 
-	App->deltaTime = 0.0;
+	ImGui::OpenPopup("About Rebel");
 
-	ImGui::OpenPopup("About");
+	if (ImGui::BeginPopupModal("About Rebel", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove)) {
 
-	if (ImGui::BeginPopupModal("About", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings)) {
-		
-		ImGui::SetNextWindowSize(ImVec2(100,100));
-		
-		ImGui::Text("Lore ipsum sdwd wdwd");
+		ImGui::SetWindowSize(ImVec2(0, 0));
 
+		ImGui::Text("Version: Rebel Engine"); ImGui::SameLine(); ImGui::Text(VERSION);
+		ImGui::Text("Rebel is a game engine programmed entirely in C++.");
+		ImGui::Text("Author:"); ImGui::SameLine(); ImGui::Text("Jordi Gil Gonzalez");
+		if (ImGui::CollapsingHeader("Libraries used")) {
+
+			char* info = (char*)malloc(sizeof(char) * libSize + 1);
+			strcpy(info, libraries_info);
+
+			char* _LIB, * _URL, * _DESC;
+			char* token = strtok(info, "\n");
+			while (token != NULL) {
+				_LIB = token;
+				token = strtok(NULL, "\n"); _URL = token;
+				token = strtok(NULL, "\n"); _DESC = token;
+				token = strtok(NULL, "\n");
+				ImGui::BulletText(""); ImGui::SameLine();  ImGui::TextURL(_LIB, _URL, 0); ImGui::SameLine(); ImGui::Text(_DESC);
+			}
+
+			free(info);
+		}
+		ImGui::Text("LICENSE: GNU General Public License v3.0");
 		ImGui::NewLine();
 		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 30);
 		if (ImGui::Button("Ok")) {
 			ImGui::CloseCurrentPopup();
-			show_about = false;
+			*show_about = false;
 		}
 
 		ImGui::EndPopup();
 	}
-
 }
 
-void ModuleEditor::PhotosopLikeStyle()
-{
+void ModuleEditor::PhotosopLikeStyle() {
+
 	ImGuiStyle* style = &ImGui::GetStyle();
 	ImVec4* colors = style->Colors;
 
@@ -182,6 +232,7 @@ void ModuleEditor::PhotosopLikeStyle()
 	colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
 	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.000f, 0.000f, 0.000f, 0.586f);
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.000f, 0.000f, 0.000f, 0.586f);
+	colors[ImGuiCol_UrlText] = ImVec4(0.000f, 0.451f, 1.0f, 1.0f);
 
 	style->ChildRounding = 4.0f;
 	style->FrameBorderSize = 1.0f;
@@ -192,5 +243,5 @@ void ModuleEditor::PhotosopLikeStyle()
 	style->ScrollbarSize = 13.0f;
 	style->TabBorderSize = 1.0f;
 	style->TabRounding = 0.0f;
-	style->WindowRounding = 4.0f;
+	style->WindowRounding = 0.0f;
 }

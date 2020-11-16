@@ -25,6 +25,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void RequestBrowser(const char* _URL);
+
 public:
 
 	ModuleRender* renderer = nullptr;
@@ -36,9 +38,16 @@ public:
 
 	float deltaTime;
 
+#ifdef _DEBUG
+	Timer logTimer;
+#endif // _DEBUG
+
 private:
 
 	Timer applicationTimer;
+#ifdef _DEBUG
+	Timer consoleTimer;
+#endif // _DEBUG
 	std::list<Module*> modules;
 
 };

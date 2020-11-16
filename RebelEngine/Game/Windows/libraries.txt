@@ -1,0 +1,21 @@
+Glew-2.1.0
+http://glew.sourceforge.net/
+Wrangle library for OpenGL. Cross-platform open-source C/C++ extension loading library.
+SDL2-2.0.12
+https://www.libsdl.org/download-2.0.php
+Window manager library.
+SDL2_image-2.0.5
+https://www.libsdl.org/projects/SDL_image/
+Image file loading library.
+MathGeoLib-1.5
+https://github.com/juj/MathGeoLib
+Library for linear algebra and geometry manipulation for computer graphics.
+Dear ImGui
+https://github.com/ocornut/imgui
+Bloat-free graphical user interface library for C++.
+DevIL-1.8.0
+http://openil.sourceforge.net/
+Powerful image loading library.
+assimp-5.0.1
+https://github.com/assimp/assimp
+Library to import and export various 3d-model-formats. With scene-post-processing

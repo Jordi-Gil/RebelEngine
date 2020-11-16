@@ -169,7 +169,7 @@ namespace ImStb
 
 // Debug Logging
 #ifndef IMGUI_DEBUG_LOG
-#define IMGUI_DEBUG_LOG(_FMT,...)       printf("[%05d] " _FMT, GImGui->FrameCount, __VA_ARGS__)
+#define IMGUI_DEBUG_LOG(_FMT,...)       printf("" _FMT, GImGui->FrameCount, __VA_ARGS__)
 #endif
 
 // Debug Logging for selected systems. Remove the '((void)0) //' to enable.

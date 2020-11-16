@@ -1,5 +1,7 @@
 #include "Main/Application.h"
 
+#include "Utils/Console.h"
+
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
@@ -17,9 +19,9 @@ ModuleRender::~ModuleRender() {
 
 }
 
-void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
-{
-	const char* tmp_source = "", * tmp_type = "", * tmp_severity = "";
+void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+
+	const char* tmp_source = "", * tmp_type = "", * tmp_severity = "", * type_msg = _WARNING;
 	switch (source) {
 	case GL_DEBUG_SOURCE_API: tmp_source = "API"; break;
 	case GL_DEBUG_SOURCE_WINDOW_SYSTEM: tmp_source = "Window System"; break;
@@ -29,7 +31,7 @@ void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLe
 	case GL_DEBUG_SOURCE_OTHER: tmp_source = "Other"; break;
 	};
 	switch (type) {
-	case GL_DEBUG_TYPE_ERROR: tmp_type = "Error"; break;
+	case GL_DEBUG_TYPE_ERROR: tmp_type = "Error"; type_msg = _ERROR; break;
 	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: tmp_type = "Deprecated Behaviour"; break;
 	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: tmp_type = "Undefined Behaviour"; break;
 	case GL_DEBUG_TYPE_PORTABILITY: tmp_type = "Portability"; break;
@@ -45,13 +47,17 @@ void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLe
 	case GL_DEBUG_SEVERITY_LOW: tmp_severity = "low"; break;
 	case GL_DEBUG_SEVERITY_NOTIFICATION: tmp_severity = "notification"; break;
 	};
-	LOG("<Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>\n", tmp_source, tmp_type, tmp_severity, id, message);
+	
+	if (App->logTimer.getDeltaTime() >= 500) {
+		LOG(type_msg, "[OpenGL Debug] <Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>", tmp_source, tmp_type, tmp_severity, id, message);
+		App->logTimer.start();
+	}
 }
 
 // Called before render is available
 bool ModuleRender::Init() {
 
-	LOG("Creating Renderer context");
+	LOG(_INFO, "Creating Renderer context");
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4); // desired version
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
@@ -63,21 +69,20 @@ bool ModuleRender::Init() {
 	mainContext = SDL_GL_CreateContext(App->window->window);
 
 	if (mainContext == nullptr) {
-		LOG("OpenGL context could not be created!SDL Error : % s", SDL_GetError());
-
+		LOG(_INFO, "OpenGL context could not be created!SDL Error : % s", SDL_GetError());
 		return false;
 	}
 
 	if (glewInit()) {
-		LOG("Unable to initialize OpenGL!");
+		LOG(_INFO, "Unable to initialize OpenGL!");
 		return false;
 	}
 
-	LOG("Using Glew %s", glewGetString(GLEW_VERSION));
-	LOG("Vendor: %s", glGetString(GL_VENDOR));
-	LOG("Renderer: %s", glGetString(GL_RENDERER));
-	LOG("OpenGL version supported %s", glGetString(GL_VERSION));
-	LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	LOG(_INFO, "Using Glew %s", glewGetString(GLEW_VERSION));
+	LOG(_INFO, "Vendor: %s", glGetString(GL_VENDOR));
+	LOG(_INFO, "Renderer: %s", glGetString(GL_RENDERER));
+	LOG(_INFO, "OpenGL version supported %s", glGetString(GL_VERSION));
+	LOG(_INFO, "GLSL: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	glEnable(GL_DEPTH_TEST); // Enable depth test
 	glEnable(GL_CULL_FACE); // Enable cull backward faces
@@ -113,21 +118,11 @@ update_status ModuleRender::PreUpdate() {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//Change to uniforms
-	/*
-	if (App->editorCamera->projectionChange()) {
-		glMatrixMode(GL_PROJECTION);
-		float4x4 projection;
-		App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
-		glLoadMatrixf((float*)projection.v);
-		App->editorCamera->setUpdated(false);
-	}
-
 	glMatrixMode(GL_MODELVIEW);
 	float4x4 view;
 	App->editorCamera->GetMatrix(VIEW_MATRIX, view);
 	glLoadMatrixf((float*)view.v);
-	*/
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -153,7 +148,7 @@ update_status ModuleRender::PostUpdate() {
 // Called before quitting
 bool ModuleRender::CleanUp() {
 
-	LOG("Destroying renderer");
+	LOG(_INFO, "Destroying renderer");
 
 	glDeleteBuffers(1, &VBO);
 

@@ -2,9 +2,9 @@
 #include <windows.h>
 #include <stdio.h>
 
-#define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
+#define LOG(type, format,  ...) log(__FILE__, __LINE__, type, format, __VA_ARGS__);
 
-void log(const char file[], int line, const char* format, ...);
+void log(const char file[], int line, const char* type, const char* format, ...);
 
 enum update_status
 {
@@ -16,6 +16,12 @@ enum update_status
 // Configuration -----------
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
+#define RESIZABLE true
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Rebel Engine"
+#define VERSION "1.0.0"
+
+#define _ERROR "[error]"
+#define _INFO "[info]"
+#define _WARNING "[warning]"

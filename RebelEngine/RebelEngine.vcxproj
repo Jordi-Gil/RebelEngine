@@ -156,13 +156,16 @@
     <ClInclude Include="Engine\CoreModules\ModuleRender.h" />
     <ClInclude Include="Engine\CoreModules\ModuleWindow.h" />
     <ClInclude Include="Engine\Main\Application.h" />
+    <ClInclude Include="Engine\Utils\Console.h" />
     <ClInclude Include="Engine\Utils\Globals.h" />
     <ClInclude Include="Engine\Utils\Timer.h" />
+    <ClInclude Include="ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="ImGui\Include\ImGui\imconfig.h" />
     <ClInclude Include="ImGui\Include\ImGui\imgui.h" />
     <ClInclude Include="ImGui\Include\ImGui\imgui_impl_opengl3.h" />
     <ClInclude Include="ImGui\Include\ImGui\imgui_impl_sdl.h" />
     <ClInclude Include="ImGui\Include\ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\Include\ImGui\imgui_utils.h" />
     <ClInclude Include="ImGui\Include\ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\Include\ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\Include\ImGui\imstb_truetype.h" />
@@ -253,6 +256,7 @@
     <ClCompile Include="Engine\CoreModules\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Main\Application.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
+    <ClCompile Include="Engine\Utils\Console.cpp" />
     <ClCompile Include="Engine\Utils\log.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_demo.cpp" />
