@@ -1,6 +1,7 @@
 #pragma once
 
 #include<list>
+
 #include "Utils/Globals.h"
 #include "CoreModules/Module.h"
 #include "Utils/Timer.h"
@@ -14,6 +15,8 @@ class ModuleEditorCamera;
 class ModuleEditor;
 class ModuleProgram;
 class ModuleDebugDraw;
+class ModuleTexture;
+class ModuleModel;
 
 class Application {
 
@@ -37,6 +40,8 @@ public:
 	ModuleEditor* editor = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleDebugDraw* debugDraw = nullptr;
+	ModuleTexture* texturer = nullptr;
+	ModuleModel* models = nullptr;
 
 	float deltaTime;
 

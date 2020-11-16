@@ -62,6 +62,7 @@
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleTexture.cpp" />
     <ClCompile Include="Engine\Main\Mesh.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Engine\Main\Mesh.h" />
     <ClInclude Include="Engine\Utils\debugdraw.h" />
     <ClInclude Include="Engine\Utils\debug_draw.hpp" />
+    <ClInclude Include="Engine\CoreModules\ModuleModel.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">
@@ -187,5 +189,7 @@
     <None Include="MathGeoLib-1.5\Include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
     <None Include="MathGeoLib-1.5\Include\Geometry\TriangleMesh_IntersectRay_CPP.inl" />
     <None Include="MathGeoLib-1.5\Include\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
+    <None Include="Game\shaders\vertex.vert" />
+    <None Include="Game\shaders\fragment.frag" />
   </ItemGroup>
 </Project>

@@ -153,6 +153,7 @@
     <ClInclude Include="Engine\CoreModules\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\CoreModules\ModuleEditorCamera.h" />
     <ClInclude Include="Engine\CoreModules\ModuleInput.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleModel.h" />
     <ClInclude Include="Engine\CoreModules\ModuleProgram.h" />
     <ClInclude Include="Engine\CoreModules\ModuleRender.h" />
     <ClInclude Include="Engine\CoreModules\ModuleTexture.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleInput.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleModel.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleProgram.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleRender.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleTexture.cpp" />
@@ -317,6 +319,8 @@
     <ClCompile Include="Engine\CoreModules\ModuleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\shaders\fragment.frag" />
+    <None Include="Game\shaders\vertex.vert" />
     <None Include="MathGeoLib-1.5\Include\Geometry\KDTree.inl" />
     <None Include="MathGeoLib-1.5\Include\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib-1.5\Include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />

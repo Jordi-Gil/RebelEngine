@@ -5,6 +5,7 @@
 #include "ModuleProgram.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleDebugDraw.h"
+#include "ModuleModel.h"
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
@@ -119,12 +120,6 @@ update_status ModuleRender::PreUpdate() {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glMatrixMode(GL_MODELVIEW);
-	float4x4 view;
-	App->editorCamera->GetMatrix(VIEW_MATRIX, view);
-	glLoadMatrixf((float*)view.v);
-	
-
 	return UPDATE_CONTINUE;
 }
 
@@ -145,27 +140,11 @@ update_status ModuleRender::PostUpdate() {
 }
 
 void ModuleRender::Draw(float width, float height) {
-
-
-	unsigned int program = App->program->GetMainProgram();
-
-	float4x4 model = float4x4::identity;
-	float4x4 view; App->editorCamera->GetMatrix(VIEW_MATRIX, view);
+	
 	float4x4 projection; App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
+	float4x4 view; App->editorCamera->GetMatrix(VIEW_MATRIX, view);
 
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&model);
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, (const float*)&view);
-	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, (const float*)&projection);
-	glUniform1i(glGetUniformLocation(program, "textureEnabled"), false);
-	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glUseProgram(program);
-
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	App->models->Draw();
 	App->debugDraw->Draw(view, projection, width, height);
 }
 
