@@ -76,7 +76,7 @@ update_status ModuleEditor::Update() {
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	
+
 	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
@@ -89,13 +89,37 @@ update_status ModuleEditor::Update() {
 	return ret;
 }
 
-bool ModuleEditor::CleanUp() {
+#pragma region Windows
 
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
+void ModuleEditor::DrawSceneEditor(bool *show_scene_editor) {
 
-	return true;
+	static float sceneWindowWidth = ImGui::GetWindowWidth();
+	static float sceneWindowHeight = ImGui::GetWindowHeight();
+
+	App->renderer->Draw(sceneWindowWidth, sceneWindowHeight);
+
+	ImGui::Begin(ICON_FA_BORDER_ALL " Scene", show_scene_editor, ImGuiWindowFlags_NoCollapse);
+	ImVec2 pos = ImGui::GetCursorScreenPos();
+
+	sceneFocused = ImGui::IsWindowFocused();
+
+	ImGui::GetWindowDrawList()->AddImage(
+		(void*)(intptr_t)App->renderer->GetViewportTexture(),
+		ImVec2(ImGui::GetCursorScreenPos()),
+		ImVec2(ImGui::GetCursorScreenPos().x + sceneWindowWidth,
+			ImGui::GetCursorScreenPos().y + sceneWindowHeight),
+		ImVec2(0, 1),
+		ImVec2(1, 0));
+
+
+	if (sceneWindowWidth != ImGui::GetWindowWidth() || sceneWindowHeight != ImGui::GetWindowHeight())
+	{
+		sceneWindowWidth = ImGui::GetWindowWidth();
+		sceneWindowHeight = ImGui::GetWindowHeight();
+		App->editorCamera->WindowResized(sceneWindowWidth, sceneWindowHeight);
+	}
+
+	ImGui::End();
 }
 
 update_status ModuleEditor::DrawMainMenu() {
@@ -105,10 +129,12 @@ update_status ModuleEditor::DrawMainMenu() {
 	static bool show_about = false;
 	static bool show_console = false;
 	static bool show_config = false;
+	static bool show_scene_editor = true;
 
 	if (show_about) DrawAbout(&show_about);
 	if (show_console) console->Draw(ICON_FA_TERMINAL "Console", &show_console);
 	if (show_config) DrawConfiguration(&show_config);
+	if (show_scene_editor) DrawSceneEditor(&show_scene_editor);
 
 	if (ImGui::BeginMainMenuBar()){
 
@@ -121,6 +147,7 @@ update_status ModuleEditor::DrawMainMenu() {
 		}
 
 		if (ImGui::BeginMenu("Windows")) {
+			ImGui::MenuItem("Scene", NULL, &show_scene_editor, &show_scene_editor);
 			ImGui::MenuItem("Console", NULL, &show_console, &show_console);
 			ImGui::MenuItem("Configuration", NULL, &show_config, &show_config);
 			ImGui::EndMenu();
@@ -203,6 +230,8 @@ void ModuleEditor::DrawConfiguration(bool* show_config) {
 	ImGui::End();
 }
 
+#pragma endregion Windows
+
 void ModuleEditor::PhotosopLikeStyle() {
 
 	ImGuiStyle* style = &ImGui::GetStyle();
@@ -270,4 +299,13 @@ void ModuleEditor::PhotosopLikeStyle() {
 	style->TabBorderSize = 1.0f;
 	style->TabRounding = 0.0f;
 	style->WindowRounding = 0.0f;
+}
+
+bool ModuleEditor::CleanUp() {
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
+	return true;
 }

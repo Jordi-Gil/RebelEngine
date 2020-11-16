@@ -100,37 +100,63 @@ bool ModuleRender::Init() {
 
 bool ModuleRender::Start() {
 
-	float vertices[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
-
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+	glGenFramebuffers(1, &FBO);
 
 	return true;
 
 }
 
-update_status ModuleRender::PreUpdate() {
+void ModuleRender::BindBuffers(float width, float height) {
 
-	int width, heigh;
-	SDL_GetWindowSize(App->window->window, &width, &heigh);
+	if (viewportTex != 0) glDeleteTextures(1, &viewportTex);
+	if (RBO != 0) glDeleteRenderbuffers(1, &RBO);
 
-	glViewport(0, 0, width, heigh);
+	//Re-Genereate the render buffer
+	glGenRenderbuffers(1, &RBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+
+	//Generate the texture
+	glGenTextures(1, &viewportTex);
+	glBindTexture(GL_TEXTURE_2D, viewportTex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (unsigned)width, (unsigned)height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, viewportTex, 0);
+
+}
+
+void ModuleRender::Draw(float width, float height) {
+
+	//Bind the Frame Buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+	BindBuffers(width, height);
+
+	GLenum  error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (error != GL_FRAMEBUFFER_COMPLETE)
+		LOG(_ERROR, "RENDER ERROR, %d", error);
+
+	glViewport(0, 0, width, height);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	return UPDATE_CONTINUE;
-}
+	float4x4 projection; App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
+	float4x4 view; App->editorCamera->GetMatrix(VIEW_MATRIX, view);
 
-// Called every draw update
-update_status ModuleRender::Update() {
+	App->models->Draw();
+	App->debugDraw->Draw(view, projection, width, height);
 
-	int width, height;
-	SDL_GetWindowSize(App->window->window, &width, &height);
-	Draw(width, height);
+	glBindVertexArray(0);
 
-	return UPDATE_CONTINUE;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 }
 
 update_status ModuleRender::PostUpdate() {
@@ -138,22 +164,14 @@ update_status ModuleRender::PostUpdate() {
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
-
-void ModuleRender::Draw(float width, float height) {
-	
-	float4x4 projection; App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
-	float4x4 view; App->editorCamera->GetMatrix(VIEW_MATRIX, view);
-
-	App->models->Draw();
-	App->debugDraw->Draw(view, projection, width, height);
-}
-
 // Called before quitting
 bool ModuleRender::CleanUp() {
 
 	LOG(_INFO, "Destroying renderer");
 
-	glDeleteBuffers(1, &VBO);
+	if (FBO != 0) glDeleteFramebuffers(1, &FBO);
+	if (RBO != 0) glDeleteFramebuffers(1, &RBO);
+	if (viewportTex != 0) glDeleteTextures(1, &viewportTex);
 
 	//Destroy window
 	SDL_GL_DeleteContext(mainContext);

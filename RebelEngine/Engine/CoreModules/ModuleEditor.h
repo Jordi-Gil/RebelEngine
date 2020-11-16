@@ -23,7 +23,7 @@ private:
 #pragma region ImGuiWindows
 	update_status DrawMainMenu();
 	void DrawAbout(bool* show_about);
-	void DrawScene();
+	void DrawSceneEditor(bool *show_scene_editor);
 	void DrawConfiguration(bool* show_config);
 #pragma endregion ImGuiWindows
 

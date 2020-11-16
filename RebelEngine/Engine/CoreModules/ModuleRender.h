@@ -2,10 +2,6 @@
 #include "Module.h"
 #include "Utils/Globals.h"
 
-struct SDL_Texture;
-struct SDL_Renderer;
-struct SDL_Rect;
-
 class ModuleRender : public Module
 {
 public:
@@ -16,8 +12,6 @@ public:
 	bool Init();
 	bool Start();
 
-	update_status PreUpdate();
-	update_status Update();
 	update_status PostUpdate();
 
 	bool CleanUp();
@@ -25,11 +19,15 @@ public:
 	void* GetContext() { return mainContext; }
 
 	void Draw(float width, float height);
+	void BindBuffers(float width, float height);
+	unsigned int GetViewportTexture() { return viewportTex; }
 
 private:
 
 	void* mainContext = nullptr;
 
-	unsigned int VBO = 0;
+	unsigned int FBO = 0;
+	unsigned int RBO = 0;
+	unsigned int viewportTex = 0;
 
 };
