@@ -74,13 +74,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./assimp-5.0.1/lib/;./DevIL-1.8.0/lib/x86/Release;./SDL2_image/libx86/;./glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc141-mt.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -112,15 +112,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./assimp-5.0.1/lib/;./DevIL-1.8.0/lib/x86/Release;./SDL2_image/libx86/;./glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc141-mt.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -150,13 +150,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine\CoreModules\Module.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\CoreModules\ModuleEditorCamera.h" />
     <ClInclude Include="Engine\CoreModules\ModuleInput.h" />
     <ClInclude Include="Engine\CoreModules\ModuleProgram.h" />
     <ClInclude Include="Engine\CoreModules\ModuleRender.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleTexture.h" />
     <ClInclude Include="Engine\CoreModules\ModuleWindow.h" />
     <ClInclude Include="Engine\Main\Application.h" />
+    <ClInclude Include="Engine\Main\Mesh.h" />
     <ClInclude Include="Engine\Utils\Console.h" />
+    <ClInclude Include="Engine\Utils\debugdraw.h" />
+    <ClInclude Include="Engine\Utils\debug_draw.hpp" />
     <ClInclude Include="Engine\Utils\Globals.h" />
     <ClInclude Include="Engine\Utils\Timer.h" />
     <ClInclude Include="ImGui\Include\ImGui\IconsFontAwesome5.h" />
@@ -249,13 +254,16 @@
     <ClInclude Include="Engine\CoreModules\ModuleEditor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleInput.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleProgram.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleRender.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleTexture.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Main\Application.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
+    <ClCompile Include="Engine\Main\Mesh.cpp" />
     <ClCompile Include="Engine\Utils\Console.cpp" />
     <ClCompile Include="Engine\Utils\log.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui.cpp" />

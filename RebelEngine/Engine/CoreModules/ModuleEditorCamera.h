@@ -29,19 +29,10 @@ public:
 
 	update_status Update();
 
-	void GetMatrix(matrix_type _mType, float4x4& matrix);
-
 	void WindowResized(unsigned width, unsigned height);
 
-	bool projectionChange() const {
-		return updated;
-	};
-
-	void setUpdated(bool _val) {
-		updated = _val;
-	};
-
 #pragma region setters
+
 	void SetHorizontalFov(float fov);
 	void SetVerticalFov(float fov);
 	void SetAspectRatio(float aspectRatio);
@@ -57,6 +48,9 @@ public:
 
 #pragma region getters
 
+	void GetMatrix(matrix_type _mType, float4x4& matrix);
+	void GetOpenGLMatrix(matrix_type _mType, float4x4& matrix);
+
 	float GetHorizontalFov();
 	float GetVerticalFov();
 	float GetAspectRatio();
@@ -69,15 +63,7 @@ public:
 	void GetPosition(float &x, float &y, float &z);
 	float3 GetPosition() { return frustum.Pos(); }
 
-
-	
-
-	float4x4 GetProjectionMatrix();
-	float4x4 GetViewMatrix();
-
-#pragma endregion getts
-
-	void LookAt(float x, float y, float z);
+#pragma endregion getters
 
 private:
 

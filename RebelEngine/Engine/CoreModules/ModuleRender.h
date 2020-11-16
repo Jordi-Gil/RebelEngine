@@ -14,19 +14,22 @@ public:
 	~ModuleRender();
 
 	bool Init();
+	bool Start();
 
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
+
 	bool CleanUp();
 
 	void* GetContext() { return mainContext; }
+
+	void Draw(float width, float height);
 
 private:
 
 	void* mainContext = nullptr;
 
 	unsigned int VBO = 0;
-	unsigned int program = 0;
 
 };

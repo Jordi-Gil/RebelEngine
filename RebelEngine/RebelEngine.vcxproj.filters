@@ -59,6 +59,9 @@
     <ClCompile Include="ImGui\Include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditor.cpp" />
     <ClCompile Include="Engine\Utils\Console.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleTexture.cpp" />
+    <ClCompile Include="Engine\Main\Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -159,6 +162,11 @@
     <ClInclude Include="Engine\Utils\Console.h" />
     <ClInclude Include="ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="ImGui\Include\ImGui\imgui_utils.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleDebugDraw.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleTexture.h" />
+    <ClInclude Include="Engine\Main\Mesh.h" />
+    <ClInclude Include="Engine\Utils\debugdraw.h" />
+    <ClInclude Include="Engine\Utils\debug_draw.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">
