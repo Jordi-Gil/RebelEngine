@@ -1,6 +1,9 @@
 #include "ModuleEditorCamera.h"
 #include "ModuleInput.h"
+#include "ModuleEditor.h"
+
 #include "Main/Application.h"
+
 #include "Math/float3x3.h"
 #include "Math/Quat.h"
 #include <SDL/SDL.h>
@@ -138,14 +141,15 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 update_status ModuleEditorCamera::Update() {
 
-	int x, y;
-	SDL_GetRelativeMouseState(&x, &y);
-
-	TranslateKeyboard();
-	TranslateMouse(x, y);
-	TranslateMouseWheel();
-	RotateKeyboard();
-	RotateMouse(x, y);
+	if (App->editor->IsSceneFocused()) {
+		int x, y;
+		SDL_GetRelativeMouseState(&x, &y);
+		TranslateKeyboard();
+		TranslateMouse(x, y);
+		TranslateMouseWheel();
+		RotateKeyboard();
+		RotateMouse(x, y);
+	}
 
 	return UPDATE_CONTINUE;
 

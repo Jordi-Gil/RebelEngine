@@ -1,5 +1,10 @@
-#include <stdlib.h>
+#include <cstdlib>
+
+#include <vld.h>
+
 #include "Application.h"
+
+
 #include "CoreModules/ModuleRender.h"
 #include "Utils/Globals.h"
 #include "Utils/Console.h"
@@ -20,8 +25,20 @@ enum main_states
 Application* App = NULL;
 Console* console = NULL;
 
-int main(int argc, char** argv) {
+struct AtExit
+{
+	~AtExit() {
+		//OutputDebugString("-----------_CrtMemDumpStatistics ---------");
+		//_CrtMemDumpStatistics(&sDiff);
+		//OutputDebugString("-----------_CrtMemDumpAllObjectsSince ---------");
+		//_CrtMemDumpAllObjectsSince(&sOld);
+		OutputDebugString("-----------_CrtDumpMemoryLeaks ---------");
+		_CrtDumpMemoryLeaks();
+	}
+} doAtExit;
 
+int main(int argc, char** argv) {
+	
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 
