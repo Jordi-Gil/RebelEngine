@@ -24,9 +24,15 @@ ModuleEditor::ModuleEditor() {
 		libraries_info = (char*)malloc(sizeof(char) * libSize + 1);
 		fseek(pTextFile, 0, SEEK_SET);
 		fread(libraries_info, 1, libSize, pTextFile);
-		libraries_info[libSize] = 0;
+		libraries_info[libSize] ='\0';
 		fclose(pTextFile);
 	}
+}
+
+ModuleEditor::~ModuleEditor() {
+
+	delete[] libraries_info;
+
 }
 
 bool ModuleEditor::Init() {
@@ -236,7 +242,7 @@ void ModuleEditor::DrawConfiguration(bool* show_config) {
 	static bool resizable = RESIZABLE;
 
 	if (ImGui::CollapsingHeader("Renderer")) {
-
+		
 	}
 
 	if (ImGui::CollapsingHeader("Window")) {

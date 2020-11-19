@@ -9,6 +9,10 @@
 
 #include <GL/glew.h>
 
+Mesh::~Mesh() {
+	
+}
+
 void Mesh::LoadVBO(const aiMesh* mesh) {
 
 	matIndex = mesh->mMaterialIndex;
@@ -107,11 +111,9 @@ void Mesh::Draw(const std::vector<unsigned int> &materials) {
 }
 
 void Mesh::Clean() {
-
-	LOG("Deleting buffers",_INFO);
+	LOG(_INFO, "Deleting buffers");
 
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteBuffers(1, &VAO);
-
 }

@@ -1,9 +1,10 @@
 #include <cstdlib>
 
+#ifdef _DEBUG
 #include <vld.h>
+#endif // DEBUG
 
 #include "Application.h"
-
 
 #include "CoreModules/ModuleRender.h"
 #include "Utils/Globals.h"
@@ -24,18 +25,6 @@ enum main_states
 
 Application* App = NULL;
 Console* console = NULL;
-
-struct AtExit
-{
-	~AtExit() {
-		//OutputDebugString("-----------_CrtMemDumpStatistics ---------");
-		//_CrtMemDumpStatistics(&sDiff);
-		//OutputDebugString("-----------_CrtMemDumpAllObjectsSince ---------");
-		//_CrtMemDumpAllObjectsSince(&sOld);
-		OutputDebugString("-----------_CrtDumpMemoryLeaks ---------");
-		_CrtDumpMemoryLeaks();
-	}
-} doAtExit;
 
 int main(int argc, char** argv) {
 	

@@ -25,6 +25,7 @@ Application::Application() {
 	deltaTime = (float)applicationTimer.getDeltaTime();
 
 	// Order matters: they will Init/start/update in this order
+	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(texturer = new ModuleTexture());
@@ -33,7 +34,6 @@ Application::Application() {
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(debugDraw = new ModuleDebugDraw());
 	modules.push_back(models = new ModuleModel());
-	modules.push_back(editor = new ModuleEditor());
 
 }
 
@@ -48,12 +48,11 @@ bool Application::Init() {
 
 	bool ret = true;
 
-	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
+	for (auto it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init();
 
-	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it) {
+	for (auto it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Start();
-	}
 
 	return ret;
 }
@@ -69,13 +68,13 @@ update_status Application::Update() {
 
 	update_status ret = UPDATE_CONTINUE;
 
-	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+	for (auto it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
 
-	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+	for (auto it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->Update();
 
-	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+	for (auto it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PostUpdate();
 
 	Uint32 prevTime = applicationTimer.getDeltaTime();
@@ -90,7 +89,7 @@ bool Application::CleanUp()
 {
 	bool ret = true;
 
-	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
+	for (auto it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
 
 	return ret;

@@ -14,6 +14,7 @@ enum class KeyState
 
 class ModuleInput : public Module
 {
+
 public:
 	
 	ModuleInput();

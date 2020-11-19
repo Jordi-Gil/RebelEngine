@@ -4,6 +4,7 @@
 
 class ModuleTexture : public Module
 {
+
 public:
 
 	ModuleTexture();

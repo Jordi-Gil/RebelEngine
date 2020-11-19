@@ -31,9 +31,5 @@ private:
 	unsigned int numMeshes;
 	std::vector<unsigned int> textures;
 	unsigned int numMaterials;
-
-
-
-	//std::map <long long int, unsigned int > textures;
 };
 

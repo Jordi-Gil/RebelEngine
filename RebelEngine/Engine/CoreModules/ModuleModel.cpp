@@ -6,10 +6,11 @@
 #include "Utils/Globals.h"
 #include "Utils/Console.h"
 
+#include <GL/GL.h>
+
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 
-#include <functional>
 
 ModuleModel::ModuleModel() {}
 
@@ -76,11 +77,13 @@ void ModuleModel::Draw() {
 
 bool ModuleModel::CleanUp() {
 
-	for (unsigned int i = 0; i < numMeshes; ++i) {
-		meshes[i].Clean();
+	for (auto mesh : meshes) mesh.Clean();
+	meshes.clear();
+
+	for (auto texture : textures) {
+		glDeleteTextures(1, &texture);
 	}
 
-	std::vector<Mesh>().swap(meshes); // free meshes
-
+	textures.clear();
 	return true;
 }

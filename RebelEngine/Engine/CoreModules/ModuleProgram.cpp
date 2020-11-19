@@ -1,7 +1,5 @@
 #include "ModuleProgram.h"
 
-#include "Utils/Console.h"
-
 #include "Main/Application.h"
 
 #include <fstream>

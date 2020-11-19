@@ -2,11 +2,13 @@
 
 #include "Module.h"
 
-class ModuleEditor : public Module
+class ModuleEditor : public Module 
 {
+
 public:
 
 	ModuleEditor();
+	~ModuleEditor();
 
 	bool Init();
 	bool Start();
