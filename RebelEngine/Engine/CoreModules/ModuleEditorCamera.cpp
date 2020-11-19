@@ -29,12 +29,12 @@ void ModuleEditorCamera::TranslateKeyboard() {
 
 	float speedModifier = 1.0f;
 
-	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	movement += frustum.Front();
-	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	movement -= frustum.WorldRight();
-	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	movement -= frustum.Front();
-	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) movement += frustum.WorldRight();
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN) movement += float3::unitY * 100;
-	if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN) movement -= float3::unitY * 100;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement += frustum.Front();
+	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement -= frustum.WorldRight();
+	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement -= frustum.Front();
+	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += frustum.WorldRight();
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += float3::unitY * 100;
+	if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement -= float3::unitY * 100;
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
@@ -48,9 +48,9 @@ void ModuleEditorCamera::TranslateMouse(int x, int y) {
 
 	float speedModifier = 1.0f;
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && x != 0 && y != 0) {
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && x != 0 && y != 0) {
 
-		movement += frustum.WorldRight();
+		movement -= frustum.WorldRight();
 		movement += frustum.Up();
 
 		movement.x -= (float)x;
@@ -106,6 +106,7 @@ void ModuleEditorCamera::RotateKeyboard() {
 	frustum.SetFront(rotationMatrix.MulDir(oldFront));
 	vec oldUp = frustum.Up().Normalized();
 	frustum.SetUp(rotationMatrix.MulDir(oldUp));
+
 }
 
 void ModuleEditorCamera::RotateMouse(int x, int y) {
@@ -114,7 +115,9 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 	float speedModifier = 1.0f;
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_IDLE && x != 0 && y != 0) {
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT &&
+		App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT &&
+		App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_IDLE && x != 0 && y != 0) {
 
 		pitch = -(float)y * App->deltaTime * rotSpeed;
 		yaw = -(float)x * App->deltaTime * rotSpeed;
