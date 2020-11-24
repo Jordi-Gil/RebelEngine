@@ -1,19 +1,18 @@
 #include "Mesh.h"
 
-#include "Utils/Console.h"
-
 #include "CoreModules/ModuleEditorCamera.h"
 #include "CoreModules/ModuleProgram.h"
 
 #include "Application.h"
 
 #include <GL/glew.h>
+#include "Math/float3x3.h"
 
 Mesh::~Mesh() {
 	
 }
 
-void Mesh::LoadVBO(const aiMesh* mesh) {
+void Mesh::LoadVBO(const aiMesh* mesh, float max[3], float min[3]) {
 
 	matIndex = mesh->mMaterialIndex;
 
@@ -32,9 +31,18 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	unsigned int pos = 0;
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i) {
 		//Position
-		data[pos++] = mesh->mVertices[i].x;
+		data[pos++] = mesh->mVertices[i].x; 
+		if (mesh->mVertices[i].x > max[0]) max[0] = mesh->mVertices[i].x;
+		if (mesh->mVertices[i].x < min[0]) min[0] = mesh->mVertices[i].x;
+
 		data[pos++] = mesh->mVertices[i].y;
+		if (mesh->mVertices[i].y > max[1]) max[1] = mesh->mVertices[i].y;
+		if (mesh->mVertices[i].y < min[1]) min[1] = mesh->mVertices[i].y;
+
 		data[pos++] = mesh->mVertices[i].z;
+		if (mesh->mVertices[i].z > max[2]) max[2] = mesh->mVertices[i].z;
+		if (mesh->mVertices[i].z < min[2]) min[2] = mesh->mVertices[i].z;
+
 		//UV
 		data[pos++] = mesh->mTextureCoords[0][i].x;
 		data[pos++] = mesh->mTextureCoords[0][i].y;
@@ -89,6 +97,7 @@ void Mesh::Draw(const std::vector<unsigned int> &materials) {
 	unsigned int program = App->program->GetMainProgram();
 
 	float4x4 model = float4x4::identity;
+	//float4x4 model = float4x4::FromTRS(float3(0,0,0), float3x3::RotateX((DEGTORAD) * -90),float3(0.05));
 	float4x4 view; App->editorCamera->GetMatrix(VIEW_MATRIX, view);
 	float4x4 projection; App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
 

@@ -1,6 +1,8 @@
 #include "ModuleEditorCamera.h"
 #include "ModuleInput.h"
-#include "ModuleEditor.h"
+#include "ModuleModel.h"
+
+#include "GUIs/GUIScene.h"
 
 #include "Main/Application.h"
 
@@ -12,7 +14,7 @@
 bool ModuleEditorCamera::Init() {
 
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-	frustum.SetViewPlaneDistances(0.1f, 100.0f);
+	frustum.SetViewPlaneDistances(currentZNear, currentZFar);
 	frustum.SetHorizontalFovAndAspectRatio((float)DEGTORAD * 90.0f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
 	frustum.SetPos(float3(0, 4, 10));
 	frustum.SetFront(-float3::unitZ);
@@ -79,7 +81,7 @@ void ModuleEditorCamera::TranslateMouseWheel() {
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
-	frustum.Translate(movement * App->deltaTime * movSpeed * speedModifier);
+	frustum.Translate(movement * App->deltaTime * zoomSpeed * speedModifier);
 
 }
 
@@ -144,7 +146,7 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 update_status ModuleEditorCamera::Update() {
 
-	if (App->editor->IsSceneFocused()) {
+	if (App->gui->scene->IsSceneFocused()) {
 		int x, y;
 		SDL_GetRelativeMouseState(&x, &y);
 		TranslateKeyboard();
@@ -152,6 +154,15 @@ update_status ModuleEditorCamera::Update() {
 		TranslateMouseWheel();
 		RotateKeyboard();
 		RotateMouse(x, y);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN) {
+		frustum.SetPos(vec(	(App->models->max[0] + App->models->min[0]) / 2, 
+							(App->models->max[1] + App->models->min[1]) / 2, 
+							(App->models->max[2] + App->models->min[2]) / 2 + 10)
+						);
+		frustum.SetFront(-float3::unitZ);
+		frustum.SetUp(float3::unitY);
 	}
 
 	return UPDATE_CONTINUE;
@@ -164,9 +175,6 @@ void ModuleEditorCamera::WindowResized(unsigned width, unsigned height) {
 		float aspectRatio = float(width) / height;
 		frustum.SetVerticalFovAndAspectRatio(frustum.VerticalFov(), aspectRatio);
 	}
-
-	updated = true;
-
 }
 
 void ModuleEditorCamera::GetMatrix(matrix_type _mType, float4x4& matrix) {
@@ -203,3 +211,41 @@ void ModuleEditorCamera::GetOpenGLMatrix(matrix_type _mType, float4x4& matrix) {
 	matrix.Transpose();
 
 }
+
+#pragma region setters
+
+void ModuleEditorCamera::SetVerticalFov(float vFov, float aspectRatio) {
+	frustum.SetVerticalFovAndAspectRatio(DEGTORAD * vFov, aspectRatio);
+}
+
+void ModuleEditorCamera::SetHorizontalFov(float hFov, float aspectRatio) {
+	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * hFov, aspectRatio);
+}
+
+void ModuleEditorCamera::SetPosition(float x, float y, float z) {
+	frustum.SetPos(vec(x,y,z));
+}
+
+void ModuleEditorCamera::SetZNear(float _znear) {
+	currentZNear = _znear;
+	frustum.SetViewPlaneDistances(currentZNear, currentZFar);
+}
+
+void ModuleEditorCamera::SetZFar(float _zfar) {
+	currentZFar = _zfar;
+	frustum.SetViewPlaneDistances(currentZNear, currentZFar);
+}
+
+void ModuleEditorCamera::SetMovSpeed(float _speed) {
+	movSpeed = _speed;
+}
+
+void ModuleEditorCamera::SetRotSpeed(float _speed) {
+	rotSpeed = _speed;
+}
+
+void ModuleEditorCamera::SetZoomSpeed(float _speed) {
+	zoomSpeed = _speed;
+}
+
+#pragma endregion setters

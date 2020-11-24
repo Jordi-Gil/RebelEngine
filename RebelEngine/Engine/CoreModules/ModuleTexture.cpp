@@ -1,7 +1,5 @@
 #include "ModuleTexture.h"
 
-#include "Utils/Console.h"
-
 #include <IL/il.h>
 #include <GL/glew.h>
 
@@ -24,28 +22,50 @@ bool ModuleTexture::Init() {
 
 }
 
-unsigned int ModuleTexture::loadTexture(const char* path) {
+unsigned int ModuleTexture::loadTexture(const char* path, const char* meshPath) {
 
 	unsigned int texId, image;
 
 	ilGenImages(1, &texId); /* Generation of one image name */
 	ilBindImage(texId); /* Binding of image name */
 	bool success = ilLoadImage(path); /* Loading of image "image.jpg" */
-	if (success) /* If no error occured: */
-	{
+	char filename[_MAX_FNAME], extension[_MAX_EXT];
+	if (!success) {
+		errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, filename, _MAX_FNAME, extension, _MAX_EXT);
+		if (error != 0) {
+			LOG(_ERROR, "Couldn't split the given path. Error: ", strerror(error));
+			return false;
+		}
+		else {
+			char path2[500];
+			sprintf(path2, "%s%s%s", meshPath, filename, extension);
+			LOG(_INFO, "Trying to load image from %s", path2);
+			success = ilLoadImage(path2);
+
+			if (!success) {
+				sprintf(path2, "Assets/Textures/%s%s", filename, extension);
+				LOG(_INFO, "Trying to load image from %s", path2);
+				success = ilLoadImage(path2);
+			}
+		}
+	}
+
+	if (success) {
+
 		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE); /* Convert every colour component into unsigned byte. If your image contains alpha channel you can replace IL_RGB with IL_RGBA */
-		if (!success)
-		{
+		
+		if (!success) {
 			/* Error occured */
+			LOG(_ERROR, "Cannot convet image");
 			return false;
 		}
 
 		//unsigned char* data = ilGetData();
 
-		glGenTextures(1, &image); /* Texture name generation */
-		glBindTexture(GL_TEXTURE_2D, image); /* Binding of texture name */
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); /* We will use linear interpolation for magnification filter */
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); /* We will use linear interpolation for minifying filter */
+		glGenTextures(1, &image);
+		glBindTexture(GL_TEXTURE_2D, image);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
 
 	}
@@ -55,7 +75,7 @@ unsigned int ModuleTexture::loadTexture(const char* path) {
 		return false;
 	}
 
-	ilDeleteImages(1, &texId); /* Because we have already copied image data into texture data we can release memory used by image. */
+	ilDeleteImages(1, &texId);
 
 	return image;
 

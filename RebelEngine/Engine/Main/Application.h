@@ -12,11 +12,12 @@ class ModuleTextures;
 class ModuleInput;
 class ModuleRenderExercise;
 class ModuleEditorCamera;
-class ModuleEditor;
 class ModuleProgram;
 class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleModel;
+
+class ModuleGUI;
 
 class Application {
 
@@ -37,11 +38,12 @@ public:
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleEditorCamera* editorCamera = nullptr;
-	ModuleEditor* editor = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleDebugDraw* debugDraw = nullptr;
 	ModuleTexture* texturer = nullptr;
 	ModuleModel* models = nullptr;
+
+	ModuleGUI *gui = nullptr;
 
 	float deltaTime;
 
@@ -53,7 +55,7 @@ private:
 
 	Timer applicationTimer;
 #ifdef _DEBUG
-	Timer consoleTimer;
+	Timer terminalTimer;
 #endif // _DEBUG
 	std::list<Module*> modules;
 

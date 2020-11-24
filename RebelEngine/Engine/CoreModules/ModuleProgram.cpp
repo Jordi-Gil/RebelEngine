@@ -9,8 +9,8 @@ ModuleProgram::ModuleProgram() {}
 
 bool ModuleProgram::Start() {
 
-	GLuint vertexSahder = App->program->CompileShader(GL_VERTEX_SHADER, (App->program->readFile("shaders/vertex.vert")).c_str());
-	GLuint fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, (App->program->readFile("shaders/fragment.frag")).c_str());
+	GLuint vertexSahder = App->program->CompileShader(GL_VERTEX_SHADER, (App->program->readFile("Assets/Shaders/vertex.vert")).c_str());
+	GLuint fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, (App->program->readFile("Assets/Shaders/fragment.frag")).c_str());
 
 	mainProgram = App->program->CreateProgram(vertexSahder, fragmentShader);
 

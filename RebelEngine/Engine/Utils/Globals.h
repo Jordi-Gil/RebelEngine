@@ -16,8 +16,12 @@ enum update_status
 // Configuration -----------
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
+
 #define RESIZABLE true
 #define FULLSCREEN false
+#define FULLDESKTOP false
+#define BORDERLESS false
+
 #define VSYNC true
 #define TITLE "Rebel Engine"
 #define VERSION "1.0.0"

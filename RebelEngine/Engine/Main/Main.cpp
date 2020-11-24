@@ -8,7 +8,6 @@
 
 #include "CoreModules/ModuleRender.h"
 #include "Utils/Globals.h"
-#include "Utils/Console.h"
 
 #include <SDL/SDL.h>
 #pragma comment( lib, "SDL/lib/x86/SDL2.lib" )
@@ -24,14 +23,11 @@ enum main_states
 };
 
 Application* App = NULL;
-Console* console = NULL;
 
 int main(int argc, char** argv) {
 	
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
-
-	console = new Console();
 
 	while (state != MAIN_EXIT) {
 
@@ -39,8 +35,8 @@ int main(int argc, char** argv) {
 
 		case MAIN_CREATION:
 
-			LOG(_INFO, "Application Creation");
 			App = new Application();
+			LOG(_INFO, "Application Creation");
 			state = MAIN_START;
 			break;
 
@@ -87,6 +83,5 @@ int main(int argc, char** argv) {
 	}
 
 	delete App;
-	delete console;
 	return main_return;
 }

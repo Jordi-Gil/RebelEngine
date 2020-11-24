@@ -1,6 +1,8 @@
 #pragma once
 #include "Globals.h"
-#include "Console.h"
+
+#include "Main/Application.h"
+#include "GUIs/GUITerminal.h"
 
 //Based on https://github.com/ocornut/imgui/issues/300
 void log(const char file[], int line, const char* type, const char* format, ...) {
@@ -19,7 +21,7 @@ void log(const char file[], int line, const char* type, const char* format, ...)
 	if (ImGui::GetCurrentContext() != nullptr) sprintf(_finalbuffer, "%s [%05d] %s\n", type, ImGui::GetFrameCount(), _Tmpbuffer);
 	else sprintf(_finalbuffer, "%s [%05d] %s \n", type, 0, _Tmpbuffer);
 
-	console->logBuffer.push_back(strdup(_finalbuffer));
+	App->gui->terminal->logBuffer.push_back(strdup(_finalbuffer));
 
-	console->scrollToBottom = true;
+	App->gui->terminal->scrollToBottom = true;
 }

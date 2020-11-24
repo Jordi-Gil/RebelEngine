@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleWindow.h"
+#include "ModuleModel.h"
 
 #include "ImGui/imgui_impl_sdl.h"
 
@@ -76,29 +77,36 @@ update_status ModuleInput::Update() {
     {
 		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 
-		if (sdlEvent.window.windowID == App->window->GetWindowID()) {
-			switch (sdlEvent.type)
-			{
-				case SDL_QUIT:
-					return UPDATE_STOP;
-				case SDL_WINDOWEVENT:
-					switch (sdlEvent.window.event) {
-						case SDL_WINDOWEVENT_RESIZED:
-						case SDL_WINDOWEVENT_SIZE_CHANGED:
-							break;
-						case SDL_WINDOWEVENT_CLOSE:
-							return UPDATE_STOP;
-					}
-					break;
-				case SDL_MOUSEBUTTONDOWN:
-					mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_DOWN;
-					break;
-				case SDL_MOUSEBUTTONUP:
-					mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_UP;
-					break;
-				case SDL_MOUSEWHEEL:
-					mouseWheel = sdlEvent.wheel.y;
-					break;
+		switch (sdlEvent.type)
+		{
+			case SDL_QUIT:
+				return UPDATE_STOP;
+			case SDL_WINDOWEVENT:
+				switch (sdlEvent.window.event) {
+					case SDL_WINDOWEVENT_RESIZED:
+					case SDL_WINDOWEVENT_SIZE_CHANGED:
+						App->window->ResizeWindow(sdlEvent.window.data1, sdlEvent.window.data2);
+						break;
+					case SDL_WINDOWEVENT_CLOSE:
+						return UPDATE_STOP;
+				}
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_DOWN;
+				break;
+			case SDL_MOUSEBUTTONUP:
+				mouse_buttons[sdlEvent.button.button - 1] = KeyState::KEY_UP;
+				break;
+			case SDL_MOUSEWHEEL:
+				mouseWheel = sdlEvent.wheel.y;
+				break;
+
+			case SDL_DROPFILE: {      // In case if dropped file
+				char* dropped_filedir = sdlEvent.drop.file;
+				LOG(_INFO, "Dropped file: %s", dropped_filedir);
+				App->models->LoadModel(dropped_filedir);
+				SDL_free(dropped_filedir);
+				break;
 			}
 		}
     }

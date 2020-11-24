@@ -74,15 +74,16 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include;C:\Program Files %28x86%29\Visual Leak Detector\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./infoware-0.5.5/include;./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include;C:\Program Files %28x86%29\Visual Leak Detector\include</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>INFOWARE_USE_D3D;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./assimp-5.0.1/lib/;./DevIL-1.8.0/lib/x86/Release;./SDL2_image/libx86/;./glew-2.1.0/lib/Release/Win32;C:\Program Files %28x86%29\Visual Leak Detector\bin\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vld.lib;assimp-vc141-mt.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./infoware-0.5.5/lib/Debug;./assimp-5.0.1/lib/;./DevIL-1.8.0/lib/x86/Release;./SDL2_image/libx86/;./glew-2.1.0/lib/Release/Win32;C:\Program Files %28x86%29\Visual Leak Detector\bin\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>infowared.lib;vld.lib;assimp-vc141-mt.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;wbemuuid.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -114,16 +115,17 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./infoware-0.5.5/include;./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include;C:\Program Files %28x86%29\Visual Leak Detector\include</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>
+      <PreprocessorDefinitions>INFOWARE_USE_OPENCL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./assimp-5.0.1/lib/;./DevIL-1.8.0/lib/x86/Release;./SDL2_image/libx86/;./glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc141-mt.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./infoware-0.5.5/lib/Release;./assimp-5.0.1/lib/;./DevIL-1.8.0/lib/x86/Release;./SDL2_image/libx86/;./glew-2.1.0/lib/Release/Win32;C:\Program Files %28x86%29\Visual Leak Detector\bin\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>infoware.lib;vld.lib;assimp-vc141-mt.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;wbemuuid.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -163,11 +165,15 @@
     <ClInclude Include="Engine\CoreModules\ModuleWindow.h" />
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Main\Mesh.h" />
-    <ClInclude Include="Engine\Utils\Console.h" />
     <ClInclude Include="Engine\Utils\debugdraw.h" />
     <ClInclude Include="Engine\Utils\debug_draw.hpp" />
     <ClInclude Include="Engine\Utils\Globals.h" />
     <ClInclude Include="Engine\Utils\Timer.h" />
+    <ClInclude Include="Engine\GUIs\GUIConfiguration.h" />
+    <ClInclude Include="Engine\GUIs\GUIScene.h" />
+    <ClInclude Include="Engine\GUIs\GUIAbout.h" />
+    <ClInclude Include="Engine\GUIs\GUITerminal.h" />
+    <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="ImGui\Include\ImGui\imconfig.h" />
     <ClInclude Include="ImGui\Include\ImGui\imgui.h" />
@@ -178,6 +184,20 @@
     <ClInclude Include="ImGui\Include\ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\Include\ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\Include\ImGui\imstb_truetype.h" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\cpu.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\detail\cpuid.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\detail\memory.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\detail\scope.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\detail\sysctl.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\detail\winstring.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\gpu.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\infoware.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\linkage.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\pci.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\system.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\utils.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware\version.hpp" />
+    <ClInclude Include="infoware-0.5.5\include\infoware_generated\pci_data.hpp" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\GJK.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\GJK2D.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Algorithm\Random\LCG.h" />
@@ -255,7 +275,7 @@
     <ClInclude Include="MathGeoLib-1.5\Include\Math\TransformOps.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Math\vec2d.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Time\Clock.h" />
-    <ClInclude Include="Engine\CoreModules\ModuleEditor.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
@@ -269,14 +289,62 @@
     <ClCompile Include="Engine\Main\Application.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Main\Mesh.cpp" />
-    <ClCompile Include="Engine\Utils\Console.cpp" />
     <ClCompile Include="Engine\Utils\log.cpp" />
+    <ClCompile Include="Engine\GUIs\GUIConfiguration.cpp" />
+    <ClCompile Include="Engine\GUIs\GUIScene.cpp" />
+    <ClCompile Include="Engine\GUIs\GUIAbout.cpp" />
+    <ClCompile Include="Engine\GUIs\GUITerminal.cpp" />
+    <ClCompile Include="Engine\GUIs\GUIInspector.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_impl_sdl.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\architecture\architecture_non_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\architecture\architecture_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\endianness\all.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\frequency\frequency_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\frequency\frequency_non_windows_non_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\frequency\frequency_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\instruction_set\instruction_set.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\instruction_set\instruction_set_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\instruction_set\instruction_set_non_windows_non_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\instruction_set\instruction_set_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\quantities_cache\quantities_cache_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\quantities_cache\quantities_cache_non_windows_non_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\quantities_cache\quantities_cache_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\vendor_model_name\vendor_id.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\vendor_model_name\vendor_model_name_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\vendor_model_name\vendor_model_name_non_windows_non_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\cpu\vendor_model_name\vendor_model_name_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\detail\cpuid_non_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\detail\cpuid_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\detail\scope.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\detail\sysctl_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\detail\sysctl_non_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\detail\winstring_non_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\detail\winstring_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\gpu\blank_all.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\gpu\d3d.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\gpu\OpenCL.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\gpu\OpenGL.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\pci.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\amounts\amounts_non_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\amounts\amounts_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\displays\displays_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\displays\displays_default_blank.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\displays\displays_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\displays\displays_x11.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\kernel_info\kernel_info_non_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\kernel_info\kernel_info_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\memory\memory_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\memory\memory_non_windows_non_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\memory\memory_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\OS_info\os_info_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\OS_info\os_info_non_windows_non_darwin.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\system\OS_info\os_info_windows.cpp" />
+    <ClCompile Include="infoware-0.5.5\include\infoware\version.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\GJK.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\GJK2D.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Algorithm\Random\LCG.cpp" />
@@ -319,7 +387,7 @@
     <ClCompile Include="MathGeoLib-1.5\Include\Math\SSEMath.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Time\Clock.cpp" />
-    <ClCompile Include="Engine\CoreModules\ModuleEditor.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\shaders\fragment.frag" />

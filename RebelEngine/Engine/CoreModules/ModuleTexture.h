@@ -11,7 +11,7 @@ public:
 
 	bool Init();
 
-	unsigned int loadTexture(const char *path);
+	unsigned int loadTexture(const char *path, const char* meshPath);
 
 };
 

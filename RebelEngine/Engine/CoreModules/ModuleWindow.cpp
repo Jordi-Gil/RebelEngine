@@ -24,9 +24,12 @@ bool ModuleWindow::Init() {
 		//Create window
 		int width = SCREEN_WIDTH;
 		int height = SCREEN_HEIGHT;
-		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 
+		if (RESIZABLE) flags |= SDL_WINDOW_RESIZABLE;
 		if (FULLSCREEN) flags |= SDL_WINDOW_FULLSCREEN;
+		if (BORDERLESS) flags |= SDL_WINDOW_BORDERLESS;
+		if (FULLDESKTOP) flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 		currentWidth = width; currentHeight = height;
@@ -59,18 +62,61 @@ bool ModuleWindow::Init() {
 	return ret;
 }
 
+#pragma region setters
+
 void ModuleWindow::SetWindowWidth(int width) {
 	currentWidth = width;
-	SDL_SetWindowSize(window, width, currentHeight);
+	SDL_SetWindowSize(window, currentWidth, currentHeight);
 }
 
 void ModuleWindow::SetWindowHeight(int height) {
 	currentHeight = height;
-	SDL_SetWindowSize(window, currentWidth, height);
+	SDL_SetWindowSize(window, currentWidth, currentHeight);
 }
 
 void ModuleWindow::SetWindowBrightness(float brightness) {
 	SDL_SetWindowBrightness(window, brightness);
+}
+
+void ModuleWindow::ResizeWindow(int width, int height) {
+	currentWidth = width; currentHeight = height;
+}
+
+void ModuleWindow::SetWindowFullScreen(bool fullSc) {
+	if (fullSc) SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	else SDL_SetWindowFullscreen(window, 0);
+}
+
+void ModuleWindow::SetWindowResizable(bool resizable) {
+	if(resizable) SDL_SetWindowResizable(window, SDL_TRUE);
+	else SDL_SetWindowResizable(window, SDL_FALSE);
+}
+
+void ModuleWindow::SetWindowBorderless(bool borderless) {
+	if (borderless) SDL_SetWindowBordered(window, SDL_FALSE);
+	else SDL_SetWindowBordered(window, SDL_TRUE);
+}
+
+void ModuleWindow::SetWindowFullScreenDesktop(bool fulldesktop) {
+	if (fulldesktop) SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	else SDL_SetWindowFullscreen(window, 0);
+}
+
+#pragma endregion setters
+
+float ModuleWindow::GetWindowRefreshRate() {
+
+	float rfr = 0.0f;
+
+	SDL_DisplayMode displayMode;
+
+	if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0) {
+		LOG(_ERROR, "SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
+	}
+	else rfr = displayMode.refresh_rate;
+
+	return rfr;
+
 }
 
 // Called before quitting

@@ -6,19 +6,19 @@
 #include "ModuleEditorCamera.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleModel.h"
+#include "GUIs/GUITerminal.h"
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
-ModuleRender::ModuleRender() {
-
-}
+ModuleRender::ModuleRender() { }
 
 // Destructor
 ModuleRender::~ModuleRender() {
 
 }
 
+#ifdef  _DEBUG
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
 
 	const char* tmp_source = "", * tmp_type = "", * tmp_severity = "", * type_msg = _WARNING;
@@ -48,12 +48,12 @@ void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLe
 	case GL_DEBUG_SEVERITY_NOTIFICATION: tmp_severity = "notification"; break;
 	};
 	
-	if (App->logTimer.getDeltaTime() >= 500) {
+	if (!App->gui->terminal->deletingOGLLog && App->logTimer.getDeltaTime() >= 500) {
 		LOG(type_msg, "[OpenGL Debug] <Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>", tmp_source, tmp_type, tmp_severity, id, message);
 		App->logTimer.start();
 	}
 }
-
+#endif
 // Called before render is available
 bool ModuleRender::Init() {
 
@@ -142,7 +142,12 @@ void ModuleRender::Draw(float width, float height) {
 		LOG(_ERROR, "RENDER ERROR, %d", error);
 
 	glViewport(0, 0, width, height);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(
+		App->editorCamera->clearColor.x,
+		App->editorCamera->clearColor.y,
+		App->editorCamera->clearColor.z,
+		1.0f
+	);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	float4x4 projection; App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
@@ -154,7 +159,12 @@ void ModuleRender::Draw(float width, float height) {
 	glBindVertexArray(0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(
+		App->editorCamera->clearColor.x,
+		App->editorCamera->clearColor.y,
+		App->editorCamera->clearColor.z,
+		1.0f
+		);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 }
