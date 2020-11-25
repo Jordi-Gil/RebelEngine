@@ -35,8 +35,8 @@ void ModuleEditorCamera::TranslateKeyboard() {
 	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement -= frustum.WorldRight();
 	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement -= frustum.Front();
 	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += frustum.WorldRight();
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += float3::unitY * 100;
-	if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement -= float3::unitY * 100;
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += float3::unitY;
+	if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement -= float3::unitY;
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
@@ -50,13 +50,11 @@ void ModuleEditorCamera::TranslateMouse(int x, int y) {
 
 	float speedModifier = 1.0f;
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && x != 0 && y != 0) {
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && 
+		App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT &&  x != 0 && y != 0) {
 
-		movement -= frustum.WorldRight();
-		movement += frustum.Up();
-
-		movement.x -= (float)x;
-		movement.y -= (float)y;
+		movement.z -= (float)x;
+		movement.z -= (float)y;
 
 	}
 
@@ -87,17 +85,17 @@ void ModuleEditorCamera::TranslateMouseWheel() {
 
 void ModuleEditorCamera::RotateKeyboard() {
 
-	float roll = 0.0f; float pitch = 0.0f;
+	float yaw = 0.0f; float pitch = 0.0f;
 	float speedModifier = 1.0f;
 
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT) roll += 1;
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT) roll -= 1;
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT) yaw += 1;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT) yaw -= 1;
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT) pitch -= 1;
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT) pitch += 1;
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
-	Quat quaternionX(frustum.WorldRight(), roll * App->deltaTime * rotSpeed * speedModifier);
+	Quat quaternionX(frustum.WorldRight(), yaw * App->deltaTime * rotSpeed * speedModifier);
 	Quat quaternionY(float3::unitY, pitch * App->deltaTime * rotSpeed * speedModifier);
 
 	float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
@@ -117,9 +115,9 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 	float speedModifier = 1.0f;
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT &&
-		App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT &&
-		App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_IDLE && x != 0 && y != 0) {
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT && 
+		App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_IDLE
+		&& x != 0 && y != 0) {
 
 		pitch = -(float)y * App->deltaTime * rotSpeed;
 		yaw = -(float)x * App->deltaTime * rotSpeed;
@@ -129,11 +127,50 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
 	Quat quaternionX(frustum.WorldRight(), pitch * App->deltaTime * rotSpeed * speedModifier);
+	//Quat quaternionY(float3::unitY, yaw * App->deltaTime * rotSpeed * speedModifier);
 	Quat quaternionY(float3::unitY, yaw * App->deltaTime * rotSpeed * speedModifier);
 
 	float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
 	float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
-	float3x3 rotationMatrix = rotationMatrixX * rotationMatrixY;
+	float3x3 rotationMatrix = rotationMatrixY * rotationMatrixX;
+
+	vec oldFront = frustum.Front().Normalized();
+	frustum.SetFront(rotationMatrix.MulDir(oldFront));
+	vec oldUp = frustum.Up().Normalized();
+	frustum.SetUp(rotationMatrix.MulDir(oldUp));
+
+}
+
+vec CenterOfScene() {
+	return vec( 
+				(App->models->max[0] + App->models->min[0])/2,
+				(App->models->max[1] + App->models->min[1])/2,
+				(App->models->max[2] + App->models->min[2])/2
+			  );
+}
+
+void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
+
+	float pitch = 0.0f; float yaw = 0.0f;
+
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT &&
+		App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT && x != 0 && y != 0
+		) {
+
+		pitch = -(float)y * App->deltaTime * rotSpeed;
+		yaw = -(float)x * App->deltaTime * rotSpeed;
+
+	}
+
+	vec target = (frustum.Pos() - CenterOfScene()).Normalized();
+
+	Quat quaternionX(frustum.WorldRight(), pitch);
+	Quat quaternionY(frustum.Up(), yaw);
+	
+	target = quaternionX.Transform(target);
+	target = quaternionY.Transform(target);
+
+	float3x3 rotationMatrix = float3x3::LookAt(frustum.Front(), target, frustum.Up(), float3::unitY);
 
 	vec oldFront = frustum.Front().Normalized();
 	frustum.SetFront(rotationMatrix.MulDir(oldFront));

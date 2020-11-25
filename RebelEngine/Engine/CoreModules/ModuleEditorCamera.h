@@ -20,6 +20,7 @@ private:
 	void TranslateMouseWheel();
 	void RotateKeyboard();
 	void RotateMouse(int x, int y);
+	void OrbitCenterScene(int x, int y);
 
 public:
 
