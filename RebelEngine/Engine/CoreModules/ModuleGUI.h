@@ -6,6 +6,7 @@
 
 class GUIScene;
 class GUITerminal;
+class GUIInspector;
 
 class ModuleGUI :  public Module
 {
@@ -31,6 +32,7 @@ public:
 
 	GUIScene* scene = nullptr;
 	GUITerminal *terminal = nullptr;
+	GUIInspector* inspector = nullptr;
 
 private:
 

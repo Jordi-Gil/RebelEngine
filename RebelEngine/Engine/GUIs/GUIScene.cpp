@@ -52,12 +52,8 @@ void GUIScene::Draw() {
 
 }
 
-void GUIScene::SetActive() {
-	active = true;
-}
-
-void GUIScene::Disable() {
-	active = false;
+void GUIScene::ToggleActive() {
+	active = !active;
 }
 
 void GUIScene::GUI_GetWindowSize(float &width, float &height){

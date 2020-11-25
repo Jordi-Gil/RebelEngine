@@ -2,6 +2,7 @@
 
 #include "CoreModules/ModuleEditorCamera.h"
 #include "CoreModules/ModuleProgram.h"
+#include "CoreModules/ModuleTexture.h"
 
 #include "Application.h"
 
@@ -71,6 +72,7 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 	}
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	
+	numFaces = mesh->mNumFaces;
 	numIndices = mesh->mNumFaces * 3;
 
 }
@@ -92,7 +94,7 @@ void Mesh::CreateVAO() {
 
 }
 
-void Mesh::Draw(const std::vector<unsigned int> &materials) {
+void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>> &materials) {
 
 	unsigned int program = App->program->GetMainProgram();
 
@@ -111,7 +113,7 @@ void Mesh::Draw(const std::vector<unsigned int> &materials) {
 
 	glBindVertexArray(VAO);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, materials[matIndex]);
+	glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
 
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
 

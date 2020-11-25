@@ -2,8 +2,8 @@
 
 #include "CoreModules/ModuleGUI.h"
 
-class GUIInspector : public ModuleGUI
-{
+class GUIInspector : public ModuleGUI {
+
 public:
 
 	GUIInspector(const char* _name);
@@ -14,6 +14,6 @@ public:
 
 	const char* GetName() { return name; }
 
-	void Disable();
+	void ToggleActive();
 };
 

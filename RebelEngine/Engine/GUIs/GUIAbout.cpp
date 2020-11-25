@@ -21,15 +21,15 @@ const std::vector<std::string> MyReadFile(const char* path) {
 
 }
 
-const std::vector<std::string> libs = MyReadFile("Windows/libraries.txt");
+const std::vector<std::string> libs = MyReadFile("Assets/Windows/libraries.txt");
 const unsigned int size = libs.size();
 
 GUIAbout::GUIAbout(const char* _name) {
 	name = _name;
 }
 
-void GUIAbout::Disable() {
-	active = false;
+void GUIAbout::ToggleActive() {
+	active = !active;
 }
 
 void GUIAbout::Draw() {

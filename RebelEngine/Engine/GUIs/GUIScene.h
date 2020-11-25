@@ -12,9 +12,7 @@ public:
 
 	bool IsActive() { return active; };
 
-	void SetActive();
-
-	void Disable();
+	void ToggleActive();
 
 	const char* GetName() { return name; }
 

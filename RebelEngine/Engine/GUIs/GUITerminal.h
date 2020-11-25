@@ -17,7 +17,7 @@ public:
 
 	const char* GetName() { return name; }
 
-	void Disable();
+	void ToggleActive();
 
 #ifdef  _DEBUG
 	void ClearOpenGLLog();

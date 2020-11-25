@@ -63,23 +63,24 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 			if (error != 0) {
 				LOG(_ERROR, "Couldn't split the given path. Error: ", strerror(error));
 			}
-			textures.push_back(App->texturer->loadTexture(file.data, dir));
+			TextureInformation info;
+			unsigned int textureId = App->texturer->loadTexture(file.data, dir, info);
+			textures.push_back(std::make_pair(textureId, info));
 		}
 	}
 }
 
 void ModuleModel::LoadModel(const char* file_name) {
 	
-	//For the assigment one. If new mesh is loaded, clear all arrays (vectors)
-	if (!meshes.empty()) {
-		CleanUp();
-		max[0] = max[1] = max[2] = FLT_MIN;
-		min[0] = min[1] = min[2] = FLT_MAX;
-	}
-
 	const aiScene* scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene) {
+
+		if (!meshes.empty()) {
+			CleanUp();
+			max[0] = max[1] = max[2] = FLT_MIN;
+			min[0] = min[1] = min[2] = FLT_MAX;
+		}
 
 		LoadMeshes(scene->mMeshes, scene->mNumMeshes);
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, file_name);
@@ -102,11 +103,14 @@ bool ModuleModel::CleanUp() {
 
 	for (auto mesh : meshes) mesh.Clean();
 	meshes.clear();
+	meshes.shrink_to_fit();
 
 	for (auto texture : textures) {
-		glDeleteTextures(1, &texture);
+		glDeleteTextures(1, &texture.first);
 	}
 
 	textures.clear();
+	textures.shrink_to_fit();
+
 	return true;
 }

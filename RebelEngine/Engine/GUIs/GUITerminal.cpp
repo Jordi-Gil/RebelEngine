@@ -114,6 +114,6 @@ void GUITerminal::Draw() {
 	ImGui::End();
 }
 
-void GUITerminal::Disable() {
-	active = false;
+void GUITerminal::ToggleActive() {
+	active = !active;
 }

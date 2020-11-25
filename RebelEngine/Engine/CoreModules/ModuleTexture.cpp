@@ -22,61 +22,75 @@ bool ModuleTexture::Init() {
 
 }
 
-unsigned int ModuleTexture::loadTexture(const char* path, const char* meshPath) {
+unsigned int ModuleTexture::loadTexture(const char* path, const char* meshPath, TextureInformation &info) {
 
-	unsigned int texId, image;
+	unsigned int texId = 0, image;
 
-	ilGenImages(1, &texId); /* Generation of one image name */
-	ilBindImage(texId); /* Binding of image name */
-	bool success = ilLoadImage(path); /* Loading of image "image.jpg" */
-	char filename[_MAX_FNAME], extension[_MAX_EXT];
+	ilGenImages(1, &image);
+	ilBindImage(image);
+
+	bool success = ilLoadImage(path);
+	
+	char fileName[_MAX_FNAME], extension[_MAX_EXT];
 	if (!success) {
-		errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, filename, _MAX_FNAME, extension, _MAX_EXT);
+		errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, fileName, _MAX_FNAME, extension, _MAX_EXT);
 		if (error != 0) {
 			LOG(_ERROR, "Couldn't split the given path. Error: ", strerror(error));
 			return false;
 		}
 		else {
 			char path2[500];
-			sprintf(path2, "%s%s%s", meshPath, filename, extension);
+			error = sprintf_s(path2, 500, "%s%s%s", meshPath, fileName, extension);
+			if (error == -1) {
+				LOG(_ERROR, "Error constructing path", path2);
+				return false;
+			}
+
 			LOG(_INFO, "Trying to load image from %s", path2);
 			success = ilLoadImage(path2);
 
 			if (!success) {
-				sprintf(path2, "Assets/Textures/%s%s", filename, extension);
+				error = sprintf_s(path2, 500, "Assets/Textures/%s%s", fileName, extension);
+				if (error == -1) {
+					LOG(_ERROR, "Error constructing path", path2);
+					return false;
+				}
 				LOG(_INFO, "Trying to load image from %s", path2);
 				success = ilLoadImage(path2);
+
+				if (!success) {
+					LOG(_ERROR, "Texture not found.", path2);
+					return false;
+				}
+				else info.name = path2;
 			}
+			else info.name = path2;
 		}
 	}
-
-	if (success) {
-
-		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE); /* Convert every colour component into unsigned byte. If your image contains alpha channel you can replace IL_RGB with IL_RGBA */
+	else info.name = path;
+	
+	if(success) {
+		
+		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 		
 		if (!success) {
-			/* Error occured */
-			LOG(_ERROR, "Cannot convet image");
+			LOG(_ERROR, "Cannot every colour component into unsigned byte");
 			return false;
 		}
 
-		//unsigned char* data = ilGetData();
+		info.w = ilGetInteger(IL_IMAGE_WIDTH);
+		info.h = ilGetInteger(IL_IMAGE_HEIGHT);
 
-		glGenTextures(1, &image);
-		glBindTexture(GL_TEXTURE_2D, image);
+		glGenTextures(1, &texId);
+		glBindTexture(GL_TEXTURE_2D, texId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
 
 	}
-	else
-	{
-		/* Error occured */
-		return false;
-	}
 
-	ilDeleteImages(1, &texId);
+	ilDeleteImages(1, &image);
 
-	return image;
+	return texId;
 
 }

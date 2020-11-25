@@ -78,11 +78,6 @@ update_status Application::Update() {
 	for (auto it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PostUpdate();
 
-	Uint32 prevTime = applicationTimer.getDeltaTime();
-
-	//if (prevTime < TIME_PER_FRAME)
-	//	SDL_Delay(TIME_PER_FRAME - prevTime);
-
 	return ret;
 }
 

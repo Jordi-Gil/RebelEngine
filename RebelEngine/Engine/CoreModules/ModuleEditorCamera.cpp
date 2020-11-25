@@ -87,7 +87,7 @@ void ModuleEditorCamera::TranslateMouseWheel() {
 
 void ModuleEditorCamera::RotateKeyboard() {
 
-	float roll = 0.0f; float pitch = 0.0f; float yaw = 0.0f;
+	float roll = 0.0f; float pitch = 0.0f;
 	float speedModifier = 1.0f;
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT) roll += 1;
@@ -113,7 +113,7 @@ void ModuleEditorCamera::RotateKeyboard() {
 
 void ModuleEditorCamera::RotateMouse(int x, int y) {
 
-	float roll = 0.0f; float pitch = 0.0f; float yaw = 0.0f;
+	float pitch = 0.0f; float yaw = 0.0f;
 
 	float speedModifier = 1.0f;
 

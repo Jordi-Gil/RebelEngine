@@ -6,8 +6,12 @@
 
 #include "Main/Mesh.h"
 
-class ModuleModel : public Module
-{
+struct TextureInformation;
+
+class ModuleModel : public Module {
+
+friend class GUIInspector;
+
 public:
 
 	ModuleModel();
@@ -33,8 +37,7 @@ private:
 
 	std::vector <Mesh> meshes;
 	unsigned int numMeshes;
-	std::vector<unsigned int> textures;
 	unsigned int numMaterials;
-
+	std::vector<std::pair<unsigned int, TextureInformation>> textures;
 };
 

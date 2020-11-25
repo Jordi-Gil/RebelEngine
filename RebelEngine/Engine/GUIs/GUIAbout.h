@@ -13,7 +13,7 @@ public:
 
 	const char* GetName() { return name; }
 
-	void Disable();
+	void ToggleActive();
 
 };
 

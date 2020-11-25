@@ -26,11 +26,12 @@ void ModuleGUI::PreInit() {
 
 	windows.push_back(std::make_unique<GUIAbout>("About Rebel"));
 	windows.push_back(std::make_unique<GUIScene>("Scene")); scene = (GUIScene*) windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUIInspector>("Inspector"));
+	windows.push_back(std::make_unique<GUIInspector>("Inspector")); inspector = (GUIInspector*)windows.rbegin()->get();
 	windows.push_back(std::make_unique<GUIConfiguration>("Configuration"));
 	windows.push_back(std::make_unique<GUITerminal>("Terminal")); terminal = (GUITerminal *) windows.rbegin()->get();
 	
-	scene->SetActive();
+	scene->ToggleActive();
+	inspector->ToggleActive();
 
 }
 

@@ -16,9 +16,13 @@
 #include "infoware/version.hpp"
 #include "infoware/utils.hpp"
 
+iware::cpu::quantities_t quantities;
+std::vector<iware::gpu::device_properties_t> device_properties;
 
 GUIConfiguration::GUIConfiguration(const char* _name) { 
 	name = _name;
+	quantities = iware::cpu::quantities();
+	device_properties = iware::gpu::device_properties();
 }
 
 void GUIConfiguration::Draw() {
@@ -44,9 +48,6 @@ void GUIConfiguration::Draw() {
 	static float znear = App->editorCamera->GetZNear();
 	static float zfar = App->editorCamera->GetZFar();
 #pragma endregion cameraVars
-
-	static auto quantities = iware::cpu::quantities();
-	const auto device_properties = iware::gpu::device_properties();
 
 	if (ImGui::CollapsingHeader("Window")) {
 
@@ -174,6 +175,6 @@ void GUIConfiguration::Draw() {
 
 }
 
-void GUIConfiguration::Disable() {
-	active = false;
+void GUIConfiguration::ToggleActive() {
+	active = !active;
 }

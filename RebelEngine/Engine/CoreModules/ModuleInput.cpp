@@ -1,5 +1,7 @@
 #include "Utils/Globals.h"
+
 #include "Main/Application.h"
+
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleEditorCamera.h"
@@ -7,6 +9,8 @@
 #include "ModuleModel.h"
 
 #include "ImGui/imgui_impl_sdl.h"
+
+#include <assimp/Importer.hpp>
 
 #include <SDL/SDL.h>
 
