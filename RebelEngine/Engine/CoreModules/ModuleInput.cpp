@@ -105,13 +105,12 @@ update_status ModuleInput::Update() {
 				mouseWheel = sdlEvent.wheel.y;
 				break;
 
-			case SDL_DROPFILE: {      // In case if dropped file
+			case SDL_DROPFILE:
 				char* dropped_filedir = sdlEvent.drop.file;
 				LOG(_INFO, "Dropped file: %s", dropped_filedir);
 				App->models->LoadModel(dropped_filedir);
 				SDL_free(dropped_filedir);
 				break;
-			}
 		}
     }
 

@@ -126,9 +126,8 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
-	Quat quaternionX(frustum.WorldRight(), pitch * App->deltaTime * rotSpeed * speedModifier);
-	//Quat quaternionY(float3::unitY, yaw * App->deltaTime * rotSpeed * speedModifier);
-	Quat quaternionY(float3::unitY, yaw * App->deltaTime * rotSpeed * speedModifier);
+	Quat quaternionX(frustum.WorldRight(), pitch * speedModifier);
+	Quat quaternionY(float3::unitY, yaw * speedModifier);
 
 	float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
 	float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
@@ -160,22 +159,29 @@ void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
 		pitch = -(float)y * App->deltaTime * rotSpeed;
 		yaw = -(float)x * App->deltaTime * rotSpeed;
 
-	}
+		vec focus = CenterOfScene();
 
-	vec target = (frustum.Pos() - CenterOfScene()).Normalized();
+		Quat rotationY(frustum.Up().Normalized(), yaw);
+		Quat rotationX(frustum.WorldRight().Normalized(), pitch);
 
-	Quat quaternionX(frustum.WorldRight(), pitch);
-	Quat quaternionY(frustum.Up(), yaw);
+		vec newPos = rotationY.Transform(frustum.Pos() - focus); //perfom the rotation over Up vector in the origin
+		newPos = rotationX.Transform(newPos); //perfom the rotation over Right vector in the origin
+
+		frustum.SetPos(newPos + focus); //Once the rotation is performed, move the camera at focus distance
 	
-	target = quaternionX.Transform(target);
-	target = quaternionY.Transform(target);
-
-	float3x3 rotationMatrix = float3x3::LookAt(frustum.Front(), target, frustum.Up(), float3::unitY);
-
-	vec oldFront = frustum.Front().Normalized();
-	frustum.SetFront(rotationMatrix.MulDir(oldFront));
-	vec oldUp = frustum.Up().Normalized();
-	frustum.SetUp(rotationMatrix.MulDir(oldUp));
+		//Make frustum points the target
+		float3x3 rotationMatrix = float3x3::LookAt(
+			frustum.Front(),
+			(focus - frustum.Pos()).Normalized(),
+			frustum.Up(),
+			float3::unitY
+		);
+		
+		vec oldFront = frustum.Front().Normalized();
+		frustum.SetFront(rotationMatrix.MulDir(oldFront));
+		vec oldUp = frustum.Up().Normalized();
+		frustum.SetUp(rotationMatrix.MulDir(oldUp));
+	}
 
 }
 
@@ -191,6 +197,7 @@ update_status ModuleEditorCamera::Update() {
 		TranslateMouseWheel();
 		RotateKeyboard();
 		RotateMouse(x, y);
+		OrbitCenterScene(x,y);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN) {

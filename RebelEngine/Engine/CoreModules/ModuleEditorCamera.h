@@ -24,7 +24,7 @@ private:
 
 public:
 
-	ModuleEditorCamera::ModuleEditorCamera() : movSpeed(2), rotSpeed(2), zoomSpeed(2), currentZNear(0.1f), currentZFar(100.0f) {}
+	ModuleEditorCamera::ModuleEditorCamera() : movSpeed(2), rotSpeed(0.5), zoomSpeed(2), currentZNear(0.1f), currentZFar(100.0f) {}
 	ModuleEditorCamera::~ModuleEditorCamera() {}
 
 	bool Init();

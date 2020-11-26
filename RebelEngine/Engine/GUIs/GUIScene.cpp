@@ -28,7 +28,6 @@ void GUIScene::Draw() {
 	
 	std::string wName(ICON_FA_BORDER_ALL " "); wName.append(name);
 	ImGui::Begin(wName.c_str(), &active, ImGuiWindowFlags_NoCollapse);
-	ImVec2 pos = ImGui::GetCursorScreenPos();
 
 	sceneFocused = ImGui::IsWindowFocused();
 
@@ -48,6 +47,23 @@ void GUIScene::Draw() {
 		App->editorCamera->WindowResized(_sceneWindowWidth, _sceneWindowHeight);
 	}
 
+	bool startWrap = ImGui::GetIO().MouseDown[ImGuiMouseButton_Right];
+
+	if (startWrap && sceneFocused) {
+
+		int ptX, ptY;
+		SDL_GetMouseState(&ptX, &ptY);
+		bool outside = false;
+
+		ImVec2 mousePos;
+		mousePos.x = ImGui::GetMousePos().x - ImGui::GetCursorScreenPos().x - ImGui::GetScrollX();
+
+		if (mousePos.x < 0.005) {
+			//TODO:
+			outside = true;
+		}
+
+	}
 	ImGui::End();
 
 }
