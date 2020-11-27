@@ -12,7 +12,6 @@
 
 #ifdef _WIN32
 
-
 #include "infoware/cpu.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

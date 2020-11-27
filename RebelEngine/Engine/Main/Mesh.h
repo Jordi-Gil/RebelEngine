@@ -11,7 +11,11 @@ friend class GUIInspector;
 
 public: 
 		
-	Mesh() : VBO(0), EBO(0), VAO(0), matIndex(0), numVertices(0), numIndices(0), numFaces(0) {}
+	Mesh() : 
+		VBO(0), EBO(0), VAO(0), matIndex(0), 
+		numVertices(0), numIndices(0), numFaces(0)
+	{}
+
 	~Mesh();
 
 	void LoadVBO(const aiMesh* mesh, float max[3], float min[3]);
@@ -23,6 +27,7 @@ public:
 	void Clean();
 
 private:
+
 	unsigned int VBO;
 	unsigned int EBO;
 	unsigned int VAO;

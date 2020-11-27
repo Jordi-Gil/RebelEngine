@@ -17,6 +17,12 @@ public:
 
 	void ToggleActive();
 
+	void AddFPS(float FPS, float ms);
+
+private:
+
+	std::vector<float> fpsHist;
+	std::vector<float> msHist;
 
 };
 

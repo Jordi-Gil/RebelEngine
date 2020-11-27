@@ -18,11 +18,18 @@ public:
 
 	bool Init();
 
-	void LoadModel(const char* file_name);
+	void LoadModel(const char* fileName);
 
 	bool CleanUp();
 
 	void Draw();
+
+	//TODO: Move to a proper class
+	//For this assigment this methods are implemented in this class
+	void SetMinFilter(int i);
+	void SetMagFilter(int i);
+	void SetWrapS(int i);
+	void SetWrapT(int i);
 
 private:
 

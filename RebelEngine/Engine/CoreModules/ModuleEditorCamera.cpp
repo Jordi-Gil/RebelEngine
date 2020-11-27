@@ -161,7 +161,7 @@ void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
 
 		vec focus = CenterOfScene();
 
-		Quat rotationY(frustum.Up().Normalized(), yaw);
+		Quat rotationY(float3::unitY, yaw);
 		Quat rotationX(frustum.WorldRight().Normalized(), pitch);
 
 		vec newPos = rotationY.Transform(frustum.Pos() - focus); //perfom the rotation over Up vector in the origin

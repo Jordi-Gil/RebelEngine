@@ -99,7 +99,6 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>> &
 	unsigned int program = App->program->GetMainProgram();
 
 	float4x4 model = float4x4::identity;
-	//float4x4 model = float4x4::FromTRS(float3(0,0,0), float3x3::RotateX((DEGTORAD) * -90),float3(0.05));
 	float4x4 view; App->editorCamera->GetMatrix(VIEW_MATRIX, view);
 	float4x4 projection; App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
 
@@ -113,6 +112,7 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>> &
 
 	glBindVertexArray(VAO);
 	glActiveTexture(GL_TEXTURE0);
+
 	glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
 
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);

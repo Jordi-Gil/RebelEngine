@@ -70,9 +70,9 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 	}
 }
 
-void ModuleModel::LoadModel(const char* file_name) {
+void ModuleModel::LoadModel(const char* fileName) {
 	
-	const aiScene* scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene) {
 
@@ -83,10 +83,19 @@ void ModuleModel::LoadModel(const char* file_name) {
 		}
 
 		LoadMeshes(scene->mMeshes, scene->mNumMeshes);
-		LoadTextures(scene->mMaterials, scene->mNumMaterials, file_name);
+		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
 	}
 	else {
-		LOG(_ERROR, "Error loading %s: %s", file_name, aiGetErrorString());
+		LOG(_ERROR, "Error loading mesh %s: %s", fileName, aiGetErrorString());
+		LOG(_INFO, "Trying loading %s as a texture.", fileName);
+
+		textures.clear();
+		textures.shrink_to_fit();
+		
+		TextureInformation info;
+		unsigned int textureId = App->texturer->loadTexture(fileName, NULL, info);
+		textures.push_back(std::make_pair(textureId, info));
+
 	}
 
 }
@@ -101,16 +110,37 @@ void ModuleModel::Draw() {
 
 bool ModuleModel::CleanUp() {
 
-	for (auto mesh : meshes) mesh.Clean();
+	for (int i = 0; i < meshes.size(); i++) meshes[i].Clean();
 	meshes.clear();
 	meshes.shrink_to_fit();
 
-	for (auto texture : textures) {
-		glDeleteTextures(1, &texture.first);
-	}
-
+	for (unsigned i = 0; i < textures.size(); i++) glDeleteTextures(1, &textures[i].first);
 	textures.clear();
 	textures.shrink_to_fit();
 
 	return true;
+}
+
+void ModuleModel::SetMinFilter(int i) {
+	for (unsigned int i = 0; i < textures.size(); i++) {
+		App->texturer->SetMinFilter(i, textures[i].first);
+	}
+}
+
+void ModuleModel::SetMagFilter(int i) {
+	for (unsigned int i = 0; i < textures.size(); i++) {
+		App->texturer->SetMagFilter(i, textures[i].first);
+	}
+}
+
+void ModuleModel::SetWrapS(int i) {
+	for (unsigned int i = 0; i < textures.size(); i++) {
+		App->texturer->SetWrapS(i, textures[i].first);
+	}
+}
+
+void ModuleModel::SetWrapT(int i) {
+	for (unsigned int i = 0; i < textures.size(); i++) {
+		App->texturer->SetWrapT(i, textures[i].first);
+	}
 }

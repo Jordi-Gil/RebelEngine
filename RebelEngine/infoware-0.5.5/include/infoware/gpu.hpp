@@ -34,11 +34,14 @@ namespace iware {
 		struct device_properties_t {
 			vendor_t vendor;
 			std::string name;
-			std::size_t memory_size;
-			std::size_t cache_size;
-			std::uint64_t max_frequency;
+			std::uint64_t budget_memory;
+			std::uint64_t available_memory;
+			std::uint64_t usage_memory;
+			std::uint64_t reserved_memory;
 		};
 
+
+		void device_properties(std::vector<iware::gpu::device_properties_t>& devices);
 
 		/// Returns all GPU's properties.
 		INFOWARE_API_LINKAGE std::vector<device_properties_t> device_properties();

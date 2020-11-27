@@ -22,6 +22,8 @@ public:
 	void BindBuffers(float width, float height);
 	unsigned int GetViewportTexture() { return viewportTex; }
 
+	void SetVSYNC(bool _VSYNC);
+
 private:
 
 	void* mainContext = nullptr;

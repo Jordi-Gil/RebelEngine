@@ -79,7 +79,9 @@ void GUITerminal::Draw() {
 
 	if (scrollToBottom)
 		ImGui::SetScrollHere(1.0f);
+	
 	scrollToBottom = false;
+
 	if (logToClipboard) {
 		ImGui::LogFinish();
 		logToClipboard = false;

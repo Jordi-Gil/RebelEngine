@@ -24,6 +24,7 @@ enum update_status
 
 #define VSYNC true
 #define TITLE "Rebel Engine"
+#define ORGANIZATION "Rebel Technologies"
 #define VERSION "1.0.0"
 
 #define _ERROR "[error]"

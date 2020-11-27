@@ -48,7 +48,7 @@ void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLe
 	case GL_DEBUG_SEVERITY_NOTIFICATION: tmp_severity = "notification"; break;
 	};
 	
-	if (!App->gui->terminal->deletingOGLLog && App->logTimer.getDeltaTime() >= 500) {
+	if (!App->gui->terminal->deletingOGLLog && App->logTimer.read() >= 500) {
 		LOG(type_msg, "[OpenGL Debug] <Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>", tmp_source, tmp_type, tmp_severity, id, message);
 		App->logTimer.start();
 	}
@@ -94,6 +94,8 @@ bool ModuleRender::Init() {
 	glDebugMessageCallback(&OurOpenGLErrorFunction, nullptr);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif //  _DEBUG
+
+	SDL_GL_SetSwapInterval(VSYNC);
 
 	return true;
 }
@@ -187,4 +189,10 @@ bool ModuleRender::CleanUp() {
 	SDL_GL_DeleteContext(mainContext);
 
 	return true;
+}
+
+void ModuleRender::SetVSYNC(bool _VSYNC) {
+
+	SDL_GL_SetSwapInterval(_VSYNC);
+
 }

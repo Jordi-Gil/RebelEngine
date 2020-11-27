@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 
 #include "CoreModules/ModuleRender.h"
+#include "CoreModules/ModuleWindow.h"
 #include "CoreModules/ModuleEditorCamera.h"
 
 #include "ImGui/IconsFontAwesome5.h"
@@ -58,8 +59,17 @@ void GUIScene::Draw() {
 		ImVec2 mousePos;
 		mousePos.x = ImGui::GetMousePos().x - ImGui::GetCursorScreenPos().x - ImGui::GetScrollX();
 
+		ImVec2 mouseStart = ImGui::GetWindowContentRegionMin();
+		mouseStart.x += ImGui::GetWindowPos().x;
+		mouseStart.y += ImGui::GetWindowPos().y + ImGui::GetScrollY() + ImGui::GetStyle().FramePadding.y;
+
 		if (mousePos.x < 0.005) {
-			//TODO:
+			ptX = mouseStart.x;
+			outside = true;
+		}
+
+		if (mousePos.y < 0.005) {
+			ptY = mouseStart.y;
 			outside = true;
 		}
 

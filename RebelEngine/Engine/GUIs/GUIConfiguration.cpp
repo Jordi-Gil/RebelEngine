@@ -4,6 +4,8 @@
 #include "Main/Application.h"
 
 #include "CoreModules/ModuleWindow.h"
+#include "CoreModules/ModuleRender.h"
+#include "CoreModules/ModuleModel.h"
 #include "CoreModules/ModuleEditorCamera.h"
 
 #include "ImGui/IconsFontAwesome5.h"
@@ -16,19 +18,40 @@
 #include "infoware/version.hpp"
 #include "infoware/utils.hpp"
 
+#include "Utils/gpuInfo.h"
+
+const char* minFilters[6] = { 
+	"Nearest",  "Linear", "Nearest Mipmap - Nearest", "Linear Mipmap - Nearest",
+	"Nearest Mipmap - Linear", "Linear Mipmap - Linear"
+};
+const char* magFilters[2] = { "Nearest",  "Linear" };
+const char* wrap[6] = { "Clamp to Edge", "Clamp to Border", "Mirrored repeat",
+	"Repeat", "Mirror calmp to Edge" };
+
+constexpr int MAX_FRAMES = 60;
+
 iware::cpu::quantities_t quantities;
 std::vector<iware::gpu::device_properties_t> device_properties;
 
-GUIConfiguration::GUIConfiguration(const char* _name) { 
+GUIConfiguration::GUIConfiguration(const char* _name) {
+
 	name = _name;
 	quantities = iware::cpu::quantities();
 	device_properties = iware::gpu::device_properties();
+
+	fpsHist = std::vector<float>(MAX_FRAMES, 0);
+	msHist = std::vector<float>(MAX_FRAMES, 0);
 }
 
 void GUIConfiguration::Draw() {
 
 	std::string wName(ICON_FA_COGS " "); wName.append(name);
 	ImGui::Begin(wName.c_str() , &active, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking);
+
+	static bool vsync = VSYNC;
+
+	static const char* min_currentItem = minFilters[1];
+	static const char* mag_currentItem = minFilters[1];
 
 #pragma region windowsVars
 	int width = App->window->GetCurrentWidth();
@@ -48,7 +71,23 @@ void GUIConfiguration::Draw() {
 	static float znear = App->editorCamera->GetZNear();
 	static float zfar = App->editorCamera->GetZFar();
 #pragma endregion cameraVars
+	
 
+	if (ImGui::CollapsingHeader("Application")) {
+		
+		ImGui::LabelText("App Name", "%s", TITLE);
+		ImGui::LabelText("Organization", "%s", ORGANIZATION);
+		ImGui::LabelText("Version", "%s", VERSION);
+
+		if (ImGui::Checkbox("VSYNC", &vsync)) App->renderer->SetVSYNC(vsync);
+
+		ImGui::Separator();
+		char title[32]; sprintf(title, "Framerate: %.2f", fpsHist[fpsHist.size()-1]);
+		ImGui::PlotHistogram("##framerate", &fpsHist[0], fpsHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
+		sprintf(title, "Milliseconds: %.2f", msHist[msHist.size() - 1]);
+		ImGui::PlotHistogram("##milliseconds", &msHist[0], msHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
+
+	}
 	if (ImGui::CollapsingHeader("Window")) {
 
 		if (ImGui::SliderFloat("Brightness", &brightness, 0.2f, 1.0f)) App->window->SetWindowBrightness(brightness);
@@ -74,6 +113,47 @@ void GUIConfiguration::Draw() {
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Fullscreen Desktop", &fullScreenDesk)) { App->window->SetWindowFullScreenDesktop(fullScreenDesk); fullScreen = false; }
 	}
+
+	if (ImGui::CollapsingHeader("Texture")) {
+		
+		ImGui::BeginColumns("##colum", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
+
+		if (ImGui::BeginCombo("Minification function", min_currentItem)) {
+
+			for (unsigned i = 0; i < IM_ARRAYSIZE(minFilters); i++) {
+
+				bool is_selected = (min_currentItem == minFilters[i]);
+				if (ImGui::Selectable(minFilters[i], is_selected)) {
+					min_currentItem = minFilters[i];
+					App->models->SetMinFilter(i);
+				}
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+		
+		if (ImGui::BeginCombo("Magnification function", mag_currentItem)) {
+
+			for (unsigned i = 0; i < IM_ARRAYSIZE(magFilters); i++) {
+
+				bool is_selected = (mag_currentItem == magFilters[i]);
+				if (ImGui::Selectable(magFilters[i], is_selected)){
+					mag_currentItem = magFilters[i];
+					App->models->SetMagFilter(i);
+				}
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::EndColumns();
+
+	}
+
 	if (ImGui::CollapsingHeader("Camera")) {
 
 		//View only for editor camera
@@ -111,7 +191,6 @@ void GUIConfiguration::Draw() {
 		}
 
 	}
-
 	if (ImGui::CollapsingHeader("Hardware information")) {
 		ImVec4 yellow(1.0000f, 0.8275f, 0.4112f, 1.0000f);
 #pragma region CPU
@@ -152,23 +231,33 @@ void GUIConfiguration::Draw() {
 
 		ImGui::Separator();
 
+#pragma region GPU
+
 		if (ImGui::CollapsingHeader("GPU")) {
+
+			std::vector<iware::gpu::device_properties_t> device_properties = {};
+
+			iware::gpu::device_properties(device_properties);
 
 			if (device_properties.empty())
 				ImGui::TextColored(ImVec4(1,0,0,0), "No detection methods enabled");
-
+		
 			for (auto i = 0u; i < device_properties.size(); ++i) {
 				const auto& properties_of_device = device_properties[i];
 				ImGui::BulletText("Device #%d:", (i + 1));
 				ImGui::Text("Vendor: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%s", iware::gpu::vendor_name(properties_of_device.vendor));
 				ImGui::Text("Name: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%s", properties_of_device.name);
-				ImGui::Text("RAM size: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%u MB", 
-					(((properties_of_device.memory_size >> 20) >> 10)));
-				ImGui::Text("Cache size: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%u MB", 
-					(((properties_of_device.cache_size >> 10) >> 10)));
-				ImGui::Text("Max frequency: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%ll Hz", properties_of_device.max_frequency);
+				ImGui::Text("VRAM size: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB", 
+					float(properties_of_device.budget_memory) / (1024.f * 1024.f * 1024.f));
+				ImGui::Text("VRAM Available: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB", 
+					float(properties_of_device.available_memory) / (1024.f * 1024.f * 1024.f));
+				ImGui::Text("VRAM Usage: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB",
+					float(properties_of_device.usage_memory) / (1024.f * 1024.f * 1024.f));
+				ImGui::Text("VRAM Reserved: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB",
+					float(properties_of_device.reserved_memory) / (1024.f * 1024.f * 1024.f));
 			}
 		}
+#pragma endregion GPU
 	}
 
 	ImGui::End();
@@ -177,4 +266,16 @@ void GUIConfiguration::Draw() {
 
 void GUIConfiguration::ToggleActive() {
 	active = !active;
+}
+
+void GUIConfiguration::AddFPS(float FPS, float ms) {
+
+	for (unsigned i = 0; i < MAX_FRAMES - 1; i++) {
+		fpsHist[i] = fpsHist[i + 1];
+		msHist[i] = msHist[i + 1];
+	}
+
+	fpsHist[MAX_FRAMES-1] = FPS;
+	msHist[MAX_FRAMES - 1] = ms;
+
 }

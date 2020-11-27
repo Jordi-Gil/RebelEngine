@@ -48,14 +48,17 @@ public:
 	float deltaTime;
 
 #ifdef _DEBUG
-	Timer logTimer;
+	MSTimer logTimer;
 #endif // _DEBUG
 
 private:
 
-	Timer applicationTimer;
+	MSTimer applicationTimer;
+	Uint32 framecount = 0;
+
+
 #ifdef _DEBUG
-	Timer terminalTimer;
+	MSTimer terminalTimer;
 #endif // _DEBUG
 	std::list<Module*> modules;
 

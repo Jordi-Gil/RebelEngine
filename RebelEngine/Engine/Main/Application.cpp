@@ -11,6 +11,7 @@
 #include "CoreModules/ModuleModel.h"
 
 #include "GUIs/GUITerminal.h"
+#include "GUIs/GUIConfiguration.h"
 
 #define TIME_PER_FRAME 1000.0f / 60.f // Approx. 60 fps
 
@@ -21,7 +22,7 @@ Application::Application() {
 	terminalTimer.start();
 	logTimer.start();
 #endif
-	deltaTime = (float)applicationTimer.getDeltaTime();
+	deltaTime = (float)applicationTimer.read();
 
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(gui = new ModuleGUI());
@@ -62,9 +63,9 @@ update_status Application::Update() {
 
 #ifdef  _DEBUG
 	//dump openGL Log - Only in debug, because the log is only traced in debug mode
-	if (terminalTimer.getDeltaTime() >= 30000) { App->gui->terminal->deletingOGLLog = true; gui->terminal->ClearOpenGLLog(); terminalTimer.start(); }
+	if (terminalTimer.read() >= 30000) { App->gui->terminal->deletingOGLLog = true; gui->terminal->ClearOpenGLLog(); terminalTimer.start(); }
 #endif
-	deltaTime = (float)applicationTimer.getDeltaTime() / 1000.0f;
+	deltaTime = (float)applicationTimer.read() / 1000.0f;
 	applicationTimer.start();
 
 	update_status ret = UPDATE_CONTINUE;
@@ -77,6 +78,13 @@ update_status Application::Update() {
 
 	for (auto it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PostUpdate();
+
+	Uint32 prevTime = applicationTimer.read();
+
+	//if (prevTime < TIME_PER_FRAME)
+	//	SDL_Delay(TIME_PER_FRAME - prevTime);
+
+	App->gui->config->AddFPS(1/deltaTime, applicationTimer.read());
 
 	return ret;
 }
