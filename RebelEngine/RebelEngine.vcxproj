@@ -168,7 +168,6 @@
     <ClInclude Include="Engine\Utils\debugdraw.h" />
     <ClInclude Include="Engine\Utils\debug_draw.hpp" />
     <ClInclude Include="Engine\Utils\Globals.h" />
-    <ClInclude Include="Engine\Utils\gpuInfo.h" />
     <ClInclude Include="Engine\Utils\Timer.h" />
     <ClInclude Include="Engine\GUIs\GUIConfiguration.h" />
     <ClInclude Include="Engine\GUIs\GUIScene.h" />

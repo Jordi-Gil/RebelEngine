@@ -1,6 +1,7 @@
 #pragma once
 
-#include <list>
+#include <vector>
+#include <memory>
 
 #include "Utils/Globals.h"
 #include "CoreModules/Module.h"
@@ -60,7 +61,7 @@ private:
 #ifdef _DEBUG
 	MSTimer terminalTimer;
 #endif // _DEBUG
-	std::list<Module*> modules;
+	std::vector<std::unique_ptr< Module >> modules;
 
 };
 

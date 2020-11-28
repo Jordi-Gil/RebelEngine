@@ -1,26 +1,18 @@
 #pragma once
 
 #include "Module.h"
+
 #include <Geometry/Frustum.h>
 
 #define PI 3.14159265358979323846  /* pi */
 #define DEGTORAD PI/180
 #define RADTODEG 180/PI
 
-enum matrix_type {
-	PROJECTION_MATRIX, VIEW_MATRIX
+enum class matrix_type {
+	PROJECTION_MATRIX = 0, VIEW_MATRIX
 };
 
-class ModuleEditorCamera : public Module
-{
-private:
-
-	void TranslateKeyboard();
-	void TranslateMouse(int x, int y);
-	void TranslateMouseWheel();
-	void RotateKeyboard();
-	void RotateMouse(int x, int y);
-	void OrbitCenterScene(int x, int y);
+class ModuleEditorCamera : public Module {
 
 public:
 
@@ -33,17 +25,17 @@ public:
 
 	void WindowResized(unsigned width, unsigned height);
 
+	void Focus();
+
 #pragma region setters
 
 	void SetHorizontalFov(float hFov, float ar);
 	void SetVerticalFov(float vFov, float aspectRatio);
-	void SetAspectRatio(float aspectRatio);
 	
 	void SetZNear(float znear);
 	void SetZFar(float zfar);
 	
 	void SetPosition(float x, float y, float z);
-	void SetOrientation();
 
 	void SetMovSpeed(float _speed);
 	void SetRotSpeed(float _speed);
@@ -75,7 +67,14 @@ public:
 
 #pragma endregion getters
 
-	float4 clearColor = float4(0.1f, 0.1f, 0.1f, 1.0f);
+private:
+
+	void TranslateKeyboard();
+	void TranslateMouse(int x, int y);
+	void TranslateMouseWheel();
+	void RotateKeyboard();
+	void RotateMouse(int x, int y);
+	void OrbitCenterScene(int x, int y);
 
 private:
 

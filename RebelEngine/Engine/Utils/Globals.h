@@ -2,7 +2,11 @@
 #include <windows.h>
 #include <stdio.h>
 
+#include <algorithm>
+
 #define LOG(type, format,  ...) log(__FILE__, __LINE__, type, format, __VA_ARGS__);
+#define MARRAYSIZE(_ARR)          ((int)(sizeof(_ARR) / sizeof(*(_ARR))))
+#define ERROR_SPLIT(path, num)			LOG(_ERROR, "Couldn't split the given path %s. Error: %s", path, strerror(num))
 
 void log(const char file[], int line, const char* type, const char* format, ...);
 

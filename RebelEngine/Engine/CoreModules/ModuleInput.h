@@ -1,19 +1,19 @@
 #pragma once
+
 #include "Module.h"
 #include "Utils/Globals.h"
 
 #define NUM_MOUSE_BUTTONS 5
 
-enum class KeyState
-{
+enum class KeyState {
+
 	KEY_IDLE = 0,
 	KEY_DOWN,
 	KEY_REPEAT,
 	KEY_UP
 };
 
-class ModuleInput : public Module
-{
+class ModuleInput : public Module {
 
 public:
 	
@@ -28,12 +28,10 @@ public:
 	{
 		return keyboard[id];
 	}
-
 	KeyState GetMouseButtonDown(int id) const
 	{
 		return mouse_buttons[id - 1];
 	}
-
 	int GetMouseWheel() {
 		return mouseWheel;
 	}

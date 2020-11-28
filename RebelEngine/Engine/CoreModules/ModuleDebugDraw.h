@@ -1,5 +1,4 @@
-#ifndef _MODULE_DEBUGDRAW_H_
-#define _MODULE_DEBUGDRAW_H_
+#pragma once
 
 #include "Module.h"
 
@@ -8,8 +7,7 @@
 class DDRenderInterfaceCoreGL;
 class Camera;
 
-class ModuleDebugDraw : public Module
-{
+class ModuleDebugDraw : public Module {
 
 public:
 
@@ -21,9 +19,9 @@ public:
 	bool            CleanUp();
 
     void            Draw(const float4x4& view, const float4x4& proj, unsigned width, unsigned height);
+
 private:
 
     static DDRenderInterfaceCoreGL* implementation;
-};
 
-#endif /* _MODULE_DEBUGDRAW_H_ */
+};

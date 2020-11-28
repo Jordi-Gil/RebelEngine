@@ -24,24 +24,40 @@ void GUIInspector::Draw() {
 	ImGui::Begin(wName.c_str(), &active, ImGuiWindowFlags_NoCollapse);
 
 	ImVec4 yellow(1.0000f, 0.8275f, 0.4112f, 1.0000f);
-
+	//TODO: Take the real transform model of each mesh.
 	if (ImGui::CollapsingHeader("Transform")) {
 		ImGui::TextColored(ImVec4(1,0,0,1), "Disabled for this first assigment");
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		static float aux0 = 0;
-		ImGui::Text("Position");
-			ImGui::Text("X"); ImGui::SameLine(); ImGui::DragFloat("", &aux0);
-			ImGui::Text("Y"); ImGui::SameLine(); ImGui::DragFloat("", &aux0);
+		ImGui::BeginColumns("##position", 4, ImGuiColumnsFlags_NoBorder | ImGuiColumnsFlags_NoResize);
+		{
+			ImGui::Text("Position");
+			ImGui::NextColumn();
+			ImGui::Text("X"); ImGui::SameLine(); ImGui::DragFloat("", &aux0); ImGui::NextColumn();
+			ImGui::Text("Y"); ImGui::SameLine(); ImGui::DragFloat("", &aux0); ImGui::NextColumn();
 			ImGui::Text("Z"); ImGui::SameLine(); ImGui::DragFloat("", &aux0); 
-		ImGui::Text("Rotation");
-			ImGui::Text("X"); ImGui::SameLine(); ImGui::DragFloat("", &aux0);
-			ImGui::Text("Y"); ImGui::SameLine(); ImGui::DragFloat("", &aux0);
+		}
+		ImGui::EndColumns();
+
+		ImGui::BeginColumns("##rotation", 4, ImGuiColumnsFlags_NoBorder | ImGuiColumnsFlags_NoResize);
+		{
+			ImGui::Text("Rotation"); ImGui::NextColumn();
+			ImGui::Text("X"); ImGui::SameLine(); ImGui::DragFloat("", &aux0); ImGui::NextColumn();
+			ImGui::Text("Y"); ImGui::SameLine(); ImGui::DragFloat("", &aux0); ImGui::NextColumn();
 			ImGui::Text("Z"); ImGui::SameLine(); ImGui::DragFloat("", &aux0);
-		ImGui::Text("Scale");
-		static float aux1 = 1;
-			ImGui::Text("X"); ImGui::SameLine(); ImGui::DragFloat("", &aux1);
-			ImGui::Text("Y"); ImGui::SameLine(); ImGui::DragFloat("", &aux1);
+		}
+		ImGui::EndColumns();
+
+		ImGui::BeginColumns("##scale", 4, ImGuiColumnsFlags_NoBorder | ImGuiColumnsFlags_NoResize);
+		{
+			static float aux1 = 1;
+			ImGui::Text("Scale"); ImGui::NextColumn();
+			ImGui::Text("X"); ImGui::SameLine(); ImGui::DragFloat("", &aux1); ImGui::NextColumn();
+			ImGui::Text("Y"); ImGui::SameLine(); ImGui::DragFloat("", &aux1); ImGui::NextColumn();
 			ImGui::Text("Z"); ImGui::SameLine(); ImGui::DragFloat("", &aux1);
+		}
+		ImGui::EndColumns();
+		
 		ImGui::PopItemFlag();
 	}
 

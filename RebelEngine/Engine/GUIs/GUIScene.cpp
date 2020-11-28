@@ -35,8 +35,7 @@ void GUIScene::Draw() {
 	ImGui::GetWindowDrawList()->AddImage(
 		(void*)(intptr_t)App->renderer->GetViewportTexture(),
 		ImVec2(ImGui::GetCursorScreenPos()),
-		ImVec2(ImGui::GetCursorScreenPos().x + _sceneWindowWidth,
-			ImGui::GetCursorScreenPos().y + _sceneWindowHeight),
+		ImVec2(ImGui::GetCursorScreenPos().x + _sceneWindowWidth, ImGui::GetCursorScreenPos().y + _sceneWindowHeight),
 		ImVec2(0, 1),
 		ImVec2(1, 0));
 
@@ -47,7 +46,7 @@ void GUIScene::Draw() {
 		_sceneWindowHeight = ImGui::GetWindowHeight(); sceneHeight = _sceneWindowHeight;
 		App->editorCamera->WindowResized(_sceneWindowWidth, _sceneWindowHeight);
 	}
-
+	/* In progress. Infit mouse rotation
 	bool startWrap = ImGui::GetIO().MouseDown[ImGuiMouseButton_Right];
 
 	if (startWrap && sceneFocused) {
@@ -72,8 +71,7 @@ void GUIScene::Draw() {
 			ptY = mouseStart.y;
 			outside = true;
 		}
-
-	}
+	} */
 	ImGui::End();
 
 }

@@ -2,12 +2,13 @@
 #include "ModuleInput.h"
 #include "ModuleModel.h"
 
-#include "GUIs/GUIScene.h"
-
 #include "Main/Application.h"
+
+#include "GUIs/GUIScene.h"
 
 #include "Math/float3x3.h"
 #include "Math/Quat.h"
+
 #include <SDL/SDL.h>
 #include <cmath>
 
@@ -41,7 +42,6 @@ void ModuleEditorCamera::TranslateKeyboard() {
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
 	frustum.Translate(movement * App->deltaTime * movSpeed * speedModifier);
-
 }
 
 void ModuleEditorCamera::TranslateMouse(int x, int y) {
@@ -140,14 +140,6 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 }
 
-vec CenterOfScene() {
-	return vec( 
-				(App->models->max[0] + App->models->min[0])/2,
-				(App->models->max[1] + App->models->min[1])/2,
-				(App->models->max[2] + App->models->min[2])/2
-			  );
-}
-
 void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
 
 	float pitch = 0.0f; float yaw = 0.0f;
@@ -159,7 +151,7 @@ void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
 		pitch = -(float)y * App->deltaTime * rotSpeed;
 		yaw = -(float)x * App->deltaTime * rotSpeed;
 
-		vec focus = CenterOfScene();
+		vec focus = App->models->GetCenterScene();
 
 		Quat rotationY(float3::unitY, yaw);
 		Quat rotationX(frustum.WorldRight().Normalized(), pitch);
@@ -201,16 +193,29 @@ update_status ModuleEditorCamera::Update() {
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN) {
-		frustum.SetPos(vec(	(App->models->max[0] + App->models->min[0]) / 2, 
-							(App->models->max[1] + App->models->min[1]) / 2, 
-							(App->models->max[2] + App->models->min[2]) / 2 + 10)
-						);
-		frustum.SetFront(-float3::unitZ);
-		frustum.SetUp(float3::unitY);
+		Focus();
 	}
 
 	return UPDATE_CONTINUE;
 
+}
+
+void ModuleEditorCamera::Focus() {
+
+	vec size = App->models->GetSizeScene();
+	vec center = App->models->GetCenterScene();
+
+	frustum.SetPos(center + frustum.Front().Neg() * size.Length() * 1.5 );
+
+	vec target = (center - frustum.Pos()).Normalized();
+	float3x3 rotationMatrix = float3x3::LookAt(frustum.Front(), target, frustum.Up(), float3::unitY);
+
+	vec oldFront = frustum.Front();
+	frustum.SetFront(rotationMatrix.MulDir(oldFront));
+	vec oldUp = frustum.Up();
+	frustum.SetUp(rotationMatrix.MulDir(oldUp));
+
+	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), frustum.FarPlaneDistance() * size.Length());
 }
 
 void ModuleEditorCamera::WindowResized(unsigned width, unsigned height) {
@@ -224,13 +229,11 @@ void ModuleEditorCamera::WindowResized(unsigned width, unsigned height) {
 void ModuleEditorCamera::GetMatrix(matrix_type _mType, float4x4& matrix) {
 
 	switch (_mType) {
-		case PROJECTION_MATRIX:
-		{
+		case matrix_type::PROJECTION_MATRIX: {
 			matrix = frustum.ProjectionMatrix();
 			break;
 		}
-		case VIEW_MATRIX:
-		{
+		case matrix_type::VIEW_MATRIX: {
 			matrix = frustum.ViewMatrix();
 			break;
 		}
@@ -240,13 +243,11 @@ void ModuleEditorCamera::GetMatrix(matrix_type _mType, float4x4& matrix) {
 void ModuleEditorCamera::GetOpenGLMatrix(matrix_type _mType, float4x4& matrix) {
 
 	switch (_mType) {
-		case PROJECTION_MATRIX:
-		{
+		case matrix_type::PROJECTION_MATRIX: {
 			matrix = frustum.ProjectionMatrix();
 			break;
 		}
-		case VIEW_MATRIX:
-		{
+		case matrix_type::VIEW_MATRIX: {
 			matrix = frustum.ViewMatrix();
 			break;
 		}

@@ -1,5 +1,4 @@
-#ifndef __ModuleWindow_H__
-#define __ModuleWindow_H__
+#pragma once
 
 #include "Module.h"
 #include <SDL/SDL.h>
@@ -17,7 +16,6 @@ public:
 	bool CleanUp();
 
 	Uint32 GetWindowID() { return SDL_GetWindowID(window); }
-
 	int GetCurrentWidth() { return currentWidth; }
 	int GetCurrentHeight() { return currentHeight; }
 	float GetWindowBrightness() { return SDL_GetWindowBrightness(window); }
@@ -34,10 +32,8 @@ public:
 	void ResizeWindow(int width, int height);
 
 public:
-	//The window we'll be rendering to
-	SDL_Window* window = NULL;
 
-	//The surface contained by the window
+	SDL_Window* window = NULL;
 	SDL_Surface* screen_surface = NULL;
 
 	int minWidth = 1050, minHeight = 250;
@@ -47,5 +43,3 @@ private:
 
 	int currentWidth, currentHeight;
 };
-
-#endif // __ModuleWindow_H__

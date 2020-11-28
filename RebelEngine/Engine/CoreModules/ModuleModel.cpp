@@ -12,7 +12,7 @@
 #include <assimp/postprocess.h>
 
 
-void myCallback(const char* msg, char* userData) {
+void LogAssimp(const char* msg, char* userData) {
 	if(msg) LOG(_INFO, "Assimp Message: %s", msg);
 }
 
@@ -22,10 +22,10 @@ bool ModuleModel::Init() {
 
 	// Register it
 	struct aiLogStream stream;
-	stream.callback = myCallback;
+	stream.callback = LogAssimp;
 	aiAttachLogStream(&stream);
 
-	LoadModel("Assets/Models/BakerHouse.fbx");
+	LoadModel("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
 	return true;
 }
 
@@ -34,7 +34,6 @@ void ModuleModel::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes){
 	LOG(_INFO, "Meshes: %d", mNumMeshes);
 
 	numMeshes = mNumMeshes;
-
 	meshes.reserve(numMeshes);
 
 	for (unsigned int i = 0; i < mNumMeshes; i++) {
@@ -44,7 +43,20 @@ void ModuleModel::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes){
 		meshes[i].CreateVAO();
 	}
 
-	App->editorCamera->SetPosition( (max[0] + min[0])/2, (max[1] + min[1])/2, (max[2] + min[2])/2 + 10 );
+	App->editorCamera->Focus();
+
+}
+
+void ModuleModel::LoadTexture(const char* fileName) {
+	
+	if (!textures.empty()) {
+		textures.clear();
+		textures.shrink_to_fit();
+	}
+
+	TextureInformation info;
+	unsigned int textureId = App->texturer->loadTexture(fileName, info);
+	textures.push_back(std::make_pair(textureId, info));
 
 }
 
@@ -58,14 +70,62 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 
 	for (unsigned int i = 0; i < numMaterials; ++i) {
 		if (materials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS) {
-			char dir[_MAX_DIR];
-			errno_t error = _splitpath_s(fbxPath, NULL, 0, dir, _MAX_DIR, NULL, 0, NULL, 0);
-			if (error != 0) {
-				LOG(_ERROR, "Couldn't split the given path. Error: ", strerror(error));
-			}
+
 			TextureInformation info;
-			unsigned int textureId = App->texturer->loadTexture(file.data, dir, info);
-			textures.push_back(std::make_pair(textureId, info));
+
+			LOG(_INFO, "Loading texture from %s", file.data);
+			unsigned int textureId = App->texturer->loadTexture(file.data, info);
+
+			char path[_MAX_PATH]; char dir[_MAX_DIR]; char fileName[_MAX_FNAME], extension[_MAX_EXT];
+			errno_t error = _splitpath_s(file.data, NULL, 0, NULL, 0, fileName, _MAX_FNAME, extension, _MAX_EXT);
+			if (error != 0) { ERROR_SPLIT(file.data, error); return; }
+
+			if (textureId == 0) {
+				//If textureID == 0 , load fails from path given by FBX.
+				//Load from same directory than mesh file.
+				error = _splitpath_s(fbxPath, NULL, 0, dir, _MAX_DIR, NULL, 0, NULL, 0);
+				if (error != 0) { ERROR_SPLIT(fbxPath, error); return; }
+
+				error = sprintf_s(path, _MAX_PATH, "%s%s%s", dir, fileName, extension);
+				if (error == -1) { LOG(_ERROR, "Error constructing path. Error: %s", strerror(error)); return; }
+
+				LOG(_INFO, "Loading texture from %s", path);
+				textureId = App->texturer->loadTexture(path, info);
+			}
+			else LOG(_INFO, "Texture loaded from path: %s", file.data);
+
+			if (textureId == 0) {
+				//If textureID == 0 , load fails from same directory than FBX.
+				//Load from textures directory.
+				error = sprintf_s(path, _MAX_PATH, "Assets/Textures/%s%s", fileName, extension);
+				if (error == -1) { LOG(_ERROR, "Error constructing path. Error: %s", strerror(error)); return; }
+
+				LOG(_INFO, "Loading texture from %s", path);
+				textureId = App->texturer->loadTexture(path, info);
+				if(textureId != 0) LOG(_INFO, "Texture loaded from path: %s", path);
+			}
+			else LOG(_INFO, "Texture loaded from path: %s", path);
+
+			if (textureId != 0) {
+				info.name += fileName; info.name += extension;
+				textures.push_back(std::make_pair(textureId, info));
+			}
+			else {
+				textureId = App->texturer->loadTexture("Assets/Textures/pink.dds", info);
+				if (textureId != 0) {
+					info.name += "pink.dds";
+					textures.push_back(std::make_pair(textureId, info));
+				}
+				LOG(_ERROR, "Impossible to load texture.");
+			}
+		}
+		else {
+			TextureInformation info;
+			unsigned int textureId = App->texturer->loadTexture("Assets/Textures/pink.dds", info);
+			if (textureId != 0) {
+				info.name += "pink.dds";
+				textures.push_back(std::make_pair(textureId, info));
+			}
 		}
 	}
 }
@@ -87,15 +147,6 @@ void ModuleModel::LoadModel(const char* fileName) {
 	}
 	else {
 		LOG(_ERROR, "Error loading mesh %s: %s", fileName, aiGetErrorString());
-		LOG(_INFO, "Trying loading %s as a texture.", fileName);
-
-		textures.clear();
-		textures.shrink_to_fit();
-		
-		TextureInformation info;
-		unsigned int textureId = App->texturer->loadTexture(fileName, NULL, info);
-		textures.push_back(std::make_pair(textureId, info));
-
 	}
 
 }
@@ -122,25 +173,25 @@ bool ModuleModel::CleanUp() {
 }
 
 void ModuleModel::SetMinFilter(int i) {
-	for (unsigned int i = 0; i < textures.size(); i++) {
-		App->texturer->SetMinFilter(i, textures[i].first);
+	for (unsigned int j = 0; j < textures.size(); j++) {
+		App->texturer->SetMinFilter(i, textures[j].first);
 	}
 }
 
 void ModuleModel::SetMagFilter(int i) {
-	for (unsigned int i = 0; i < textures.size(); i++) {
-		App->texturer->SetMagFilter(i, textures[i].first);
+	for (unsigned int j = 0; j < textures.size(); j++) {
+		App->texturer->SetMagFilter(i, textures[j].first);
 	}
 }
 
 void ModuleModel::SetWrapS(int i) {
-	for (unsigned int i = 0; i < textures.size(); i++) {
-		App->texturer->SetWrapS(i, textures[i].first);
+	for (unsigned int j = 0; j < textures.size(); j++) {
+		App->texturer->SetWrapS(i, textures[j].first);
 	}
 }
 
 void ModuleModel::SetWrapT(int i) {
-	for (unsigned int i = 0; i < textures.size(); i++) {
-		App->texturer->SetWrapT(i, textures[i].first);
+	for (unsigned int j = 0; j < textures.size(); j++) {
+		App->texturer->SetWrapT(i, textures[j].first);
 	}
 }

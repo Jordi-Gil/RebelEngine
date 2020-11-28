@@ -32,7 +32,6 @@ void ModuleGUI::PreInit() {
 	
 	scene->ToggleActive();
 	inspector->ToggleActive();
-
 }
 
 bool ModuleGUI::Init() {
@@ -78,7 +77,99 @@ bool ModuleGUI::Start() {
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->GetContext());
 	ImGui_ImplOpenGL3_Init(glsl_version);
 	
+	return true;
+}
 
+update_status ModuleGUI::Update() {
+	
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
+	
+	ImGuiWindowFlags window_flags =
+		ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking |
+		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
+	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("DockSpaceWnd", 0, window_flags);
+	ImGui::PopStyleVar(3);
+	
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DockingEnable) {
+		ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+	}
+	
+	update_status ret = UPDATE_CONTINUE;
+	
+	DrawMainMenu();
+
+	for (auto it = windows.begin(); it != windows.end(); ++it) {
+		if ((*it)->IsActive()) (*it)->Draw();
+	}
+	
+	ImGui::End();
+	
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+	}
+
+	return ret;
+
+}
+
+void ModuleGUI::DrawMainMenu() {
+
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("File")) {
+			ImGui::Separator();
+			if (ImGui::MenuItem("Exit", "ALT+F4")) {
+				SDL_Event event;
+				event.type = SDL_QUIT;
+				SDL_PushEvent(&event);
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Windows")) {
+			for (auto it = windows.begin(); it != windows.end(); ++it) {
+				auto ptr = it->get();
+				if(ptr->name != "About Rebel") ImGui::MenuItem(ptr->name, NULL, &ptr->active, &ptr->active);
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Help")) {
+			if (ImGui::MenuItem("Documentation")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/wiki");
+			if (ImGui::MenuItem("Download latest")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/releases");
+			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/issues");
+			ImGui::Separator();
+			ImGui::MenuItem("About Rebel", NULL, &(windows[0]->active));
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
+}
+
+bool ModuleGUI::CleanUp() {
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+	
 	return true;
 }
 
@@ -149,97 +240,4 @@ void ModuleGUI::PhotoshopLikeStyle() {
 	style->TabBorderSize = 1.0f;
 	style->TabRounding = 0.0f;
 	style->WindowRounding = 0.0f;
-}
-
-update_status ModuleGUI::Update() {
-	
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();
-	
-	ImGuiWindowFlags window_flags =
-		ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking |
-		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
-	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
-	ImGui::SetNextWindowViewport(viewport->ID);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("DockSpaceWnd", 0, window_flags);
-	ImGui::PopStyleVar(3);
-	
-	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DockingEnable) {
-		ImGuiID dockspace_id = ImGui::GetID("DockSpace");
-		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-	}
-	
-	update_status ret = UPDATE_CONTINUE;
-	
-	DrawMainMenu();
-
-	for (auto it = windows.begin(); it != windows.end(); ++it) {
-		if ((*it)->IsActive()) (*it)->Draw();
-	}
-	
-	ImGui::End();
-	
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	
-	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-	}
-
-	return ret;
-
-}
-
-void ModuleGUI::DrawMainMenu() {
-
-	if (ImGui::BeginMainMenuBar()) {
-
-		if (ImGui::BeginMenu("File")) {
-			ImGui::Separator();
-			if (ImGui::MenuItem("Exit", "ALT+F4")) {
-				SDL_Event event;
-				event.type = SDL_QUIT;
-				SDL_PushEvent(&event);
-			}
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Windows")) {
-			for (auto it = windows.begin(); it != windows.end(); ++it) {
-				auto ptr = it->get();
-				if(ptr->name != "About Rebel") ImGui::MenuItem(ptr->name, NULL, &ptr->active, &ptr->active);
-			}
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Help")) {
-			if (ImGui::MenuItem("Documentation")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/wiki");
-			if (ImGui::MenuItem("Download latest")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/releases");
-			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/issues");
-			ImGui::Separator();
-			ImGui::MenuItem("About Rebel", NULL, &(windows[0]->active));
-			ImGui::EndMenu();
-		}
-		ImGui::EndMainMenuBar();
-	}
-}
-
-bool ModuleGUI::CleanUp() {
-
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
-	
-	return true;
 }

@@ -11,7 +11,6 @@ public:
 	void Draw();
 
 	bool IsActive() { return active; };
-
 	const char* GetName() { return name; }
 
 	void ToggleActive();

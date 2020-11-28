@@ -10,15 +10,13 @@ public:
 
 	void Draw();
 
-	bool IsActive() { return active; };
-
 	void ToggleActive();
 
-	const char* GetName() { return name; }
-
-	static void GUI_GetWindowSize(float& width, float& height);
-
+	bool IsActive() { return active; };
 	bool IsSceneFocused() { return sceneFocused; }
+
+	const char* GetName() { return name; }
+	static void GUI_GetWindowSize(float& width, float& height);
 
 private:
 

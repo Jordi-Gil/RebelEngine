@@ -99,8 +99,8 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>> &
 	unsigned int program = App->program->GetMainProgram();
 
 	float4x4 model = float4x4::identity;
-	float4x4 view; App->editorCamera->GetMatrix(VIEW_MATRIX, view);
-	float4x4 projection; App->editorCamera->GetMatrix(PROJECTION_MATRIX, projection);
+	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
+	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 
 	glUseProgram(program);
 

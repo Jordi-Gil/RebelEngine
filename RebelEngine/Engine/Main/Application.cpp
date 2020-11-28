@@ -25,15 +25,15 @@ Application::Application() {
 	deltaTime = (float)applicationTimer.read();
 
 	// Order matters: they will Init/start/update in this order
-	modules.push_back(gui = new ModuleGUI());
-	modules.push_back(window = new ModuleWindow());
-	modules.push_back(input = new ModuleInput());
-	modules.push_back(texturer = new ModuleTexture());
-	modules.push_back(editorCamera = new ModuleEditorCamera());
-	modules.push_back(renderer = new ModuleRender());
-	modules.push_back(program = new ModuleProgram());
-	modules.push_back(debugDraw = new ModuleDebugDraw());
-	modules.push_back(models = new ModuleModel());
+	modules.push_back(std::make_unique<ModuleGUI>()); gui = (ModuleGUI*) modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleWindow>()); window = (ModuleWindow*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleInput>()); input = (ModuleInput*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleTexture>()); texturer = (ModuleTexture*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleEditorCamera>()); editorCamera = (ModuleEditorCamera*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleRender>()); renderer = (ModuleRender*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleProgram>()); program = (ModuleProgram*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleDebugDraw>()); debugDraw = (ModuleDebugDraw*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleModel>()); models = (ModuleModel*)modules.rbegin()->get();
 
 	gui->PreInit();
 
@@ -41,9 +41,9 @@ Application::Application() {
 
 Application::~Application() {
 
-	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it) {
-		delete* it;
-	}
+	//for (std::list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it) {
+	//	delete* it;
+	//}
 }
 
 bool Application::Init() {
@@ -81,8 +81,8 @@ update_status Application::Update() {
 
 	Uint32 prevTime = applicationTimer.read();
 
-	//if (prevTime < TIME_PER_FRAME)
-	//	SDL_Delay(TIME_PER_FRAME - prevTime);
+	if (prevTime < TIME_PER_FRAME)
+		SDL_Delay(TIME_PER_FRAME - prevTime);
 
 	App->gui->config->AddFPS(1/deltaTime, applicationTimer.read());
 

@@ -18,26 +18,21 @@
 #include "infoware/version.hpp"
 #include "infoware/utils.hpp"
 
-#include "Utils/gpuInfo.h"
-
-const char* minFilters[6] = { 
+constexpr char* minFilters[6] = { 
 	"Nearest",  "Linear", "Nearest Mipmap - Nearest", "Linear Mipmap - Nearest",
 	"Nearest Mipmap - Linear", "Linear Mipmap - Linear"
 };
-const char* magFilters[2] = { "Nearest",  "Linear" };
-const char* wrap[6] = { "Clamp to Edge", "Clamp to Border", "Mirrored repeat",
+constexpr char* magFilters[2] = { "Nearest",  "Linear" };
+constexpr char* wrap[5] = { "Clamp to Edge", "Clamp to Border", "Mirrored repeat",
 	"Repeat", "Mirror calmp to Edge" };
 
 constexpr int MAX_FRAMES = 60;
 
-iware::cpu::quantities_t quantities;
-std::vector<iware::gpu::device_properties_t> device_properties;
+iware::cpu::quantities_t quantities = iware::cpu::quantities();
 
 GUIConfiguration::GUIConfiguration(const char* _name) {
 
 	name = _name;
-	quantities = iware::cpu::quantities();
-	device_properties = iware::gpu::device_properties();
 
 	fpsHist = std::vector<float>(MAX_FRAMES, 0);
 	msHist = std::vector<float>(MAX_FRAMES, 0);
@@ -52,6 +47,8 @@ void GUIConfiguration::Draw() {
 
 	static const char* min_currentItem = minFilters[1];
 	static const char* mag_currentItem = minFilters[1];
+	static const char* wrapS_currentItem = wrap[3];
+	static const char* wrapT_currentItem = wrap[3];
 
 #pragma region windowsVars
 	int width = App->window->GetCurrentWidth();
@@ -113,11 +110,10 @@ void GUIConfiguration::Draw() {
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Fullscreen Desktop", &fullScreenDesk)) { App->window->SetWindowFullScreenDesktop(fullScreenDesk); fullScreen = false; }
 	}
-
 	if (ImGui::CollapsingHeader("Texture")) {
 		
-		ImGui::BeginColumns("##colum", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
-
+		ImGui::PushItemWidth(100);
+		
 		if (ImGui::BeginCombo("Minification function", min_currentItem)) {
 
 			for (unsigned i = 0; i < IM_ARRAYSIZE(minFilters); i++) {
@@ -150,10 +146,41 @@ void GUIConfiguration::Draw() {
 			ImGui::EndCombo();
 		}
 
-		ImGui::EndColumns();
+		if (ImGui::BeginCombo("Wrap parameter coord. S", wrapS_currentItem)) {
+
+			for (unsigned i = 0; i < IM_ARRAYSIZE(wrap); i++) {
+
+				bool is_selected = (wrapS_currentItem == wrap[i]);
+				if (ImGui::Selectable(wrap[i], is_selected)) {
+					wrapS_currentItem = wrap[i];
+					App->models->SetWrapS(i);
+				}
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		if (ImGui::BeginCombo("Wrap parameter coord. T", wrapT_currentItem)) {
+
+			for (unsigned i = 0; i < IM_ARRAYSIZE(wrap); i++) {
+
+				bool is_selected = (wrapT_currentItem == wrap[i]);
+				if (ImGui::Selectable(wrap[i], is_selected)) {
+					wrapT_currentItem = wrap[i];
+					App->models->SetWrapT(i);
+				}
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::PopItemWidth();
 
 	}
-
 	if (ImGui::CollapsingHeader("Camera")) {
 
 		//View only for editor camera
@@ -176,14 +203,14 @@ void GUIConfiguration::Draw() {
 		if (ImGui::SliderFloat("Rotation speed", &rotSpeed, 0, 5)) App->editorCamera->SetRotSpeed(rotSpeed);
 		if (ImGui::SliderFloat("Zoom speed", &zoomSpeed, 0, 5)) App->editorCamera->SetZoomSpeed(zoomSpeed);
 		float clear[3] = {
-			App->editorCamera->clearColor.x,
-			App->editorCamera->clearColor.y,
-			App->editorCamera->clearColor.z,
+			App->renderer->clearColor[0],
+			App->renderer->clearColor[1],
+			App->renderer->clearColor[2],
 		};
 		if (ImGui::DragFloat3("Background", clear, 0.01, 0, 1)) {
-			App->editorCamera->clearColor.x = clear[0];
-			App->editorCamera->clearColor.y = clear[1];
-			App->editorCamera->clearColor.z = clear[2];
+			App->renderer->clearColor[0] = clear[0];
+			App->renderer->clearColor[1] = clear[1];
+			App->renderer->clearColor[2] = clear[2];
 		}
 		if (ImGui::SliderFloat("FOV", &hFov, 50, 120)) {
 			float sceneWidth, sceneHeight; GUIScene::GUI_GetWindowSize(sceneWidth, sceneHeight);

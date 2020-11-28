@@ -2,8 +2,7 @@
 
 #include "CoreModules/ModuleGUI.h"
 
-class GUIConfiguration : public ModuleGUI
-{
+class GUIConfiguration : public ModuleGUI {
 
 public:
 

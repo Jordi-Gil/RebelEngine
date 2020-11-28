@@ -1,4 +1,5 @@
 #pragma once
+
 #include "CoreModules/ModuleGUI.h"
 
 class GUIAbout : public ModuleGUI {

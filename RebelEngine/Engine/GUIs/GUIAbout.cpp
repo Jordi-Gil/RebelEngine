@@ -12,15 +12,16 @@
 #include <string>
 
 const std::vector<std::string> MyReadFile(const char* path) {
+
 	std::ifstream ifs(path);
 	std::string line;
 	std::vector<std::string> res;
 	while (getline(ifs, line, '\n')) res.emplace_back(line);
 	
 	return res;
-
 }
 
+//Can a file be read at compile time? In C++20, but before?
 const std::vector<std::string> libs = MyReadFile("Assets/Windows/libraries.txt");
 const unsigned int size = libs.size();
 

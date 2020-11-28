@@ -16,6 +16,53 @@
 
 #define MAX_KEYS 300
 
+constexpr char* imageFormat[] = { 
+	".blp", ".bmp", ".bw", ".cur", ".cut", ".dcm", ".dcx", ".dds", ".dicom", ".dpx", ".exr", ".fit", 
+	".fits", ".ftx", ".gif", ".h", ".hdp", ".hdr", ".icns", ".ico", ".iff", ".im", ".iwi", ".jng", ".jp2", 
+	".jpe", ".jpeg", ".jpg", ".lbm", ".lif", ".lmp", ".mdl", ".mng", ".mp3", ".pbm", ".pcd", ".pcx", ".pgm", 
+	".pic", ".pix", ".png", ".pnm", ".ppm", ".psd", ".psp", ".pxr", ".ras", ".rgb", ".rgba", ".rot", ".rs", ".sgi", 
+	".sun", ".texture", ".tga", ".tif", ".tiff", ".tpl", ".utx", ".vtf", ".wal", ".wdp", ".xpm" };
+
+constexpr char* meshFormat[] = { ".3d", ".3ds", ".ac", ".ase", ".b3d", ".blend", ".bvh", ".cob", ".csm",
+".dae", ".dxf", ".fbx", ".glb", ".gltf", ".hmp", ".ifc", ".irr", ".irrmesh",
+".lwo", ".lws", ".lxo", ".md2", ".md3", ".md5", ".mdc", ".mdl", ".mdl", ".ms3d",
+".ndo", ".nff", ".nff", ".obj", ".off", ".ogex", ".pk3", ".ply", ".q3d", ".q3s",
+".raw", ".scn", ".smd", ".stl", ".ter", ".vta", ".x", ".xgl", ".xml", ".zgl" };
+
+char asciitolower(char in) {
+	if (in <= 'Z' && in >= 'A')
+		return in - ('Z' - 'z');
+	return in;
+}
+
+bool ImageSupported(const char *path) {
+
+	char extension[_MAX_EXT];
+	errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
+	if (error != 0) { ERROR_SPLIT(path, error); return false; }
+
+	std::string ext(extension);
+	std::transform(ext.begin(), ext.end(), ext.begin(), asciitolower);
+
+	for (int i = 0; i < MARRAYSIZE(imageFormat); i++)
+		if (std::strcmp(imageFormat[i], ext.c_str()) == 0) return true;
+	return false;
+}
+
+bool MeshSupported(const char* path) {
+
+	char extension[_MAX_EXT];
+	errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
+	if (error != 0) { ERROR_SPLIT(path, error); return false; }
+
+	std::string ext(extension);
+	std::transform(ext.begin(), ext.end(), ext.begin(), asciitolower);
+
+	for (int i = 0; i < MARRAYSIZE(meshFormat); i++)
+		if (std::strcmp(meshFormat[i], ext.c_str()) == 0) return true;
+	return false;
+}
+
 ModuleInput::ModuleInput(){
 	keyboard = new KeyState[MAX_KEYS];
 	memset(keyboard, (int)KeyState::KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
@@ -46,17 +93,15 @@ update_status ModuleInput::Update() {
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-	for (int i = 0; i < MAX_KEYS; ++i)
-	{
-		if (keys[i] == 1)
-		{
+	for (int i = 0; i < MAX_KEYS; ++i) {
+
+		if (keys[i] == 1) {
 			if (keyboard[i] == KeyState::KEY_IDLE)
 				keyboard[i] = KeyState::KEY_DOWN;
 			else
 				keyboard[i] = KeyState::KEY_REPEAT;
 		}
-		else
-		{
+		else {
 			if (keyboard[i] == KeyState::KEY_REPEAT || keyboard[i] == KeyState::KEY_DOWN)
 				keyboard[i] = KeyState::KEY_UP;
 			else
@@ -64,8 +109,8 @@ update_status ModuleInput::Update() {
 		}
 	}
 
-	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
-	{
+	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i) {
+
 		if (mouse_buttons[i] == KeyState::KEY_DOWN)
 			mouse_buttons[i] = KeyState::KEY_REPEAT;
 
@@ -77,12 +122,12 @@ update_status ModuleInput::Update() {
 
 	mouseWheel = 0;
 
-    while (SDL_PollEvent(&sdlEvent) != 0)
-    {
+    while (SDL_PollEvent(&sdlEvent) != 0) {
+
 		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 
-		switch (sdlEvent.type)
-		{
+		switch (sdlEvent.type) {
+
 			case SDL_QUIT:
 				return UPDATE_STOP;
 			case SDL_WINDOWEVENT:
@@ -108,7 +153,9 @@ update_status ModuleInput::Update() {
 			case SDL_DROPFILE:
 				char* dropped_filedir = sdlEvent.drop.file;
 				LOG(_INFO, "Dropped file: %s", dropped_filedir);
-				App->models->LoadModel(dropped_filedir);
+				if (ImageSupported(dropped_filedir)) App->models->LoadTexture(dropped_filedir);
+				else if (MeshSupported(dropped_filedir)) App->models->LoadModel(dropped_filedir);
+				else LOG(_ERROR, "The file dropped has not a valid extension for mesh/texture loader.");
 				SDL_free(dropped_filedir);
 				break;
 		}
@@ -118,6 +165,7 @@ update_status ModuleInput::Update() {
 }
 
 bool ModuleInput::CleanUp() {
+
 	LOG(_INFO, "Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;

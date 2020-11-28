@@ -12,18 +12,20 @@ class ModuleTexture : public Module {
 
 public:
 
-	ModuleTexture();
+	ModuleTexture() {}
 
-	~ModuleTexture();
+	~ModuleTexture() {}
 
 	bool Init();
+	bool CleanUp();
 
-	unsigned int loadTexture(const char *path, const char* meshPath, TextureInformation &info);
+	unsigned int loadTexture(const char *path, TextureInformation &info);
 
-	void SetMinFilter(int i, unsigned texID);
-	void SetMagFilter(int i, unsigned texID);
-	void SetWrapS(int i, unsigned texID);
-	void SetWrapT(int i, unsigned texID);
-	void SetWrapR(int i, unsigned texID);
+	void SetMinFilter(unsigned i, unsigned texID);
+	void SetMagFilter(unsigned i, unsigned texID);
+	void SetWrapS(unsigned i, unsigned texID);
+	void SetWrapT(unsigned i, unsigned texID);
+	void SetWrapR(unsigned i, unsigned texID);
+
 };
 

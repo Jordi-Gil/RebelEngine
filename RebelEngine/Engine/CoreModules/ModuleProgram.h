@@ -2,8 +2,7 @@
 #include "Module.h"
 #include <string>
 
-class ModuleProgram : public Module
-{
+class ModuleProgram : public Module {
 
 public:
 

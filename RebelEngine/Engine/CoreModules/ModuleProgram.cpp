@@ -19,6 +19,7 @@ bool ModuleProgram::Start() {
 }
 
 std::string ModuleProgram::readFile(const char* filePath) {
+
 	std::string content;
 	std::ifstream fileStream(filePath, std::ios::in);
 
@@ -37,19 +38,21 @@ std::string ModuleProgram::readFile(const char* filePath) {
 	return content;
 }
 
-unsigned int ModuleProgram::CompileShader(unsigned int type, const char* source)
-{
+unsigned int ModuleProgram::CompileShader(unsigned int type, const char* source) {
+
 	GLuint shader_id = glCreateShader(type);
 	glShaderSource(shader_id, 1, &source, 0);
 	glCompileShader(shader_id);
 	int res = GL_FALSE;
 	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &res);
-	if (res == GL_FALSE)
-	{
+
+	if (res == GL_FALSE) {
+
 		int len = 0;
 		glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &len);
-		if (len > 0)
-		{
+
+		if (len > 0) {
+
 			int written = 0;
 			char* info = (char*)malloc(len);
 			glGetShaderInfoLog(shader_id, len, &written, info);
@@ -68,12 +71,13 @@ unsigned int ModuleProgram::CreateProgram(unsigned int vtx_shader, unsigned int 
 	glLinkProgram(program_id);
 	int res;
 	glGetProgramiv(program_id, GL_LINK_STATUS, &res);
-	if (res == GL_FALSE)
-	{
+
+	if (res == GL_FALSE) {
+
 		int len = 0;
 		glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &len);
-		if (len > 0)
-		{
+		if (len > 0) {
+
 			int written = 0;
 			char* info = (char*)malloc(len);
 			glGetProgramInfoLog(program_id, len, &written, info);
@@ -81,8 +85,10 @@ unsigned int ModuleProgram::CreateProgram(unsigned int vtx_shader, unsigned int 
 			free(info);
 		}
 	}
+
 	glDeleteShader(vtx_shader);
 	glDeleteShader(frg_shader);
+	
 	return program_id;
 }
 
@@ -91,5 +97,4 @@ bool ModuleProgram::CleanUp() {
 	if (mainProgram != 0) glDeleteProgram(mainProgram);
 
 	return true;
-
 }
