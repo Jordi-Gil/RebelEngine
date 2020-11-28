@@ -5,8 +5,6 @@
 #include <Geometry/Frustum.h>
 
 #define PI 3.14159265358979323846  /* pi */
-#define DEGTORAD PI/180
-#define RADTODEG 180/PI
 
 enum class matrix_type {
 	PROJECTION_MATRIX = 0, VIEW_MATRIX
@@ -84,5 +82,7 @@ private:
 	float rotSpeed;
 	float currentZNear;
 	float currentZFar;
+
+	float pitch = 0;
 	
 };

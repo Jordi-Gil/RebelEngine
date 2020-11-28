@@ -61,7 +61,7 @@ void GUIConfiguration::Draw() {
 #pragma endregion windowsVars
 
 #pragma region cameraVars
-	static float hFov = (RADTODEG)*App->editorCamera->GetHorizontalFov();
+	static float hFov = RadToDeg(App->editorCamera->GetHorizontalFov());
 	static float movSpeed = App->editorCamera->GetMovSpeed();
 	static float rotSpeed = App->editorCamera->GetRotSpeed();
 	static float zoomSpeed = App->editorCamera->GetZoomSpeed();
