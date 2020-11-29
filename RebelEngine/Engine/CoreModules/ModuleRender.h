@@ -22,6 +22,12 @@ public:
 	unsigned int GetViewportTexture() { return viewportTex; }
 
 	void SetVSYNC(bool _VSYNC);
+	void EnableAlphaTest(bool _alpha);
+	void EnableBlend(bool _blend);
+	void EnableCullFace(bool _cull);
+	void EnableDepthTest(bool _depth);
+	void EnableScissorTest(bool _scissor);
+	void EnableStencilTest(bool _stencil);
 
 public:
 

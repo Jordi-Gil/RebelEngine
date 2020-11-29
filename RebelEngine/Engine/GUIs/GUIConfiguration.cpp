@@ -44,11 +44,12 @@ void GUIConfiguration::Draw() {
 	ImGui::Begin(wName.c_str() , &active, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking);
 
 	static bool vsync = VSYNC;
-
+#pragma region texture
 	static const char* min_currentItem = minFilters[1];
 	static const char* mag_currentItem = minFilters[1];
 	static const char* wrapS_currentItem = wrap[3];
 	static const char* wrapT_currentItem = wrap[3];
+#pragma endregion texture
 
 #pragma region windowsVars
 	int width = App->window->GetCurrentWidth();
@@ -69,6 +70,12 @@ void GUIConfiguration::Draw() {
 	static float zfar = App->editorCamera->GetZFar();
 #pragma endregion cameraVars
 	
+	static bool alphatest = false;
+	static bool blend = false;
+	static bool cullFace = true;
+	static bool depthTest = true;
+	static bool scissorTest = false;
+	static bool stencilTest = false;
 
 	if (ImGui::CollapsingHeader("Application")) {
 		
@@ -110,6 +117,30 @@ void GUIConfiguration::Draw() {
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Fullscreen Desktop", &fullScreenDesk)) { App->window->SetWindowFullScreenDesktop(fullScreenDesk); fullScreen = false; }
 	}
+	
+	if (ImGui::CollapsingHeader("Render")) {
+
+		float clear[3] = {
+			App->renderer->clearColor[0],
+			App->renderer->clearColor[1],
+			App->renderer->clearColor[2],
+		};
+
+		if (ImGui::Checkbox("Blend", &blend)) App->renderer->EnableBlend(blend);
+		if (ImGui::Checkbox("Cull face", &cullFace)) App->renderer->EnableCullFace(cullFace);
+		if (ImGui::Checkbox("Alpha test", &alphatest)) App->renderer->EnableAlphaTest(alphatest);
+		if (ImGui::Checkbox("Scissor test", &scissorTest)) App->renderer->EnableScissorTest(scissorTest);
+		if (ImGui::Checkbox("Stencil test", &stencilTest)) App->renderer->EnableStencilTest(stencilTest);
+		if (ImGui::Checkbox("Depth test", &depthTest)) App->renderer->EnableDepthTest(depthTest);
+
+		if (ImGui::DragFloat3("Background", clear, 0.01, 0, 1)) {
+			App->renderer->clearColor[0] = clear[0];
+			App->renderer->clearColor[1] = clear[1];
+			App->renderer->clearColor[2] = clear[2];
+		}
+
+	}
+
 	if (ImGui::CollapsingHeader("Texture")) {
 		
 		ImGui::PushItemWidth(100);
@@ -202,16 +233,7 @@ void GUIConfiguration::Draw() {
 		if (ImGui::SliderFloat("Movement speed", &movSpeed, 0, 5)) App->editorCamera->SetMovSpeed(movSpeed);
 		if (ImGui::SliderFloat("Rotation speed", &rotSpeed, 0, 5)) App->editorCamera->SetRotSpeed(rotSpeed);
 		if (ImGui::SliderFloat("Zoom speed", &zoomSpeed, 0, 5)) App->editorCamera->SetZoomSpeed(zoomSpeed);
-		float clear[3] = {
-			App->renderer->clearColor[0],
-			App->renderer->clearColor[1],
-			App->renderer->clearColor[2],
-		};
-		if (ImGui::DragFloat3("Background", clear, 0.01, 0, 1)) {
-			App->renderer->clearColor[0] = clear[0];
-			App->renderer->clearColor[1] = clear[1];
-			App->renderer->clearColor[2] = clear[2];
-		}
+		
 		if (ImGui::SliderFloat("FOV", &hFov, 50, 120)) {
 			float sceneWidth, sceneHeight; GUIScene::GUI_GetWindowSize(sceneWidth, sceneHeight);
 			App->editorCamera->SetHorizontalFov(hFov, sceneWidth / sceneHeight);

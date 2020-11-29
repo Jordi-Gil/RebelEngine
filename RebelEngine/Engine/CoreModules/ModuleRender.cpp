@@ -185,3 +185,33 @@ bool ModuleRender::CleanUp() {
 void ModuleRender::SetVSYNC(bool _VSYNC) {
 	SDL_GL_SetSwapInterval(_VSYNC);
 }
+
+void ModuleRender::EnableAlphaTest(bool _alpha) {
+	if (_alpha) glEnable(GL_ALPHA_TEST);
+	else glDisable(GL_ALPHA_TEST);
+}
+
+void ModuleRender::EnableBlend(bool _blend) {
+	if (_blend) glEnable(GL_BLEND);
+	else glDisable(GL_BLEND);
+}
+
+void ModuleRender::EnableCullFace(bool _cull) {
+	if (_cull) glEnable(GL_CULL_FACE);
+	else glDisable(GL_CULL_FACE);
+}
+
+void ModuleRender::EnableDepthTest(bool _depth) {
+	if (_depth) glEnable(GL_DEPTH_TEST);
+	else glDisable(GL_DEPTH_TEST);
+}
+
+void ModuleRender::EnableScissorTest(bool _scissor) {
+	if (_scissor) glEnable(GL_SCISSOR_TEST);
+	else glDisable(GL_SCISSOR_TEST);
+}
+
+void ModuleRender::EnableStencilTest(bool _stencil) {
+	if (_stencil) glEnable(GL_STENCIL_TEST);
+	else glDisable(GL_STENCIL_TEST);
+}
