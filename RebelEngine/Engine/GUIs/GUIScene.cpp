@@ -73,7 +73,6 @@ void GUIScene::Draw() {
 		}
 	} */
 	ImGui::End();
-
 }
 
 void GUIScene::ToggleActive() {

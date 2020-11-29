@@ -79,9 +79,9 @@ void GUIConfiguration::Draw() {
 		if (ImGui::Checkbox("VSYNC", &vsync)) App->renderer->SetVSYNC(vsync);
 
 		ImGui::Separator();
-		char title[32]; sprintf(title, "Framerate: %.2f", fpsHist[fpsHist.size()-1]);
+		char title[32]; sprintf_s(title, 32, "Framerate: %.2f", fpsHist[fpsHist.size()-1]);
 		ImGui::PlotHistogram("##framerate", &fpsHist[0], fpsHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
-		sprintf(title, "Milliseconds: %.2f", msHist[msHist.size() - 1]);
+		sprintf_s(title, 32, "Milliseconds: %.2f", msHist[msHist.size() - 1]);
 		ImGui::PlotHistogram("##milliseconds", &msHist[0], msHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
 
 	}

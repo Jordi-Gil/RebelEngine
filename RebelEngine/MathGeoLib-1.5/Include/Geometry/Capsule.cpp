@@ -454,7 +454,7 @@ bool Capsule::Intersects(const Polyhedron &polyhedron) const
 StringT Capsule::ToString() const
 {
 	char str[256];
-	sprintf(str, "Capsule(a:(%.2f, %.2f, %.2f) b:(%.2f, %.2f, %.2f), r:%.2f)", l.a.x, l.a.y, l.a.z, l.b.x, l.b.y, l.b.z, r);
+	sprintf_s(str, 256, "Capsule(a:(%.2f, %.2f, %.2f) b:(%.2f, %.2f, %.2f), r:%.2f)", l.a.x, l.a.y, l.a.z, l.b.x, l.b.y, l.b.z, r);
 	return str;
 }
 
@@ -476,7 +476,7 @@ StringT Capsule::SerializeToString() const
 StringT Capsule::SerializeToCodeString() const
 {
 	char str[256];
-	sprintf(str, "%.9g", r);
+	sprintf_s(str, 256, "%.9g", r);
 	return "Capsule(" + l.SerializeToCodeString() + "," + str + ")";
 }
 

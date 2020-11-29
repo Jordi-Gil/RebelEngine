@@ -289,7 +289,7 @@ float2 Circle2D::RandomPointInside(LCG &lcg)
 StringT Circle2D::ToString() const
 {
 	char str[256];
-	sprintf(str, "Circle2D(pos:(%.2f, %.2f) r:%.2f)",
+	sprintf_s(str, 256, "Circle2D(pos:(%.2f, %.2f) r:%.2f)",
 		pos.x, pos.y, r);
 	return str;
 }

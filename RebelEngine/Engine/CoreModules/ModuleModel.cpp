@@ -78,13 +78,24 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 
 			char path[_MAX_PATH]; char dir[_MAX_DIR]; char fileName[_MAX_FNAME], extension[_MAX_EXT];
 			errno_t error = _splitpath_s(file.data, NULL, 0, NULL, 0, fileName, _MAX_FNAME, extension, _MAX_EXT);
-			if (error != 0) { ERROR_SPLIT(file.data, error); return; }
+			if (error != 0) { 
+				char errmsg[256];
+				strerror_s(errmsg, 256, error);
+				LOG(_ERROR, "Couldn't split the given path %s. Error: %s", file.data, errmsg);
+				
+				return; 
+			}
 
 			if (textureId == 0) {
 				//If textureID == 0 , load fails from path given by FBX.
 				//Load from same directory than mesh file.
 				error = _splitpath_s(fbxPath, NULL, 0, dir, _MAX_DIR, NULL, 0, NULL, 0);
-				if (error != 0) { ERROR_SPLIT(fbxPath, error); return; }
+				if (error != 0) {
+					char errmsg[256];
+					strerror_s(errmsg, 256, error);
+					LOG(_ERROR, "Couldn't split the given path %s. Error: %s", fbxPath, errmsg);
+					return; 
+				}
 
 				error = sprintf_s(path, _MAX_PATH, "%s%s%s", dir, fileName, extension);
 				if (error == -1) { LOG(_ERROR, "Error constructing path. Error: %s", strerror(error)); return; }

@@ -15,12 +15,12 @@ void log(const char file[], int line, const char* type, const char* format, ...)
 	static char _Tmpbuffer[1024];
 	static char _finalbuffer[4096];
 
-	vsprintf(_Tmpbuffer, format, ap);
+	vsprintf_s(_Tmpbuffer, 1024, format, ap);
 	va_end(ap);
 
 	if (ImGui::GetCurrentContext() != nullptr) sprintf(_finalbuffer, "%s [%05d] %s\n", type, ImGui::GetFrameCount(), _Tmpbuffer);
-	else sprintf(_finalbuffer, "%s [%05d] %s \n", type, 0, _Tmpbuffer);
+	else sprintf_s(_finalbuffer, 4096, "%s [%05d] %s \n", type, 0, _Tmpbuffer);
 
-	App->gui->terminal->logBuffer.push_back(strdup(_finalbuffer));
+	App->gui->terminal->logBuffer.push_back(_strdup(_finalbuffer));
 	App->gui->terminal->scrollToBottom = true;
 }

@@ -1995,7 +1995,7 @@ bool float4x4::ContainsProjection(float epsilon) const
 StringT float4x4::ToString() const
 {
 	char str[256];
-	sprintf(str, "(%.2f, %.2f, %.2f, %.2f) (%.2f, %.2f, %.2f, %.2f) (%.2f, %.2f, %.2f, %.2f) (%.2f, %.2f, %.2f, %.2f)",
+	sprintf_s(str, 256, "(%.2f, %.2f, %.2f, %.2f) (%.2f, %.2f, %.2f, %.2f) (%.2f, %.2f, %.2f, %.2f) (%.2f, %.2f, %.2f, %.2f)",
 		At(0, 0), At(0, 1), At(0, 2), At(0, 3),
 		At(1, 0), At(1, 1), At(1, 2), At(1, 3),
 		At(2, 0), At(2, 1), At(2, 2), At(2, 3),
@@ -2031,7 +2031,7 @@ StringT float4x4::SerializeToString() const
 StringT float4x4::ToString2() const
 {
 	char str[256];
-	sprintf(str, "float4x4(X:(%.2f,%.2f,%.2f,%.2f) Y:(%.2f,%.2f,%.2f,%.2f) Z:(%.2f,%.2f,%.2f,%.2f), Pos:(%.2f,%.2f,%.2f,%.2f))",
+	sprintf_s(str, 256, "float4x4(X:(%.2f,%.2f,%.2f,%.2f) Y:(%.2f,%.2f,%.2f,%.2f) Z:(%.2f,%.2f,%.2f,%.2f), Pos:(%.2f,%.2f,%.2f,%.2f))",
 		At(0, 0), At(1, 0), At(2, 0), At(3, 0),
 		At(0, 1), At(1, 1), At(2, 1), At(3, 1),
 		At(0, 2), At(1, 2), At(2, 2), At(3, 2),

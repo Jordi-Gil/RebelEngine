@@ -216,7 +216,7 @@ bool IsNeutralCLocale()
 StringT float2::ToString() const
 {
 	char str[256];
-	sprintf(str, "(%f, %f)", x, y);
+	sprintf_s(str, 256, "(%f, %f)", x, y);
 	return str;
 }
 

@@ -112,7 +112,7 @@ void ModuleRender::BindBuffers(float width, float height) {
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
-	//Generate the texture
+	//Re-Generate the texture
 	glGenTextures(1, &viewportTex);
 	glBindTexture(GL_TEXTURE_2D, viewportTex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (unsigned)width, (unsigned)height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
@@ -135,11 +135,15 @@ void ModuleRender::Draw(float width, float height) {
 	GLenum  error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (error != GL_FRAMEBUFFER_COMPLETE) {
 		LOG(_ERROR, "RENDER ERROR, %d", error);
+		return;
+		//return UPDATE_ERROR;
 		//Necessary?
+		/*
 		if (FBO != 0) glDeleteFramebuffers(1, &FBO);
 		glGenFramebuffers(1, &FBO);
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 		BindBuffers(width, height);
+		*/
 	}
 
 	glViewport(0, 0, width, height);
@@ -156,7 +160,7 @@ void ModuleRender::Draw(float width, float height) {
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 update_status ModuleRender::PostUpdate() {

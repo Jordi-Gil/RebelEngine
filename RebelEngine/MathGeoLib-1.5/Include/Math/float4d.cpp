@@ -32,7 +32,7 @@ const float4d float4d::inf = float4d(FLOAT_INF, FLOAT_INF, FLOAT_INF, FLOAT_INF)
 StringT float4d::ToString() const
 {
 	char str[256];
-	sprintf(str, "(%.3f, %.3f, %.3f, %.3f)", x, y, z, w);
+	sprintf_s(str, 256, "(%.3f, %.3f, %.3f, %.3f)", x, y, z, w);
 	return str;
 }
 #endif

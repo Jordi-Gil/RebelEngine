@@ -39,7 +39,12 @@ bool ImageSupported(const char *path) {
 
 	char extension[_MAX_EXT];
 	errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
-	if (error != 0) { ERROR_SPLIT(path, error); return false; }
+	if (error != 0) { 
+		char errmsg[256];
+		strerror_s(errmsg, 256, error);
+		LOG(_ERROR, "Couldn't split the given path %s. Error: %s", path, errmsg);
+		return false; 
+	}
 
 	std::string ext(extension);
 	std::transform(ext.begin(), ext.end(), ext.begin(), asciitolower);
@@ -53,7 +58,12 @@ bool MeshSupported(const char* path) {
 
 	char extension[_MAX_EXT];
 	errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
-	if (error != 0) { ERROR_SPLIT(path, error); return false; }
+	if (error != 0) {
+		char errmsg[256];
+		strerror_s(errmsg, 256, error);
+		LOG(_ERROR, "Couldn't split the given path %s. Error: %s", path, errmsg);
+		return false;
+	}
 
 	std::string ext(extension);
 	std::transform(ext.begin(), ext.end(), ext.begin(), asciitolower);

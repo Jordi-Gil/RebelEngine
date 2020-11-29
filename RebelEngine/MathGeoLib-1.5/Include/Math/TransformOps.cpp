@@ -74,7 +74,7 @@ vec TranslateOp::Offset() const
 StringT TranslateOp::ToString() const
 {
 	char str[256];
-	sprintf(str, "(%.3f, %.3f, %.3f)", offset.x, offset.y, offset.z);
+	sprintf_s(str, 256, "(%.3f, %.3f, %.3f)", offset.x, offset.y, offset.z);
 	return str;
 }
 #endif
@@ -290,7 +290,7 @@ vec ScaleOp::Offset() const
 StringT ScaleOp::ToString() const
 {
 	char str[256];
-	sprintf(str, "(%.3f, %.3f, %.3f)", scale.x, scale.y, scale.z);
+	sprintf_s(str, 256, "(%.3f, %.3f, %.3f)", scale.x, scale.y, scale.z);
 	return str;
 }
 #endif
