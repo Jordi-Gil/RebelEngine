@@ -18,6 +18,12 @@
 #include "infoware/version.hpp"
 #include "infoware/utils.hpp"
 
+#include <GL\glew.h>
+
+#define GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX 0x9047
+#define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
+#define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
+
 constexpr char* minFilters[6] = { 
 	"Nearest",  "Linear", "Nearest Mipmap - Nearest", "Linear Mipmap - Nearest",
 	"Nearest Mipmap - Linear", "Linear Mipmap - Linear"
@@ -284,27 +290,25 @@ void GUIConfiguration::Draw() {
 
 		if (ImGui::CollapsingHeader("GPU")) {
 
-			std::vector<iware::gpu::device_properties_t> device_properties = {};
+			GLint totalMem = 0;
+			glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX,
+				&totalMem);
 
-			iware::gpu::device_properties(device_properties);
+			GLint availMem = 0;
+			glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
+				&availMem);
 
-			if (device_properties.empty())
-				ImGui::TextColored(ImVec4(1,0,0,0), "No detection methods enabled");
+			GLint usageMem = totalMem - availMem;
 		
-			for (auto i = 0u; i < device_properties.size(); ++i) {
-				const auto& properties_of_device = device_properties[i];
-				ImGui::BulletText("Device #%d:", (i + 1));
-				ImGui::Text("Vendor: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%s", iware::gpu::vendor_name(properties_of_device.vendor));
-				ImGui::Text("Name: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%s", properties_of_device.name);
-				ImGui::Text("VRAM size: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB", 
-					float(properties_of_device.budget_memory) / (1024.f * 1024.f * 1024.f));
-				ImGui::Text("VRAM Available: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB", 
-					float(properties_of_device.available_memory) / (1024.f * 1024.f * 1024.f));
-				ImGui::Text("VRAM Usage: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB",
-					float(properties_of_device.usage_memory) / (1024.f * 1024.f * 1024.f));
-				ImGui::Text("VRAM Reserved: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB",
-					float(properties_of_device.reserved_memory) / (1024.f * 1024.f * 1024.f));
-			}
+			ImGui::Text("Vendor: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%s", glGetString(GL_VENDOR));
+			ImGui::Text("Name: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%s", glGetString(GL_RENDERER));
+			ImGui::Text("VRAM size: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB", 
+				float(totalMem) / (1024.f * 1024.f));
+			ImGui::Text("VRAM Available: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB", 
+				float(availMem) / (1024.f * 1024.f));
+			ImGui::Text("VRAM Usage: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%.1f GB",
+				float(usageMem) / (1024.f * 1024.f));
+			
 		}
 #pragma endregion GPU
 	}

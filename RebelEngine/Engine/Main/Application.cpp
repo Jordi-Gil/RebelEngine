@@ -29,8 +29,8 @@ Application::Application() {
 	modules.push_back(std::make_unique<ModuleWindow>()); window = (ModuleWindow*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleInput>()); input = (ModuleInput*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleTexture>()); texturer = (ModuleTexture*)modules.rbegin()->get();
-	modules.push_back(std::make_unique<ModuleEditorCamera>()); editorCamera = (ModuleEditorCamera*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleRender>()); renderer = (ModuleRender*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleEditorCamera>()); editorCamera = (ModuleEditorCamera*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleProgram>()); program = (ModuleProgram*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleDebugDraw>()); debugDraw = (ModuleDebugDraw*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleModel>()); models = (ModuleModel*)modules.rbegin()->get();
@@ -41,9 +41,6 @@ Application::Application() {
 
 Application::~Application() {
 
-	//for (std::list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it) {
-	//	delete* it;
-	//}
 }
 
 bool Application::Init() {

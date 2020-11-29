@@ -235,6 +235,7 @@
     <ClInclude Include="infoware-0.5.5\include\infoware\utils.hpp" />
     <ClInclude Include="infoware-0.5.5\include\infoware_generated\pci_data.hpp" />
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">
@@ -257,5 +258,11 @@
     <None Include="MathGeoLib-1.5\Include\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
     <None Include="Game\shaders\vertex.vert" />
     <None Include="Game\shaders\fragment.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RebelEngineMaster.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
   </ItemGroup>
 </Project>

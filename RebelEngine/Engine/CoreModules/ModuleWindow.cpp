@@ -1,7 +1,13 @@
+#include "ModuleWindow.h"
+#include "ModuleTexture.h"
+
 #include "Utils/Globals.h"
 
 #include "Main/Application.h"
-#include "ModuleWindow.h"
+
+#include <SDL/SDL_image.h>
+
+#include <GL/glew.h>
 
 ModuleWindow::ModuleWindow() { }
 
@@ -59,7 +65,17 @@ bool ModuleWindow::Init() {
 	SDL_SetWindowMaximumSize(window, maxWidth, maxHeight);
 	SDL_SetWindowBrightness(window, 1.0f);
 
+	SDL_Surface *icon = IMG_Load("Assets/Images/Logo/rebel_logo_no_text.png");
+	SDL_SetWindowIcon(window, icon);
+
 	return ret;
+}
+
+bool ModuleWindow::Start() {
+
+	TextureInformation info;
+	texIcon = App->texturer->loadTexture("Assets/Images/Logo/rebel_logo.png", info);
+	return true;
 }
 
 #pragma region setters

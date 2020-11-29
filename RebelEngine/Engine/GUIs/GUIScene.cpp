@@ -80,6 +80,6 @@ void GUIScene::ToggleActive() {
 }
 
 void GUIScene::GUI_GetWindowSize(float &width, float &height){
-	width = sceneWidth;// _sceneWindowWidth;
-	height = sceneHeight; // _sceneWindowHeight;
+	width = sceneWidth;
+	height = sceneHeight;
 }

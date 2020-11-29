@@ -12,6 +12,8 @@ public:
 	ModuleWindow();
 	virtual ~ModuleWindow();
 
+	bool Start();
+
 	bool Init();
 	bool CleanUp();
 
@@ -38,6 +40,8 @@ public:
 
 	int minWidth = 1050, minHeight = 250;
 	int maxWidth, maxHeight;
+
+	unsigned int texIcon = 0;
 
 private:
 

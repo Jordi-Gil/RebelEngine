@@ -98,7 +98,7 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 				}
 
 				error = sprintf_s(path, _MAX_PATH, "%s%s%s", dir, fileName, extension);
-				if (error == -1) { LOG(_ERROR, "Error constructing path. Error: %s", strerror(error)); return; }
+				if (error == -1) { char errmsg[256]; strerror_s(errmsg, 256, error); LOG(_ERROR, "Error constructing path. Error: %s", errmsg); return; }
 
 				LOG(_INFO, "Loading texture from %s", path);
 				textureId = App->texturer->loadTexture(path, info);
@@ -109,7 +109,7 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 				//If textureID == 0 , load fails from same directory than FBX.
 				//Load from textures directory.
 				error = sprintf_s(path, _MAX_PATH, "Assets/Textures/%s%s", fileName, extension);
-				if (error == -1) { LOG(_ERROR, "Error constructing path. Error: %s", strerror(error)); return; }
+				if (error == -1) { char errmsg[256]; strerror_s(errmsg, 256, error); LOG(_ERROR, "Error constructing path. Error: %s", errmsg); return; }
 
 				LOG(_INFO, "Loading texture from %s", path);
 				textureId = App->texturer->loadTexture(path, info);
@@ -172,7 +172,7 @@ void ModuleModel::Draw() {
 
 bool ModuleModel::CleanUp() {
 
-	for (int i = 0; i < meshes.size(); i++) meshes[i].Clean();
+	for (unsigned i = 0; i < meshes.size(); i++) meshes[i].Clean();
 	meshes.clear();
 	meshes.shrink_to_fit();
 

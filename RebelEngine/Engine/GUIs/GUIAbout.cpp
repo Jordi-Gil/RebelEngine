@@ -1,5 +1,9 @@
 #include "GUIAbout.h"
 
+#include "Main/Application.h"
+
+#include "CoreModules/ModuleWindow.h"
+
 #include "ImGui/IconsFontAwesome5.h"
 
 #include "ImGui/imgui_impl_sdl.h"
@@ -40,6 +44,8 @@ void GUIAbout::Draw() {
 	if (ImGui::BeginPopupModal(name, NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove)) {
 
 		ImGui::SetWindowSize(ImVec2(0, 0));
+
+		ImGui::Image((void*) App->window->texIcon, ImVec2(128,128), ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::Text("Version: Rebel Engine"); ImGui::SameLine(); ImGui::Text(VERSION);
 		ImGui::Text("Rebel is a game engine programmed entirely in C++.");
