@@ -1,3 +1,4 @@
+
 # Rebel Engine
 Basic engine created for academic reasons for the UPC' s Talent School Master Degree in Advanced Programming for AAA Videogames.
 ## Features
@@ -90,8 +91,8 @@ In this window we can see information related to the CPU and GPU.<span id="a5">[
 
 [https://github.com/Jordi-Gil/RebelEngine/](https://github.com/Jordi-Gil/RebelEngine/)
 
-1. <span id="f1"></span> This is a footnote. [$\hookleftarrow$](#a1): At the moment, only models in *.FBX* format have been tested.
-2. <span id="f2"></span> This is a footnote. [$\hookleftarrow$](#a2): Allows to load textures in any of the formats supported by [DevIL](http://openil.sourceforge.net/).
-3. <span id="f3"></span> This is a footnote. [$\hookleftarrow$](#a3): At the moment there are no commands available.
-4. <span id="f4"></span> This is a footnote. [$\hookleftarrow$](#a4): Some options, such as stencil test, do not affect the current pipeline.
-5. <span id="f5"></span> This is a footnote. [$\hookleftarrow$](#a5): The information about the graph memory is not necessarily accurate.
+1. <span id="f1"></span>: At the moment, only models in *.FBX* format have been tested.  [$`\hookleftarrow`$](#a1)
+2. <span id="f2"></span>: Allows to load textures in any of the formats supported by [DevIL] (http://openil.sourceforge.net/). [$`\hookleftarrow`$](#a2)
+3. <span id="f3"></span>: At the moment there are no commands available. [$`\hookleftarrow`$](#a3)
+4. <span id="f4"></span>: Some options, such as stencil test, do not affect the current pipeline. [$`\hookleftarrow`$](#a4)
+5. <span id="f5"></span>: The information about the graph memory is not necessarily accurate. [$`\hookleftarrow`$](#a5)
