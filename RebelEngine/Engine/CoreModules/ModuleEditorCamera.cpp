@@ -208,17 +208,7 @@ void ModuleEditorCamera::Focus() {
 
 	vec size = App->models->GetSizeScene();
 	vec center = App->models->GetCenterScene();
-
-	frustum.SetPos(center + frustum.Front().Neg() * size.Length() * 1.5 );
-
-	vec target = (center - frustum.Pos()).Normalized();
-	float3x3 rotationMatrix = float3x3::LookAt(frustum.Front(), target, frustum.Up(), float3::unitY);
-
-	vec oldFront = frustum.Front();
-	frustum.SetFront(rotationMatrix.MulDir(oldFront));
-	vec oldUp = frustum.Up();
-	frustum.SetUp(rotationMatrix.MulDir(oldUp));
-
+	frustum.SetPos(center + frustum.Front().Neg() * (size.Length() * 0.5) * 2 );
 	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), frustum.FarPlaneDistance() * size.Length());
 }
 

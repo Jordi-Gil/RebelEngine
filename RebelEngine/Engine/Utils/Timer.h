@@ -33,8 +33,6 @@ private:
 
 };
 
-static const Uint64 frequency = SDL_GetPerformanceFrequency();
-
 class uSTimer {
 
 	void start() {
@@ -47,11 +45,11 @@ class uSTimer {
 		stopTime = SDL_GetPerformanceCounter();
 	}
 
-	double read() {
+	Uint64 read() {
 		if (isStopped) {
-			return (stopTime - startTime) / (double) frequency;
+			return (stopTime - startTime) / SDL_GetPerformanceFrequency();
 		}
-		else return (SDL_GetPerformanceCounter() - startTime) / (double)frequency;
+		else return (SDL_GetPerformanceCounter() - startTime) / SDL_GetPerformanceFrequency();
 	}
 
 	Uint64 startTime;

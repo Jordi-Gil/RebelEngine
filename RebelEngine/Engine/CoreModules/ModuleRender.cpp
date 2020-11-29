@@ -134,16 +134,16 @@ void ModuleRender::Draw(float width, float height) {
 
 	GLenum  error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (error != GL_FRAMEBUFFER_COMPLETE) {
-		LOG(_ERROR, "RENDER ERROR, %d", error);
-		return;
-		//return UPDATE_ERROR;
-		//Necessary?
-		/*
-		if (FBO != 0) glDeleteFramebuffers(1, &FBO);
-		glGenFramebuffers(1, &FBO);
-		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-		BindBuffers(width, height);
-		*/
+		char msg[256];
+		sprintf_s(msg, 256, "Erorr <%d>: %s", error, glewGetErrorString(error));
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+			"Render error",
+			msg,
+			NULL);
+		SDL_Event event;
+		event.type = SDL_QUIT;
+		SDL_PushEvent(&event);
+		
 	}
 
 	glViewport(0, 0, width, height);

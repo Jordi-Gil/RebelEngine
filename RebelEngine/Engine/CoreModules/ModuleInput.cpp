@@ -81,6 +81,7 @@ ModuleInput::ModuleInput(){
 // Destructor
 ModuleInput::~ModuleInput(){
 	delete[] keyboard;
+	keyboard = nullptr;
 }
 
 // Called before render is available
@@ -135,7 +136,7 @@ update_status ModuleInput::Update() {
     while (SDL_PollEvent(&sdlEvent) != 0) {
 
 		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
-
+		
 		switch (sdlEvent.type) {
 
 			case SDL_QUIT:
@@ -144,7 +145,8 @@ update_status ModuleInput::Update() {
 				switch (sdlEvent.window.event) {
 					case SDL_WINDOWEVENT_RESIZED:
 					case SDL_WINDOWEVENT_SIZE_CHANGED:
-						App->window->ResizeWindow(sdlEvent.window.data1, sdlEvent.window.data2);
+						if (sdlEvent.window.windowID == App->window->GetWindowID()) 
+							App->window->ResizeWindow(sdlEvent.window.data1, sdlEvent.window.data2);
 						break;
 					case SDL_WINDOWEVENT_CLOSE:
 						return UPDATE_STOP;
