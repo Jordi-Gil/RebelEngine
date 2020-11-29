@@ -91,8 +91,8 @@ In this window we can see information related to the CPU and GPU.<span id="a5">[
 
 [https://github.com/Jordi-Gil/RebelEngine/](https://github.com/Jordi-Gil/RebelEngine/)
 
-1. <span id="f1"></span>: At the moment, only models in *.FBX* format have been tested.  [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a1)
-2. <span id="f2"></span>: Allows to load textures in any of the formats supported by [DevIL] (http://openil.sourceforge.net/). [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a2)
-3. <span id="f3"></span>: At the moment there are no commands available. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a3)
-4. <span id="f4"></span>: Some options, such as stencil test, do not affect the current pipeline. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a4)
-5. <span id="f5"></span>: The information about the graph memory is not necessarily accurate. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a5)
+1. <span id="f1"></span> At the moment, only models in *.FBX* format have been tested.  [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a1)
+2. <span id="f2"></span> Allows to load textures in any of the formats supported by [DevIL] (http://openil.sourceforge.net/). [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a2)
+3. <span id="f3"></span> At the moment there are no commands available. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a3)
+4. <span id="f4"></span> Some options, such as stencil test, do not affect the current pipeline. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a4)
+5. <span id="f5"></span> The information about the graph memory is not necessarily accurate. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a5)
