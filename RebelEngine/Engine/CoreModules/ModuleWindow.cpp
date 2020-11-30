@@ -68,6 +68,8 @@ bool ModuleWindow::Init() {
 	SDL_Surface *icon = IMG_Load("Assets/Images/Logo/rebel_logo_no_text.png");
 	SDL_SetWindowIcon(window, icon);
 
+	SDL_MaximizeWindow(window);
+
 	return ret;
 }
 
