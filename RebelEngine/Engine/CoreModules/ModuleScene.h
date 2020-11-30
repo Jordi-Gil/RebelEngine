@@ -12,6 +12,8 @@ class ModuleScene : public Module {
 	bool Init();
 	update_status Update();
 
+	GameObject* CreateGameObject();
+
 	std::unique_ptr<GameObject> root;
 
 };

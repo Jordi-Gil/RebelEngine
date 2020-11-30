@@ -6,8 +6,7 @@ class GameObject;
 
 enum class type_component {
 	TRANSFORM,
-	MESH,
-	MATERIAL
+	MESHRENDERER
 };
 
 class Component {
@@ -24,7 +23,7 @@ public:
 
 private:
 
-	std::unique_ptr<GameObject*> owner;
+	std::unique_ptr<GameObject> owner;
 	bool active = false;
 	type_component type;
 

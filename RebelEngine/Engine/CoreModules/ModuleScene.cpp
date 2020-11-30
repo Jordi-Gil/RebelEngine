@@ -9,3 +9,7 @@ update_status ModuleScene::Update() {
 
 	return UPDATE_CONTINUE;
 }
+
+GameObject* CreateGameObject() {
+
+}
