@@ -1,7 +1,7 @@
 
 # Rebel Engine
 
-![alt text](https://github.com/Jordi-Gil/RebelEngine/blob/main/RebelEngine/Game/Assets/Images/Logo/rebel_logo.png?raw=true =350x350)
+![](https://github.com/Jordi-Gil/RebelEngine/blob/main/RebelEngine/Game/Assets/Images/Logo/rebel_logo.png?raw=true =350x350)
 
 Basic engine created for academic reasons for the UPC's Talent School Master Degree in Advanced Programming for AAA Video Games.
 ## Features
