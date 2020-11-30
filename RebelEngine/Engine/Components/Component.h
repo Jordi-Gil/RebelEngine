@@ -21,7 +21,7 @@ public:
 	virtual void Update() {}
 	virtual void Disable() {}
 
-private:
+protected:
 
 	std::unique_ptr<GameObject> owner;
 	bool active = false;

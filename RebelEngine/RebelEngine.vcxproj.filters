@@ -113,6 +113,7 @@
     <ClCompile Include="Engine\GUIs\GUIInspector.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleScene.cpp" />
     <ClCompile Include="Engine\Main\GameObject.cpp" />
+    <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -241,6 +242,7 @@
     <ClInclude Include="Engine\CoreModules\ModuleScene.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="Engine\Components\Component.h" />
+    <ClInclude Include="Engine\Components\ComponentTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

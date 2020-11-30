@@ -280,6 +280,7 @@
     <ClInclude Include="Engine\CoreModules\ModuleGUI.h" />
     <ClInclude Include="Engine\CoreModules\ModuleScene.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Engine\Components\ComponentTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
@@ -394,6 +395,7 @@
     <ClCompile Include="MathGeoLib-1.5\Include\Time\Clock.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleGUI.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleScene.cpp" />
+    <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\shaders\fragment.frag" />
