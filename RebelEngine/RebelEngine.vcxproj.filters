@@ -111,6 +111,8 @@
     <ClCompile Include="infoware-0.5.5\include\infoware\pci.cpp" />
     <ClCompile Include="infoware-0.5.5\include\infoware\version.cpp" />
     <ClCompile Include="Engine\GUIs\GUIInspector.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleScene.cpp" />
+    <ClCompile Include="Engine\Main\GameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -236,6 +238,9 @@
     <ClInclude Include="infoware-0.5.5\include\infoware_generated\pci_data.hpp" />
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleScene.h" />
+    <ClInclude Include="Engine\Main\GameObject.h" />
+    <ClInclude Include="Engine\Components\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

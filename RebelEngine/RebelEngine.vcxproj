@@ -154,6 +154,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\CoreModules\Module.h" />
     <ClInclude Include="Engine\CoreModules\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\CoreModules\ModuleEditorCamera.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Engine\GUIs\GUIAbout.h" />
     <ClInclude Include="Engine\GUIs\GUITerminal.h" />
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
+    <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="ImGui\Include\ImGui\imconfig.h" />
     <ClInclude Include="ImGui\Include\ImGui\imgui.h" />
@@ -276,6 +278,7 @@
     <ClInclude Include="MathGeoLib-1.5\Include\Math\vec2d.h" />
     <ClInclude Include="MathGeoLib-1.5\Include\Time\Clock.h" />
     <ClInclude Include="Engine\CoreModules\ModuleGUI.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleScene.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -296,6 +299,7 @@
     <ClCompile Include="Engine\GUIs\GUIAbout.cpp" />
     <ClCompile Include="Engine\GUIs\GUITerminal.cpp" />
     <ClCompile Include="Engine\GUIs\GUIInspector.cpp" />
+    <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_draw.cpp" />
@@ -389,6 +393,7 @@
     <ClCompile Include="MathGeoLib-1.5\Include\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib-1.5\Include\Time\Clock.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleGUI.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\shaders\fragment.frag" />
