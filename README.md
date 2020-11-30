@@ -1,6 +1,6 @@
 
 # Rebel Engine
-Basic engine created for academic reasons for the UPC' s Talent School Master Degree in Advanced Programming for AAA Videogames.
+Basic engine created for academic reasons for the UPC's Talent School Master Degree in Advanced Programming for AAA Video Games.
 ## Features
 
  - 3D Scene view with Unity-like controls
