@@ -99,7 +99,7 @@ In this window we can see information related to the CPU and GPU.<span id="a5">[
 If an error about "fonts" occurs, don't panic. Click on 'retry' and works prefectlly. Tested in four PC and in one of them this error occurs, but the application don't crash.
 
 1. <span id="f1"></span> At the moment, only models in *.FBX* format have been tested.  [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a1)
-2. <span id="f2"></span> Allows to load textures in any of the formats supported by [DevIL] (http://openil.sourceforge.net/). [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a2)
+2. <span id="f2"></span> Allows to load textures in any of the formats supported by [DevIL](http://openil.sourceforge.net/). [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a2)
 3. <span id="f3"></span> At the moment there are no commands available. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a3)
 4. <span id="f4"></span> Some options, such as stencil test, do not affect the current pipeline. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a4)
 5. <span id="f5"></span> The information about the graph memory is not necessarily accurate. [<img src="https://render.githubusercontent.com/render/math?math=\hookleftarrow">](#a5)
