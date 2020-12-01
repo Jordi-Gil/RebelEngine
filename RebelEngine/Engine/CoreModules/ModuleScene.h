@@ -12,7 +12,7 @@ class ModuleScene : public Module {
 	bool Init();
 	update_status Update();
 
-	GameObject* CreateGameObject();
+	//GameObject* CreateGameObject();
 
 	std::unique_ptr<GameObject> root;
 
