@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "Main/Mesh.h"
+#include "Main/GameObject.h"
 
 #include "Math/float3.h"
 
@@ -45,8 +46,9 @@ public:
 private:
 
 	void LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes);
+	void LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes, GameObject& father);
 	void LoadTextures(aiMaterial** const materials, unsigned int mNumMaterials, const char* fbxPath);
-	
+
 private:
 
 	float max[3] = { FLT_MIN, FLT_MIN , FLT_MIN }, min[3] = { FLT_MAX , FLT_MAX , FLT_MAX };

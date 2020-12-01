@@ -5,13 +5,13 @@
 #include "Math/float4x4.h"
 #include "Math/Quat.h"
 
-class Transform : public Component {
+class ComponentTransform : public Component {
 
 public:
 
-	Transform() {}
-	Transform(const float3 _position, const float3 _rotation, const float3 _scale);
-	~Transform() {}
+	ComponentTransform() {}
+	ComponentTransform(const float3 _position, const float3 _rotation, const float3 _scale);
+	~ComponentTransform() {}
 
 	void SetTransform(const float3 _position, const float3 _rotation, const float3 _scale);
 

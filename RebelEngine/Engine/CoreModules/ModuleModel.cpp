@@ -3,13 +3,15 @@
 #include "ModuleEditorCamera.h"
 
 #include "Main/Application.h"
-
 #include "Utils/Globals.h"
+#include "Components/ComponentMeshRenderer.h"
+#include "Components/ComponentTransform.h"
 
 #include <GL/GL.h>
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
+
 
 
 void LogAssimp(const char* msg, char* userData) {
@@ -27,6 +29,29 @@ bool ModuleModel::Init() {
 
 	LoadModel("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
 	return true;
+}
+void ModuleModel::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes, GameObject& father) {
+
+	LOG(_INFO, "Meshes: %d", mNumMeshes);
+
+	numMeshes = mNumMeshes;
+	//meshes.reserve(numMeshes);
+
+	for (unsigned int i = 0; i < mNumMeshes; i++) {
+		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
+		std::unique_ptr<ComponentMeshRenderer> comp = std::make_unique<ComponentMeshRenderer>();
+		Mesh* mesh = new Mesh();
+		mesh->LoadVBO(mMeshes[i], max, min);
+		mesh->LoadEBO(mMeshes[i]);
+		mesh->CreateVAO();
+		std::unique_ptr <ComponentTransform> comp_trans = std::make_unique <ComponentTransform>();
+		go->AddComponent(std::move(comp_trans));
+		comp->SetMesh(mesh);
+		father.AddChild(go);
+	}
+
+	App->editorCamera->Focus();
+
 }
 
 void ModuleModel::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes){
@@ -144,17 +169,18 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 void ModuleModel::LoadModel(const char* fileName) {
 	
 	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
-
 	if (scene) {
-
+		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
+		std::unique_ptr<ComponentTransform> comp = std::make_unique<ComponentTransform>();
+		go->AddComponent(std::move(comp));
 		if (!meshes.empty()) {
 			CleanUp();
 			max[0] = max[1] = max[2] = FLT_MIN;
 			min[0] = min[1] = min[2] = FLT_MAX;
 		}
-
-		LoadMeshes(scene->mMeshes, scene->mNumMeshes);
+		LoadMeshes(scene->mMeshes, scene->mNumMeshes, *go);
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
+
 	}
 	else {
 		LOG(_ERROR, "Error loading mesh %s: %s", fileName, aiGetErrorString());

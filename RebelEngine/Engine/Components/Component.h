@@ -4,7 +4,7 @@
 
 class GameObject;
 
-enum class type_component {
+enum  class type_component {
 	TRANSFORM,
 	MESHRENDERER
 };
@@ -23,8 +23,7 @@ public:
 
 protected:
 
-	std::unique_ptr<GameObject> owner;
+	GameObject* owner;
 	bool active = false;
 	type_component type;
-
 };

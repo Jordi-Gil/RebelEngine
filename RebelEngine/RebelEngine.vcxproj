@@ -74,7 +74,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./infoware-0.5.5/include;./SDL2_image/include;./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include;C:\Program Files %28x86%29\Visual Leak Detector\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./infoware-0.5.5/include;./SDL2_image/include;./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include;./Visual Leak Detector/include</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>INFOWARE_USE_D3D;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -82,7 +82,7 @@
     <Link>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./infoware-0.5.5/lib/Debug;./assimp-5.0.1/lib/;./DevIL-1.8.0/lib/x86/Release;./SDL2_image/libx86/;./glew-2.1.0/lib/Release/Win32;C:\Program Files %28x86%29\Visual Leak Detector\bin\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./infoware-0.5.5/lib/Debug;./assimp-5.0.1/lib/;./DevIL-1.8.0/lib/x86/Release;./SDL2_image/libx86/;./glew-2.1.0/lib/Release/Win32;./Visual Leak Detector/bin/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>infowared.lib;vld.lib;assimp-vc141-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;SDL2_image.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;wbemuuid.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
@@ -154,6 +154,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\CoreModules\Module.h" />
     <ClInclude Include="Engine\CoreModules\ModuleDebugDraw.h" />
@@ -283,6 +284,7 @@
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleInput.cpp" />
