@@ -1,6 +1,6 @@
 #include "ComponentTransform.h"
 
-Transform::Transform(const float3 _position, const float3 _rotation, const float3 _scale) {
+ComponentTransform::ComponentTransform(const float3 _position, const float3 _rotation, const float3 _scale) {
 
 	type = type_component::TRANSFORM;
 
@@ -14,7 +14,7 @@ Transform::Transform(const float3 _position, const float3 _rotation, const float
 
 }
 
-void Transform::SetTransform(const float3 _position, const float3 _rotation, const float3 _scale) {
+void ComponentTransform::SetTransform(const float3 _position, const float3 _rotation, const float3 _scale) {
 
 	if (owner) {
 

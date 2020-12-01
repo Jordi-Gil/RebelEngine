@@ -1,8 +1,8 @@
 #include <cstdlib>
 
-#ifdef _DEBUG
-#include <vld.h>
-#endif // DEBUG
+//#ifdef _DEBUG
+////#include <vld.h>
+//#endif // DEBUG
 
 #include "Application.h"
 

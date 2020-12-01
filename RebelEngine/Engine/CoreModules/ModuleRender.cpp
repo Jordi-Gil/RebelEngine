@@ -153,7 +153,7 @@ void ModuleRender::Draw(float width, float height) {
 	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
 
-	App->models->Draw();
+	//App->models->Draw();
 	App->debugDraw->Draw(view, projection, width, height);
 
 	glBindVertexArray(0);
