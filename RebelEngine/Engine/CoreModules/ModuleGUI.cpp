@@ -146,7 +146,7 @@ void ModuleGUI::DrawMainMenu() {
 		if (ImGui::BeginMenu("Windows")) {
 			for (auto it = windows.begin(); it != windows.end(); ++it) {
 				auto ptr = it->get();
-				if(ptr->name != "About Rebel") ImGui::MenuItem(ptr->name, NULL, &ptr->active, &ptr->active);
+				if(std::strcmp(ptr->name, "About Rebel")) ImGui::MenuItem(ptr->name, NULL, &ptr->active, &ptr->active);
 			}
 			ImGui::EndMenu();
 		}

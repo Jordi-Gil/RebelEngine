@@ -139,7 +139,7 @@ void GUIConfiguration::Draw() {
 		if (ImGui::Checkbox("Stencil test", &stencilTest)) App->renderer->EnableStencilTest(stencilTest);
 		if (ImGui::Checkbox("Depth test", &depthTest)) App->renderer->EnableDepthTest(depthTest);
 
-		if (ImGui::DragFloat3("Background", clear, 0.01, 0, 1)) {
+		if (ImGui::DragFloat3("Background", clear, 0.01f, 0, 1)) {
 			App->renderer->clearColor[0] = clear[0];
 			App->renderer->clearColor[1] = clear[1];
 			App->renderer->clearColor[2] = clear[2];

@@ -320,7 +320,7 @@ int i32_to_string(int i, char *str)
 		*str++ = '-';
 		if (i == INT_MIN)
 		{
-			strcpy(str, "2147483648");
+			strcpy_s(str, 11, "2147483648");
 			return 11; // == strlen("-2147483648")
 		}
 		return u32_to_string((uint32_t)-i, str) + 1;
