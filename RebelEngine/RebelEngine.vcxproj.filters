@@ -115,7 +115,7 @@
     <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
     <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
-    <ClCompile Include="Engine\GUIs\GUIhierarchy.cpp" />
+    <ClCompile Include="Engine\GUIs\GUIHierarchy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -246,7 +246,7 @@
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
-    <ClInclude Include="Engine\GUIs\GUIhierarchy.h" />
+    <ClInclude Include="Engine\GUIs\GUIHierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">
