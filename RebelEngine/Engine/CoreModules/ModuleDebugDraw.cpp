@@ -126,10 +126,10 @@ public:
 
     }
 
-    dd::GlyphTextureHandle createGlyphTexture(int width, int height, const void * pixels) override {
+    dd::GlyphTextureHandle createGlyphTexture(int _width, int _height, const void * _pixels) override {
 
-        assert(width > 0 && height > 0);
-        assert(pixels != nullptr);
+        assert(_width > 0 && _height > 0);
+        assert(_pixels != nullptr);
 
         GLuint textureId = 0;
         glGenTextures(1, &textureId);
@@ -138,7 +138,7 @@ public:
         glPixelStorei(GL_PACK_ALIGNMENT,   1);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, pixels);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, _width, _height, 0, GL_RED, GL_UNSIGNED_BYTE, _pixels);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -400,7 +400,7 @@ public:
     static void checkGLError(const char * file, const int line) {
         GLenum err;
         while ((err = glGetError()) != GL_NO_ERROR) {
-            //LOG("%s(%d) : GL_CORE_ERROR=0x%X - %s\n", file, line, err, errorToString(err));
+            LOG(_ERROR, "%s(%d) : GL_CORE_ERROR=0x%X - %s\n", file, line, err, glewGetErrorString(err));
         }
     }
 

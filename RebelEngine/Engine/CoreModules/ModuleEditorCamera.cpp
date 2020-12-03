@@ -80,18 +80,18 @@ void ModuleEditorCamera::TranslateMouseWheel() {
 
 void ModuleEditorCamera::RotateKeyboard() {
 
-	float yaw = 0.0f; float pitch = 0.0f;
+	float _yaw = 0.0f; float _pitch = 0.0f;
 	float speedModifier = 1.0f;
 
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT) yaw += 1;
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT) yaw -= 1;
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT) pitch -= 1;
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT) pitch += 1;
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT) _yaw += 1;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT) _yaw -= 1;
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT) _pitch -= 1;
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT) _pitch += 1;
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
-	Quat quaternionX(frustum.WorldRight(), yaw * App->deltaTime * rotSpeed * speedModifier);
-	Quat quaternionY(float3::unitY, pitch * App->deltaTime * rotSpeed * speedModifier);
+	Quat quaternionX(frustum.WorldRight(), _yaw * App->deltaTime * rotSpeed * speedModifier);
+	Quat quaternionY(float3::unitY, _pitch * App->deltaTime * rotSpeed * speedModifier);
 
 	float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
 	float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
@@ -106,7 +106,7 @@ void ModuleEditorCamera::RotateKeyboard() {
 
 void ModuleEditorCamera::RotateMouse(int x, int y) {
 
-	float pitch = 0.0f; float yaw = 0.0f;
+	float _pitch = 0.0f; float _yaw = 0.0f;
 
 	float speedModifier = 1.0f;
 
@@ -116,14 +116,14 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 		App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_IDLE
 		&& x != 0 && y != 0) {
 
-		pitch = -(float)y * App->deltaTime * rotSpeed;
-		yaw = -(float)x * App->deltaTime * rotSpeed;
+		_pitch = -(float)y * App->deltaTime * rotSpeed;
+		_yaw = -(float)x * App->deltaTime * rotSpeed;
 
 
 
 
-		Quat quaternionX(frustum.WorldRight(), pitch * speedModifier);
-		Quat quaternionY(float3::unitY, yaw * speedModifier);
+		Quat quaternionX(frustum.WorldRight(), _pitch * speedModifier);
+		Quat quaternionY(float3::unitY, _yaw * speedModifier);
 
 		float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
 		float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
@@ -138,34 +138,30 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
 
-	float pitch = 0.0f; float yaw = 0.0f;
+	float _pitch = 0.0f; float _yaw = 0.0f;
 
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT &&
 		App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT && x != 0 && y != 0
 		) {
 
-		pitch = -(float)y * App->deltaTime * rotSpeed;
-		yaw = -(float)x * App->deltaTime * rotSpeed;
+		_pitch = -(float)y * App->deltaTime * rotSpeed;
+		_yaw = -(float)x * App->deltaTime * rotSpeed;
 
-		this->pitch += pitch;
+		this->pitch += _pitch;
 
-		if (RadToDeg(this->pitch) > 85) { 
-			this->pitch = DegToRad(85);
-			pitch *= 0; 
-		}
-		if (RadToDeg(this->pitch) < -85) { this->pitch = DegToRad(-85); pitch *= 0; }
+		if (RadToDeg(pitch) > 85)  { pitch = DegToRad(85); _pitch *= 0; }
+		if (RadToDeg(pitch) < -85) { pitch = DegToRad(-85); _pitch *= 0; }
 
 		vec focus = App->models->GetCenterScene();
 
-		Quat rotationY(float3::unitY, yaw);
-		Quat rotationX(frustum.WorldRight().Normalized(), pitch);
+		Quat rotationY(float3::unitY, _yaw);
+		Quat rotationX(frustum.WorldRight().Normalized(), _pitch);
 
-		vec newPos = rotationY.Transform(frustum.Pos() - focus); //perfom the rotation over Up vector in the origin
-		newPos = rotationX.Transform(newPos); //perfom the rotation over Right vector in the origin
+		vec newPos = rotationY.Transform(frustum.Pos() - focus);
+		newPos = rotationX.Transform(newPos);
 
-		frustum.SetPos(newPos + focus); //Once the rotation is performed, move the camera at focus distance
+		frustum.SetPos(newPos + focus);
 	
-		//Make frustum points the target
 		float3x3 rotationMatrix = float3x3::LookAt(
 			frustum.Front(),
 			(focus - frustum.Pos()).Normalized(),
@@ -208,7 +204,7 @@ void ModuleEditorCamera::Focus() {
 
 	vec size = App->models->GetSizeScene();
 	vec center = App->models->GetCenterScene();
-	frustum.SetPos(center + frustum.Front().Neg() * (size.Length() * 0.5) * 2 );
+	frustum.SetPos(center + frustum.Front().Neg() * (size.Length() * 0.5f) * 2 );
 	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), frustum.FarPlaneDistance() * size.Length());
 }
 
