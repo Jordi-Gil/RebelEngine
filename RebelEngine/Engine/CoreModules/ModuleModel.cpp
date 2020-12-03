@@ -178,7 +178,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 			min[0] = min[1] = min[2] = FLT_MAX;
 		}
 		aiNode* father = scene->mRootNode;
-		LoadNodeHierarchy(father,std::move(App->scene->root), scene);
+		LoadNodeHierarchy(father, App->scene->root, scene);
 		/*LoadMeshes(scene->mMeshes, scene->mNumMeshes, *go);
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);*/
 		LOG(_INFO,"meshes loaded");
@@ -188,7 +188,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 	}
 
 }
-void ModuleModel::LoadNodeHierarchy(aiNode *node, std::unique_ptr<GameObject> father, const aiScene* scene) {
+void ModuleModel::LoadNodeHierarchy(aiNode *node, std::unique_ptr<GameObject> &father, const aiScene* scene) {
 
 	// assignar nombre edl mesh al name del game object
 	int unsigned num_children = node->mNumChildren;
