@@ -177,6 +177,7 @@
     <ClInclude Include="Engine\GUIs\GUITerminal.h" />
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
+    <ClInclude Include="Engine\GUIs\GUIHierarchy.h" />
     <ClInclude Include="ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="ImGui\Include\ImGui\imconfig.h" />
     <ClInclude Include="ImGui\Include\ImGui\imgui.h" />
@@ -303,6 +304,7 @@
     <ClCompile Include="Engine\GUIs\GUITerminal.cpp" />
     <ClCompile Include="Engine\GUIs\GUIInspector.cpp" />
     <ClCompile Include="Engine\Main\GameObject.cpp" />
+    <ClCompile Include="Engine\GUIs\GUIHierarchy.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\Include\ImGui\imgui_draw.cpp" />

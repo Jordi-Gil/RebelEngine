@@ -10,6 +10,7 @@
 #include "GUIs/GUIConfiguration.h"
 #include "GUIs/GUITerminal.h"
 #include "GUIs/GUIInspector.h"
+#include "GUIs/GUIHierarchy.h"
 
 #include "ImGui/IconsFontAwesome5.h"
 
@@ -29,7 +30,7 @@ void ModuleGUI::PreInit() {
 	windows.push_back(std::make_unique<GUIInspector>("Inspector")); inspector = (GUIInspector*)windows.rbegin()->get();
 	windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); config = (GUIConfiguration *) windows.rbegin()->get();
 	windows.push_back(std::make_unique<GUITerminal>("Terminal")); terminal = (GUITerminal *) windows.rbegin()->get();
-	
+	windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy"));
 	scene->ToggleActive();
 	inspector->ToggleActive();
 }
