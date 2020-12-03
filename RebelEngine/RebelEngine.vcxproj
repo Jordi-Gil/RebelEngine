@@ -165,6 +165,7 @@
     <ClInclude Include="Engine\CoreModules\ModuleRender.h" />
     <ClInclude Include="Engine\CoreModules\ModuleTexture.h" />
     <ClInclude Include="Engine\CoreModules\ModuleWindow.h" />
+    <ClInclude Include="Engine\GUIs\GUIhierarchy.h" />
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Main\Mesh.h" />
     <ClInclude Include="Engine\Utils\debugdraw.h" />
@@ -293,6 +294,7 @@
     <ClCompile Include="Engine\CoreModules\ModuleRender.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleTexture.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleWindow.cpp" />
+    <ClCompile Include="Engine\GUIs\GUIhierarchy.cpp" />
     <ClCompile Include="Engine\Main\Application.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Main\Mesh.cpp" />
