@@ -15,7 +15,7 @@ public:
 
 	Component() {}
 
-	virtual ~Component() {}
+	virtual ~Component() = default;
 
 	virtual void Enable() {}
 	virtual void Update() {}
