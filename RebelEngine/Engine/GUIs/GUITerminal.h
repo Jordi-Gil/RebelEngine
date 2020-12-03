@@ -11,9 +11,9 @@ public:
 
 	~GUITerminal();
 
-	void Draw();
+	void Draw() override;
 
-	bool IsActive() { return active; };
+	bool IsActive() override { return active; };
 
 	const char* GetName() { return name; }
 

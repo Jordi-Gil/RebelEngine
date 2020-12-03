@@ -17,9 +17,9 @@ public:
 	ModuleEditorCamera::ModuleEditorCamera() : movSpeed(2), rotSpeed(0.5), zoomSpeed(2), currentZNear(0.1f), currentZFar(100.0f) {}
 	ModuleEditorCamera::~ModuleEditorCamera() {}
 
-	bool Init();
+	bool Init() override;
 
-	update_status Update();
+	update_status Update() override;
 
 	void WindowResized(unsigned width, unsigned height);
 

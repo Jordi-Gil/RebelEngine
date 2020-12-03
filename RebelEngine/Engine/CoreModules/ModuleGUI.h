@@ -17,10 +17,10 @@ public:
 	ModuleGUI();
 
 	void PreInit();
-	bool Init();
-	bool Start();
-	update_status Update();
-	bool CleanUp();
+	bool Init() override;
+	bool Start() override;
+	update_status Update() override;
+	bool CleanUp() override;
 
 	virtual bool IsActive() { return true; }
 	virtual void Disable() { };

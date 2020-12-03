@@ -16,8 +16,8 @@ public:
 
 	~ModuleTexture() {}
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
 	unsigned int loadTexture(const char *path, TextureInformation &info);
 

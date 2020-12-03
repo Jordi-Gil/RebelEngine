@@ -16,8 +16,8 @@ public:
 
 	ModuleModel();
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
 	void LoadModel(const char* fileName);
 	void LoadTexture(const char* fileName);
@@ -49,6 +49,7 @@ private:
 	void LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes, GameObject& father);
 	void LoadTextures(aiMaterial** const materials, unsigned int mNumMaterials, const char* fbxPath);
 	void LoadNodeHierarchy(aiNode* node, std::unique_ptr<GameObject> &father,const aiScene* scene);
+
 private:
 
 	float max[3] = { FLT_MIN, FLT_MIN , FLT_MIN }, min[3] = { FLT_MAX , FLT_MAX , FLT_MAX };
