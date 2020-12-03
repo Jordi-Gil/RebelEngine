@@ -4,7 +4,7 @@
 
 #include "Math/float4x4.h"
 #include "Math/Quat.h"
-
+#include "assimp/matrix4x4.h"
 class ComponentTransform : public Component {
 
 public:
@@ -14,7 +14,7 @@ public:
 	~ComponentTransform() {}
 
 	void SetTransform(const float3 _position, const float3 _rotation, const float3 _scale);
-
+	void SetTransform(const aiMatrix4x4& matrix);
 	void Enable() {}
 
 	void Update() {}

@@ -1,6 +1,7 @@
 #include "ModuleModel.h"
 #include "ModuleTexture.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleScene.h"
 
 #include "Main/Application.h"
 #include "Utils/Globals.h"
@@ -11,7 +12,6 @@
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
-
 
 
 void LogAssimp(const char* msg, char* userData) {
@@ -31,7 +31,6 @@ bool ModuleModel::Init() {
 	return true;
 }
 void ModuleModel::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes, GameObject& father) {
-
 	LOG(_INFO, "Meshes: %d", mNumMeshes);
 
 	numMeshes = mNumMeshes;
@@ -178,16 +177,49 @@ void ModuleModel::LoadModel(const char* fileName) {
 			max[0] = max[1] = max[2] = FLT_MIN;
 			min[0] = min[1] = min[2] = FLT_MAX;
 		}
-		LoadMeshes(scene->mMeshes, scene->mNumMeshes, *go);
-		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
-
+		aiNode* father = scene->mRootNode;
+		LoadNodeHierarchy(father,std::move(App->scene->root), scene);
+		/*LoadMeshes(scene->mMeshes, scene->mNumMeshes, *go);
+		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);*/
+		LOG(_ERROR,"meshes loaded");
 	}
 	else {
 		LOG(_ERROR, "Error loading mesh %s: %s", fileName, aiGetErrorString());
 	}
 
 }
+void ModuleModel::LoadNodeHierarchy(aiNode *node, std::unique_ptr<GameObject> father, const aiScene* scene) {
 
+	// assignar nombre edl mesh al name del game object
+	int unsigned num_children = node->mNumChildren;
+	for (int i = 0; i < num_children; ++i) {//node iteration
+		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
+		std::unique_ptr<ComponentMeshRenderer> comp_renderer = std::make_unique<ComponentMeshRenderer>();
+		std::unique_ptr <ComponentTransform> comp_transform = std::make_unique <ComponentTransform>();
+		aiMatrix4x4 trans_matrix = node->mTransformation;
+		go->AddComponent(std::move(comp_transform));
+		comp_transform->SetTransform(trans_matrix);
+		for (int x = 0; x <node->mNumMeshes;++x){//mesh iteration
+			std::unique_ptr<GameObject> go_mesh = std::make_unique<GameObject>();
+			std::unique_ptr<ComponentMeshRenderer> comp_renderer_mesh = std::make_unique<ComponentMeshRenderer>();
+			std::unique_ptr <ComponentTransform> comp_transform_mesh = std::make_unique <ComponentTransform>();
+			aiMatrix4x4 trans_matrix_mesh = node->mTransformation;
+			comp_transform_mesh->SetTransform(trans_matrix_mesh); //modify transform here after ask
+			go_mesh->SetName(scene->mMeshes[node->mMeshes[x]]->mName.C_Str());
+			Mesh* mesh = new Mesh();
+			mesh->LoadVBO(scene->mMeshes[node->mMeshes[x]], max, min);
+			mesh->LoadEBO(scene->mMeshes[node->mMeshes[x]]);
+			mesh->CreateVAO();
+			comp_renderer->SetMesh(mesh);
+			go_mesh->AddComponent(std::move(comp_transform));
+			go_mesh->AddComponent(std::move(comp_renderer));
+		}
+		father->AddChild(go);
+		LoadNodeHierarchy(node->mChildren[i], std::move(go), scene);
+	}
+	
+	
+}
 void ModuleModel::Draw() {
 
 	for (unsigned int i = 0; i < numMeshes ; ++i) {

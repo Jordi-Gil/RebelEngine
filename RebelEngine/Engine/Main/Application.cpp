@@ -9,7 +9,7 @@
 #include "CoreModules/ModuleDebugDraw.h"
 #include "CoreModules/ModuleTexture.h"
 #include "CoreModules/ModuleModel.h"
-
+#include "CoreModules/ModuleScene.h"
 #include "GUIs/GUITerminal.h"
 #include "GUIs/GUIConfiguration.h"
 
@@ -33,6 +33,7 @@ Application::Application() {
 	modules.push_back(std::make_unique<ModuleEditorCamera>()); editorCamera = (ModuleEditorCamera*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleProgram>()); program = (ModuleProgram*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleDebugDraw>()); debugDraw = (ModuleDebugDraw*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleScene>()); scene = (ModuleScene*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleModel>()); models = (ModuleModel*)modules.rbegin()->get();
 
 	gui->PreInit();

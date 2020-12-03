@@ -5,15 +5,16 @@
 
 class ModuleScene : public Module {
 
-	ModuleScene(){}
+public:
+	ModuleScene() { root = std::make_unique<GameObject>();
+	}
 
 	~ModuleScene(){}
 
 	bool Init();
 	update_status Update();
 
-	GameObject* CreateGameObject();
-
+public:
 	std::unique_ptr<GameObject> root;
 
 };

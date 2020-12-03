@@ -1,7 +1,7 @@
 #pragma once
 #include "Main/Mesh.h"
 #include "Components/Component.h"
-class ComponentMeshRenderer : Component
+class ComponentMeshRenderer : public Component
 {
 public:
 	ComponentMeshRenderer();

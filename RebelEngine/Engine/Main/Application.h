@@ -17,6 +17,7 @@ class ModuleProgram;
 class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleModel;
+class ModuleScene;
 
 class ModuleGUI;
 
@@ -43,6 +44,7 @@ public:
 	ModuleDebugDraw* debugDraw = nullptr;
 	ModuleTexture* texturer = nullptr;
 	ModuleModel* models = nullptr;
+	ModuleScene* scene = nullptr;
 
 	ModuleGUI *gui = nullptr;
 
