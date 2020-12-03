@@ -5,17 +5,17 @@
 
 class Application;
 
-class ModuleWindow : public Module
-{
+class ModuleWindow : public Module {
+
 public:
 
 	ModuleWindow();
-	virtual ~ModuleWindow();
+	~ModuleWindow();
 
-	bool Start();
+	bool Start() override;
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
 	Uint32 GetWindowID() { return SDL_GetWindowID(window); }
 	int GetCurrentWidth() { return currentWidth; }

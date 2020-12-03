@@ -8,7 +8,7 @@ public:
 
     ModuleProgram();
 
-    bool Start();
+    bool Start() override;
 
     std::string readFile(const char* filePath);
     unsigned int CreateProgram(unsigned int vtx_shader, unsigned int frg_shader);
@@ -16,7 +16,7 @@ public:
 
     unsigned int GetMainProgram() { return mainProgram; }
 
-    bool CleanUp();
+    bool CleanUp() override;
 
 private:
 

@@ -8,11 +8,11 @@ public:
 
 	GUIScene(const char * _name);
 
-	void Draw();
+	void Draw() override;
 
 	void ToggleActive();
 
-	bool IsActive() { return active; };
+	bool IsActive() override { return active; };
 	bool IsSceneFocused() { return sceneFocused; }
 
 	const char* GetName() { return name; }

@@ -11,8 +11,8 @@ public:
 
 	~ModuleScene(){}
 
-	bool Init();
-	update_status Update();
+	bool Init() override;
+	update_status Update() override;
 
 public:
 	std::unique_ptr<GameObject> root;
