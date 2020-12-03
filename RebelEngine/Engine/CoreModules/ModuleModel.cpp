@@ -181,7 +181,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 		LoadNodeHierarchy(father,std::move(App->scene->root), scene);
 		/*LoadMeshes(scene->mMeshes, scene->mNumMeshes, *go);
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);*/
-		LOG(_ERROR,"meshes loaded");
+		LOG(_INFO,"meshes loaded");
 	}
 	else {
 		LOG(_ERROR, "Error loading mesh %s: %s", fileName, aiGetErrorString());
@@ -197,8 +197,8 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, std::unique_ptr<GameObject> fa
 		std::unique_ptr<ComponentMeshRenderer> comp_renderer = std::make_unique<ComponentMeshRenderer>();
 		std::unique_ptr <ComponentTransform> comp_transform = std::make_unique <ComponentTransform>();
 		aiMatrix4x4 trans_matrix = node->mTransformation;
+		comp_transform->SetTransform(trans_matrix);//modify transform here after ask
 		go->AddComponent(std::move(comp_transform));
-		comp_transform->SetTransform(trans_matrix);
 		for (int x = 0; x <node->mNumMeshes;++x){//mesh iteration
 			std::unique_ptr<GameObject> go_mesh = std::make_unique<GameObject>();
 			std::unique_ptr<ComponentMeshRenderer> comp_renderer_mesh = std::make_unique<ComponentMeshRenderer>();
@@ -210,16 +210,16 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, std::unique_ptr<GameObject> fa
 			mesh->LoadVBO(scene->mMeshes[node->mMeshes[x]], max, min);
 			mesh->LoadEBO(scene->mMeshes[node->mMeshes[x]]);
 			mesh->CreateVAO();
-			comp_renderer->SetMesh(mesh);
-			go_mesh->AddComponent(std::move(comp_transform));
-			go_mesh->AddComponent(std::move(comp_renderer));
+			comp_renderer_mesh->SetMesh(mesh);
+			go_mesh->AddComponent(std::move(comp_transform_mesh));
+			go_mesh->AddComponent(std::move(comp_renderer_mesh));
 		}
 		father->AddChild(go);
 		LoadNodeHierarchy(node->mChildren[i], std::move(go), scene);
 	}
 	
-	
 }
+
 void ModuleModel::Draw() {
 
 	for (unsigned int i = 0; i < numMeshes ; ++i) {
