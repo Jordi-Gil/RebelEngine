@@ -6,8 +6,8 @@ class ComponentMeshRenderer : public Component
 public:
 	ComponentMeshRenderer();
 	~ComponentMeshRenderer() {
-		delete mesh;
-		mesh = nullptr;
+		//delete mesh;
+		//mesh = nullptr;
 	}; 
 
 	void Enable() override {}
@@ -16,7 +16,12 @@ public:
 
 	void SetMesh(Mesh* component_mesh) { mesh = component_mesh; }
 
+	void Draw();
+
+	type_component GetType() const override { return type; }
+
 private:
+
 	Mesh* mesh = nullptr;
 };
 

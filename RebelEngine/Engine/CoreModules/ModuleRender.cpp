@@ -6,6 +6,8 @@
 #include "ModuleEditorCamera.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleModel.h"
+#include "ModuleScene.h"
+
 #include "GUIs/GUITerminal.h"
 
 #include <SDL/SDL.h>
@@ -146,7 +148,7 @@ void ModuleRender::Draw(float width, float height) {
 	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
 
-	//App->models->Draw();
+	App->scene->Draw();
 	App->debugDraw->Draw(view, projection, width, height);
 
 	glBindVertexArray(0);

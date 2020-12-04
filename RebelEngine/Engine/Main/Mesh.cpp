@@ -55,7 +55,7 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	numVertices = mesh->mNumVertices;
 
 	aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
-	obb = OBB::OBB(aabb);
+	//obb = OBB::OBB(aabb);
 
 }
 
@@ -92,16 +92,20 @@ void Mesh::CreateVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
+	GLsizei stride = sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 2;
+
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3 + sizeof(float) * 2, (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 3 + sizeof(float) * 2, (void*)(sizeof(float) * 3));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+	glEnableVertexAttribArray(1);			
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(2);					
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(sizeof(float) * 6));
 
 	glBindVertexArray(0);
 
 }
 
-void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>> &materials) {
+void Mesh::Draw(/*const std::vector<std::pair<unsigned int, TextureInformation>> &materials*/) {
 
 	unsigned int program = App->program->GetMainProgram();
 
@@ -114,13 +118,13 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>> &
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*) &model);
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, (const float*) &view);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, (const float*) &projection);
-	glUniform1i(glGetUniformLocation(program, "textureEnabled"), true);
+	glUniform1i(glGetUniformLocation(program, "textureEnabled"), false);
 	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 
 	glBindVertexArray(VAO);
 	glActiveTexture(GL_TEXTURE0);
 
-	glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
+	//glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
 
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
 

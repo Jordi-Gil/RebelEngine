@@ -12,13 +12,17 @@ public:
 	GameObject();
 
 	void Update(){}
-	void AddChild(std::unique_ptr<GameObject>&& go) { children.push_back(std::move(go)); }
-	void AddComponent(std::unique_ptr<Component>&& comp) { components.push_back(std::move(comp)); }
-	void SetName(const char* _name) { name = _name; }
+	void AddChild(std::unique_ptr<GameObject>&& go);
+	void AddComponent(std::unique_ptr<Component>&& comp);
+	void SetName(const char* _name);
+
+	bool HasComponent(type_component _type) const;
+
 	const char* GetName() const { return name; }
 	int GetNumChildren() const { return children.size(); };
 	
 	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return children; }
+	Component& GetComponent(type_component type) const;
 
 private:
 

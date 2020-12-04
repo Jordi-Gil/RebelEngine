@@ -15,12 +15,21 @@ public:
 	}
 
 	bool Init() override;
-	update_status Update() override;
+	
+	update_status PreUpdate() override;
+
+	void Draw();
+
+private:
+
+	void DrawRecursive(GameObject &go);
 
 public:
 
 	std::unique_ptr<GameObject> root;
 	GameObject* goSelected = nullptr;
+
+	bool frustum = false;
 
 };
 

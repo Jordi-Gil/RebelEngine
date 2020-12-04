@@ -189,6 +189,8 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 			comp_renderer_mesh->SetMesh(mesh);
 			go_mesh->AddComponent(std::move(comp_transform_mesh));
 			go_mesh->AddComponent(std::move(comp_renderer_mesh));
+
+			go->AddChild(std::move(go_mesh));
 		}
 		father.AddChild(std::move(go));
 		LoadNodeHierarchy(node->mChildren[i], *go, scene);

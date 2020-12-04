@@ -20,6 +20,7 @@ public:
 	virtual void Enable() {}
 	virtual void Update() {}
 	virtual void Disable() {}
+	virtual type_component GetType() const { return type; }
 
 protected:
 
