@@ -30,46 +30,6 @@ bool ModuleModel::Init() {
 	LoadModel("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
 	return true;
 }
-void ModuleModel::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes, GameObject& father) {
-	LOG(_INFO, "Meshes: %d", mNumMeshes);
-
-	numMeshes = mNumMeshes;
-	//meshes.reserve(numMeshes);
-
-	for (unsigned int i = 0; i < mNumMeshes; i++) {
-		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
-		std::unique_ptr<ComponentMeshRenderer> comp = std::make_unique<ComponentMeshRenderer>();
-		Mesh* mesh = new Mesh();
-		mesh->LoadVBO(mMeshes[i], max, min);
-		mesh->LoadEBO(mMeshes[i]);
-		mesh->CreateVAO();
-		std::unique_ptr <ComponentTransform> comp_trans = std::make_unique <ComponentTransform>();
-		go->AddComponent(std::move(comp_trans));
-		comp->SetMesh(mesh);
-		father.AddChild(go);
-	}
-
-	App->editorCamera->Focus();
-
-}
-
-void ModuleModel::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes){
-	
-	LOG(_INFO, "Meshes: %d", mNumMeshes);
-
-	numMeshes = mNumMeshes;
-	meshes.reserve(numMeshes);
-
-	for (unsigned int i = 0; i < mNumMeshes; i++) {
-		meshes.push_back(Mesh());
-		meshes[i].LoadVBO(mMeshes[i], max, min);
-		meshes[i].LoadEBO(mMeshes[i]);
-		meshes[i].CreateVAO();
-	}
-
-	App->editorCamera->Focus();
-
-}
 
 void ModuleModel::LoadTexture(const char* fileName) {
 	
@@ -168,25 +128,23 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 void ModuleModel::LoadModel(const char* fileName) {
 	
 	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
+
 	if (scene) {
-		if (!meshes.empty()) {
-			CleanUp();
-			max[0] = max[1] = max[2] = FLT_MIN;
-			min[0] = min[1] = min[2] = FLT_MAX;
-		}
 
 		char fn[_MAX_FNAME]; _splitpath_s(fileName,NULL,0,NULL,0,fn,_MAX_FNAME,NULL,0);
+		
 		aiNode* father = scene->mRootNode;
+		
 		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
 		std::unique_ptr<ComponentTransform> comp = std::make_unique<ComponentTransform>();
-		go->SetName(strdup(fn));
+
+		go->SetName(_strdup(fn));
 		go->AddComponent(std::move(comp));
 		
-		LoadNodeHierarchy(father, go, scene);
-		App->scene->root->AddChild(go);
+		LoadNodeHierarchy(father, *go, scene);
+		App->scene->root->AddChild(std::move(go));
 
-		/*LoadMeshes(scene->mMeshes, scene->mNumMeshes, *go);
-		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);*/
+		//LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
 		LOG(_INFO,"meshes loaded");
 	}
 	else {
@@ -194,54 +152,51 @@ void ModuleModel::LoadModel(const char* fileName) {
 	}
 
 }
-void ModuleModel::LoadNodeHierarchy(aiNode *node, std::unique_ptr<GameObject> &father, const aiScene* scene) {
+
+void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiScene* scene) {
 
 	// assignar nombre edl mesh al name del game object
 	int unsigned num_children = node->mNumChildren;
-	for (int i = 0; i < num_children; ++i) {//node iteration
+
+	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
+
 		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
 		std::unique_ptr<ComponentMeshRenderer> comp_renderer = std::make_unique<ComponentMeshRenderer>();
 		std::unique_ptr <ComponentTransform> comp_transform = std::make_unique <ComponentTransform>();
+		
 		aiMatrix4x4 trans_matrix = node->mChildren[i]->mTransformation;
 		comp_transform->SetTransform(trans_matrix);//modify transform here after ask
 		go->AddComponent(std::move(comp_transform));
 
 		go->SetName(node->mChildren[i]->mName.C_Str());
 
-		for (int x = 0; x < node->mChildren[i]->mNumMeshes;++x){//mesh iteration
+		for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x){//mesh iteration
+
 			std::unique_ptr<GameObject> go_mesh = std::make_unique<GameObject>();
 			std::unique_ptr<ComponentMeshRenderer> comp_renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 			std::unique_ptr <ComponentTransform> comp_transform_mesh = std::make_unique <ComponentTransform>();
+			
 			aiMatrix4x4 trans_matrix_mesh = node->mChildren[i]->mTransformation;
 			comp_transform_mesh->SetTransform(trans_matrix_mesh); //modify transform here after ask
+			
 			go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
+			
 			Mesh* mesh = new Mesh();
-			mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]], max, min);
+			mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 			mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 			mesh->CreateVAO();
+			
 			comp_renderer_mesh->SetMesh(mesh);
 			go_mesh->AddComponent(std::move(comp_transform_mesh));
 			go_mesh->AddComponent(std::move(comp_renderer_mesh));
 		}
-		father->AddChild(go);
-		LoadNodeHierarchy(node->mChildren[i], go, scene);
+		father.AddChild(std::move(go));
+		LoadNodeHierarchy(node->mChildren[i], *go, scene);
 	}
 	
 }
 
-void ModuleModel::Draw() {
-
-	for (unsigned int i = 0; i < numMeshes ; ++i) {
-		meshes[i].Draw(textures);
-	}
-
-}
-
 bool ModuleModel::CleanUp() {
-
-	for (unsigned i = 0; i < meshes.size(); i++) meshes[i].Clean();
-	meshes.clear();
-	meshes.shrink_to_fit();
 
 	for (unsigned i = 0; i < textures.size(); i++) glDeleteTextures(1, &textures[i].first);
 	textures.clear();

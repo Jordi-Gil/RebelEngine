@@ -6,16 +6,21 @@
 class ModuleScene : public Module {
 
 public:
-	ModuleScene() { root = std::make_unique<GameObject>();
-	}
 
-	~ModuleScene(){}
+	ModuleScene();
+
+	~ModuleScene(){
+		delete goSelected;
+		goSelected = nullptr;
+	}
 
 	bool Init() override;
 	update_status Update() override;
 
 public:
+
 	std::unique_ptr<GameObject> root;
+	GameObject* goSelected = nullptr;
 
 };
 

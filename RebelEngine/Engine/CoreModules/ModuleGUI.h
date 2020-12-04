@@ -22,9 +22,10 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	virtual bool IsActive() { return true; }
-	virtual void Disable() { };
-	virtual void Draw() { }
+	virtual bool IsActive() const { return active; }
+	virtual const char* GetName() const { return name; }
+	virtual void ToggleActive() {}
+	virtual void Draw() {}
 
 private:
 

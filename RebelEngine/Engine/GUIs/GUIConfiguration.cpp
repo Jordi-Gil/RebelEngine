@@ -110,7 +110,7 @@ void GUIConfiguration::Draw() {
 
 		ImGui::Separator();
 		ImGui::Text("Refresh rate: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9922f, 0.5490f, 0.0157f, 1.0000f), "%.2f Hz", App->window->GetWindowRefreshRate());
+		ImGui::TextColored(ImVec4(0.9922f, 0.5490f, 0.0157f, 1.0000f), "%d Hz", App->window->GetWindowRefreshRate());
 		ImGui::Text("Frame rate: "); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.9922f, 0.5490f, 0.0157f, 1.0000f), "%2.f FPS", ImGui::GetIO().Framerate);
 

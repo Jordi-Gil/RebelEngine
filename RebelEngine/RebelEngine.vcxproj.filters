@@ -116,6 +116,7 @@
     <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
     <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\GUIs\GUIHierarchy.cpp" />
+    <ClCompile Include="Engine\AcceleratorStructures\BSP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -247,6 +248,7 @@
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\GUIs\GUIHierarchy.h" />
+    <ClInclude Include="Engine\AcceleratorStructures\BSP.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

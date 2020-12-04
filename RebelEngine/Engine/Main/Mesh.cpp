@@ -9,18 +9,16 @@
 #include <GL/glew.h>
 #include "Math/float3x3.h"
 
-Mesh::~Mesh() {
-	
-}
+void Mesh::LoadVBO(const aiMesh* mesh) {
 
-void Mesh::LoadVBO(const aiMesh* mesh, float max[3], float min[3]) {
+	float max[3] = { FLT_MIN, FLT_MIN , FLT_MIN }, min[3] = { FLT_MAX , FLT_MAX , FLT_MAX };
 
 	matIndex = mesh->mMaterialIndex;
 
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	unsigned int vertex_size = (sizeof(float) * 3 + sizeof(float) * 2); // Position / UV
+	unsigned int vertex_size = (sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 2); // Position / Normal / UV
 	unsigned int vertices_size = vertex_size * mesh->mNumVertices; // Total size of Mesh
 	
 	glBufferData(GL_ARRAY_BUFFER, vertices_size, nullptr, GL_STATIC_DRAW); // 'Allocate' memory for all data set
@@ -44,12 +42,21 @@ void Mesh::LoadVBO(const aiMesh* mesh, float max[3], float min[3]) {
 		if (mesh->mVertices[i].z > max[2]) max[2] = mesh->mVertices[i].z;
 		if (mesh->mVertices[i].z < min[2]) min[2] = mesh->mVertices[i].z;
 
+		//Normal
+		data[pos++] = mesh->mNormals[i].x;
+		data[pos++] = mesh->mNormals[i].y;
+		data[pos++] = mesh->mNormals[i].z;
+
 		//UV
 		data[pos++] = mesh->mTextureCoords[0][i].x;
 		data[pos++] = mesh->mTextureCoords[0][i].y;
 	}
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	numVertices = mesh->mNumVertices;
+
+	aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
+	obb = OBB::OBB(aabb);
+
 }
 
 void Mesh::LoadEBO(const aiMesh* mesh) {

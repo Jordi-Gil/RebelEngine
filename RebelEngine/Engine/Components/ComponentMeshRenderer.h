@@ -5,13 +5,17 @@ class ComponentMeshRenderer : public Component
 {
 public:
 	ComponentMeshRenderer();
-	~ComponentMeshRenderer() {}; // TODO: hacer delete del mesh
+	~ComponentMeshRenderer() {
+		delete mesh;
+		mesh = nullptr;
+	}; 
 
-	void Enable() {}
-	void Update() {}
-	void Disable() {}
+	void Enable() override {}
+	void Update() override {}
+	void Disable() override {}
 
 	void SetMesh(Mesh* component_mesh) { mesh = component_mesh; }
+
 private:
 	Mesh* mesh = nullptr;
 };

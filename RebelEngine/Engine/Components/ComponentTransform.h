@@ -15,11 +15,12 @@ public:
 
 	void SetTransform(const float3 _position, const float3 _rotation, const float3 _scale);
 	void SetTransform(const aiMatrix4x4& matrix);
-	void Enable() {}
 
-	void Update() {}
+	void Enable() override {}
 
-	void Disable() {}
+	void Update() override {}
+
+	void Disable() override {}
 
 private:
 

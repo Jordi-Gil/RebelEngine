@@ -129,9 +129,9 @@ void ModuleWindow::SetWindowFullScreenDesktop(bool fulldesktop) {
 
 #pragma endregion setters
 
-float ModuleWindow::GetWindowRefreshRate() {
+int ModuleWindow::GetWindowRefreshRate() const {
 
-	float rfr = 0.0f;
+	int rfr = 0;
 
 	SDL_DisplayMode displayMode;
 

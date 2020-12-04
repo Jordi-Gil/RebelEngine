@@ -154,6 +154,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\AcceleratorStructures\BSP.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\CoreModules\Module.h" />
@@ -285,6 +286,7 @@
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\AcceleratorStructures\BSP.cpp" />
     <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />

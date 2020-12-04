@@ -10,8 +10,8 @@ public:
 
 	void Draw() override;
 
-	bool IsActive() override { return active; };
-	const char* GetName() { return name; }
+	bool IsActive() const override { return active; };
+	const char* GetName() const override { return name; }
 
 	void ToggleActive();
 };

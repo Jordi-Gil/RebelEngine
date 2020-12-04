@@ -63,11 +63,14 @@ void GUIInspector::Draw() {
 
 	if (ImGui::CollapsingHeader("Geometry")) {
 		int i = 0;
+		//TODO: Get Geometry properly --> GameObject Clicked
+		/*
 		for (auto mesh : App->models->meshes) {
 			ImGui::BulletText("Mesh: %d", i++);
 			ImGui::Text("#Vertices: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%d", mesh.numVertices);
 			ImGui::Text("#Triangles: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%d", mesh.numFaces);
 		}
+		*/
 	}
 
 	if (ImGui::CollapsingHeader("Textures")) {

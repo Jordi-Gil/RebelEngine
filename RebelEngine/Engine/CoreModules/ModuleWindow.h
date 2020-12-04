@@ -17,11 +17,11 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	Uint32 GetWindowID() { return SDL_GetWindowID(window); }
-	int GetCurrentWidth() { return currentWidth; }
-	int GetCurrentHeight() { return currentHeight; }
-	float GetWindowBrightness() { return SDL_GetWindowBrightness(window); }
-	float GetWindowRefreshRate();
+	Uint32 GetWindowID() const { return SDL_GetWindowID(window); }
+	int GetCurrentWidth() const { return currentWidth; }
+	int GetCurrentHeight() const { return currentHeight; }
+	float GetWindowBrightness() const { return SDL_GetWindowBrightness(window); }
+	int GetWindowRefreshRate() const;
 
 	void SetWindowWidth(int width);
 	void SetWindowHeight(int height);

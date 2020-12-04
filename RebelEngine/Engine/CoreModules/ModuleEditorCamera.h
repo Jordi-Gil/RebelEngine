@@ -46,22 +46,22 @@ public:
 	void GetMatrix(matrix_type _mType, float4x4& matrix);
 	void GetOpenGLMatrix(matrix_type _mType, float4x4& matrix);
 
-	float GetHorizontalFov() { return frustum.HorizontalFov(); }
-	float GetVerticalFov() { return frustum.VerticalFov(); }
-	float GetAspectRatio() { return frustum.AspectRatio(); }
+	const float GetHorizontalFov() const { return frustum.HorizontalFov(); }
+	const float GetVerticalFov() const { return frustum.VerticalFov(); }
+	const float GetAspectRatio() const { return frustum.AspectRatio(); }
 
-	float3 GetFront() { return frustum.Front(); }
-	float3 GetUp() { return frustum.Up(); }
-	float3 GetRight() { return frustum.WorldRight(); }
+	const float3 GetFront() const { return frustum.Front(); }
+	const float3 GetUp() const { return frustum.Up(); }
+	const float3 GetRight() const { return frustum.WorldRight(); }
 
-	float GetZNear() { return frustum.NearPlaneDistance(); }
-	float GetZFar() { return frustum.FarPlaneDistance(); }
+	const float GetZNear() const { return frustum.NearPlaneDistance(); }
+	const float GetZFar() const { return frustum.FarPlaneDistance(); }
 
-	float3 GetPosition() { return frustum.Pos(); }
+	const float3 GetPosition() const { return frustum.Pos(); }
 
-	float GetMovSpeed() { return movSpeed; }
-	float GetRotSpeed() { return rotSpeed; }
-	float GetZoomSpeed() { return zoomSpeed; }
+	const float GetMovSpeed() const { return movSpeed; }
+	const float GetRotSpeed() const { return rotSpeed; }
+	const float GetZoomSpeed() const { return zoomSpeed; }
 
 #pragma endregion getters
 

@@ -3,6 +3,9 @@
 #include <assimp/scene.h>
 #include <vector>
 
+#include "Geometry/AABB.h"
+#include "Geometry/OBB.h"
+
 struct TextureInformation;
 
 class Mesh {
@@ -16,9 +19,22 @@ public:
 		numVertices(0), numIndices(0), numFaces(0)
 	{}
 
-	~Mesh();
+	Mesh(Mesh&& _mesh) {
 
-	void LoadVBO(const aiMesh* mesh, float max[3], float min[3]);
+		VBO = _mesh.VAO;
+		EBO = _mesh.EBO;
+		VAO = _mesh.VAO;
+		matIndex = _mesh.matIndex;
+		numVertices = _mesh.numVertices;
+		numIndices = _mesh.numIndices;
+		numFaces = _mesh.numFaces;
+		aabb = aabb;
+		obb = obb;
+	}
+
+	~Mesh() {}
+
+	void LoadVBO(const aiMesh* mesh);
 	void LoadEBO(const aiMesh* mesh);
 	void CreateVAO();
 
@@ -35,5 +51,8 @@ private:
 	unsigned int numVertices;
 	unsigned int numIndices;
 	unsigned int numFaces;
+
+	AABB aabb;
+	OBB obb;
 };
 

@@ -10,12 +10,14 @@ public:
 
 	void Draw() override;
 
-	void ToggleActive();
+	void ToggleActive() override;
 
-	bool IsActive() override { return active; };
-	bool IsSceneFocused() { return sceneFocused; }
+	bool IsActive() const override { return active; };
 
-	const char* GetName() { return name; }
+	bool IsSceneFocused() const { return sceneFocused; }
+
+	const char* GetName() const override { return name; }
+
 	static void GUI_GetWindowSize(float& width, float& height);
 
 private:

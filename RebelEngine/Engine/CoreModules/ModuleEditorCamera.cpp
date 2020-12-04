@@ -152,7 +152,7 @@ void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
 		if (RadToDeg(pitch) > 85)  { pitch = DegToRad(85); _pitch *= 0; }
 		if (RadToDeg(pitch) < -85) { pitch = DegToRad(-85); _pitch *= 0; }
 
-		vec focus = App->models->GetCenterScene();
+		vec focus = vec(0, 0, 0);//TODO: Get Center GameObject Clicked App->models->GetCenterScene();
 
 		Quat rotationY(float3::unitY, _yaw);
 		Quat rotationX(frustum.WorldRight().Normalized(), _pitch);
@@ -202,8 +202,8 @@ update_status ModuleEditorCamera::Update() {
 
 void ModuleEditorCamera::Focus() {
 
-	vec size = App->models->GetSizeScene();
-	vec center = App->models->GetCenterScene();
+	vec size = vec(1, 1, 1);//App->models->GetSizeScene();
+	vec center = vec(0, 0, 0);//App->models->GetCenterScene();
 	frustum.SetPos(center + frustum.Front().Neg() * (size.Length() * 0.5f) * 2 );
 	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), frustum.FarPlaneDistance() * size.Length());
 }
