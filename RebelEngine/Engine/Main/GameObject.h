@@ -9,13 +9,13 @@ class GameObject
 
 public:
 
-	GameObject();
+	GameObject() {}
 
 	void Update(){}
 	void AddChild(std::unique_ptr<GameObject>&& go);
 	void AddComponent(std::unique_ptr<Component>&& comp);
 	void SetName(const char* _name);
-
+	void SetParent(GameObject* _go);
 	bool HasComponent(type_component _type) const;
 
 	const char* GetName() const { return name; }
@@ -27,9 +27,9 @@ public:
 private:
 
 	bool active = false;
-	const char* name;
+	const char* name = "";
 
-	std::unique_ptr<GameObject> parent;
+	GameObject *parent = nullptr;
 	std::vector<std::unique_ptr<GameObject>> children;
 	std::vector<std::unique_ptr<Component>> components;
 

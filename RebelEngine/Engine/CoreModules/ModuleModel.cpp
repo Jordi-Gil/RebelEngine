@@ -161,7 +161,6 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
 
 		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
-		std::unique_ptr<ComponentMeshRenderer> comp_renderer = std::make_unique<ComponentMeshRenderer>();
 		std::unique_ptr <ComponentTransform> comp_transform = std::make_unique <ComponentTransform>();
 		
 		aiMatrix4x4 trans_matrix = node->mChildren[i]->mTransformation;
@@ -170,28 +169,44 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 
 		go->SetName(node->mChildren[i]->mName.C_Str());
 
-		for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x){//mesh iteration
-
-			std::unique_ptr<GameObject> go_mesh = std::make_unique<GameObject>();
+		if (node->mChildren[i]->mNumMeshes == 1) {
+			
 			std::unique_ptr<ComponentMeshRenderer> comp_renderer_mesh = std::make_unique<ComponentMeshRenderer>();
-			std::unique_ptr <ComponentTransform> comp_transform_mesh = std::make_unique <ComponentTransform>();
-			
-			aiMatrix4x4 trans_matrix_mesh = node->mChildren[i]->mTransformation;
-			comp_transform_mesh->SetTransform(trans_matrix_mesh); //modify transform here after ask
-			
-			go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
 			
 			Mesh* mesh = new Mesh();
-			mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
-			mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
+			mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
+			mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
 			mesh->CreateVAO();
-			
-			comp_renderer_mesh->SetMesh(mesh);
-			go_mesh->AddComponent(std::move(comp_transform_mesh));
-			go_mesh->AddComponent(std::move(comp_renderer_mesh));
 
-			go->AddChild(std::move(go_mesh));
+			comp_renderer_mesh->SetMesh(mesh);
+
+			go->AddComponent(std::move(comp_renderer_mesh));
 		}
+		else {
+			for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x) {//mesh iteration
+
+				std::unique_ptr<GameObject> go_mesh = std::make_unique<GameObject>();
+				std::unique_ptr<ComponentMeshRenderer> comp_renderer_mesh = std::make_unique<ComponentMeshRenderer>();
+				std::unique_ptr <ComponentTransform> comp_transform_mesh = std::make_unique <ComponentTransform>();
+
+				aiMatrix4x4 trans_matrix_mesh = node->mChildren[i]->mTransformation;
+				comp_transform_mesh->SetTransform(trans_matrix_mesh); //modify transform here after ask
+
+				go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
+
+				Mesh* mesh = new Mesh();
+				mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
+				mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
+				mesh->CreateVAO();
+
+				comp_renderer_mesh->SetMesh(mesh);
+				go_mesh->AddComponent(std::move(comp_transform_mesh));
+				go_mesh->AddComponent(std::move(comp_renderer_mesh));
+				go_mesh->SetParent(go.get());
+				go->AddChild(std::move(go_mesh));
+			}
+		}
+		go->SetParent(&father);
 		father.AddChild(std::move(go));
 		LoadNodeHierarchy(node->mChildren[i], *go, scene);
 	}

@@ -29,6 +29,8 @@ public:
 	std::unique_ptr<GameObject> root;
 	GameObject* goSelected = nullptr;
 
+	
+
 	bool frustum = false;
 
 };

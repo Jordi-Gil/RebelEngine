@@ -5,6 +5,7 @@
 class GameObject;
 
 enum  class type_component {
+	NONE,
 	TRANSFORM,
 	MESHRENDERER
 };
@@ -24,7 +25,8 @@ public:
 
 protected:
 
-	GameObject* owner;
+	GameObject* owner = nullptr;
 	bool active = false;
-	type_component type;
+	type_component type = type_component::NONE;
+
 };

@@ -27,11 +27,10 @@ class BVH{
 
 	//void ConstructSAH(BVHNode *node, std::vector<std::unique_ptr<GameObject>>& orderedGameObjects);
 
-	BVHNode* GenerateBVH(std::vector<std::unique_ptr<GameObject>>& orderedGameObjects, unsigned int size);
+	BVHNode* GenerateBVH(std::vector<GameObject>& orderedGameObjects, unsigned int size);
 
-	BVH(std::vector<std::unique_ptr<GameObject>> &orderedGameObjects);
+	BVH(std::vector<GameObject> &orderedGameObjects);
 
-	const SplitMethod split;
 	BVHNode* root;
 };
 

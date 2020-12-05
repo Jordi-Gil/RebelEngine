@@ -10,9 +10,9 @@
 
 struct int2 {
 
-    int2(int _x, int _y) : x(_x), y(_y) {};
+    int2(unsigned int _x, unsigned int _y) : x(_x), y(_y) {};
 
-    int x, y;
+    unsigned int x, y;
 };
 
 static constexpr uint8_t clz_table_4bit[16] = { 4, 3, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -26,12 +26,12 @@ static unsigned int clz32d(uint32_t x) /* 32-bit clz */{
     return n;
 }
 
-int LongestCommonPrefix(int i, int j, int size, std::vector<std::unique_ptr<GameObject>>& orderedGameObjects) {
+int LongestCommonPrefix(int i, int j, int size, std::vector<GameObject>& orderedGameObjects) {
 
     if (i < 0 || i > size - 1 || j < 0 || j > size - 1) return -1;
 
-    ComponentMeshRenderer* compF = static_cast<ComponentMeshRenderer*>(orderedGameObjects[i].get()->GetComponent(type_component::MESHRENDERER));
-    ComponentMeshRenderer* compL = static_cast<ComponentMeshRenderer*>(orderedGameObjects[j].get()->GetComponent(type_component::MESHRENDERER));
+    ComponentMeshRenderer* compF = static_cast<ComponentMeshRenderer*>(orderedGameObjects[i].GetComponent(type_component::MESHRENDERER));
+    ComponentMeshRenderer* compL = static_cast<ComponentMeshRenderer*>(orderedGameObjects[j].GetComponent(type_component::MESHRENDERER));
 
     uint32_t codeI = compF->GetMorton();
     uint32_t codeJ = compL->GetMorton();
@@ -43,15 +43,15 @@ int LongestCommonPrefix(int i, int j, int size, std::vector<std::unique_ptr<Game
 
 }
 
-unsigned int findSplit(std::vector<std::unique_ptr<GameObject>>& orderedGameObjects, int first, int last) {
+unsigned int findSplit(std::vector<GameObject>& orderedGameObjects, int first, int last) {
 
 
     if (first == last) {
         return -1;
     }
 
-    ComponentMeshRenderer* compF = static_cast<ComponentMeshRenderer*>(orderedGameObjects[first].get()->GetComponent(type_component::MESHRENDERER));
-    ComponentMeshRenderer* compL = static_cast<ComponentMeshRenderer*>(orderedGameObjects[last].get()->GetComponent(type_component::MESHRENDERER));
+    ComponentMeshRenderer* compF = static_cast<ComponentMeshRenderer*>(orderedGameObjects[first].GetComponent(type_component::MESHRENDERER));
+    ComponentMeshRenderer* compL = static_cast<ComponentMeshRenderer*>(orderedGameObjects[last].GetComponent(type_component::MESHRENDERER));
 
     uint32_t firstCode = compF->GetMorton();
     uint32_t lastCode = compL->GetMorton();
@@ -67,10 +67,10 @@ unsigned int findSplit(std::vector<std::unique_ptr<GameObject>>& orderedGameObje
 
         if (newSplit < last) {
 
-            ComponentMeshRenderer* aux = static_cast<ComponentMeshRenderer*>(orderedGameObjects[newSplit].get()->GetComponent(type_component::MESHRENDERER));
+            ComponentMeshRenderer* aux = static_cast<ComponentMeshRenderer*>(orderedGameObjects[newSplit].GetComponent(type_component::MESHRENDERER));
             uint32_t splitCode = aux->GetMorton();
 
-            int splitPrefix = clz32d(firstCode ^ splitCode);
+            unsigned int splitPrefix = clz32d(firstCode ^ splitCode);
 
             if (splitPrefix > commonPrefix) {
 
@@ -84,7 +84,7 @@ unsigned int findSplit(std::vector<std::unique_ptr<GameObject>>& orderedGameObje
 
 }
 
-int2 determineRange(std::vector<std::unique_ptr<GameObject>>& orderedGameObjects, int idx, unsigned int size) {
+int2 determineRange(std::vector<GameObject>& orderedGameObjects, int idx, unsigned int size) {
 
     int d = LongestCommonPrefix(idx, idx + 1, size, orderedGameObjects) -
         LongestCommonPrefix(idx, idx - 1, size, orderedGameObjects) >= 0 ? 1 : -1;
@@ -113,7 +113,7 @@ int2 determineRange(std::vector<std::unique_ptr<GameObject>>& orderedGameObjects
 
 }
 
-BVHNode* BVH::GenerateBVH(std::vector<std::unique_ptr<GameObject>>& orderedGameObjects, unsigned int size) {
+BVHNode* BVH::GenerateBVH(std::vector<GameObject>& orderedGameObjects, unsigned int size) {
 
     BVHNode* leaf_nodes = new BVHNode[size];
     BVHNode* internal_nodes = new BVHNode[size-1];
@@ -121,22 +121,22 @@ BVHNode* BVH::GenerateBVH(std::vector<std::unique_ptr<GameObject>>& orderedGameO
     MSTimer constructionTime; constructionTime.start();
 
     for (unsigned int i = 0; i < size; i++) {
-        leaf_nodes[i].go = orderedGameObjects[i].get();
+        leaf_nodes[i].go = &orderedGameObjects[i];
     }
 
     int maxthreads = omp_get_max_threads();
     omp_set_num_threads(maxthreads);
     #pragma omp parallel for schedule(static, maxthreads)
-    for (int idx = 0; idx < size - 1; idx++) {
+    for (unsigned int idx = 0; idx < size - 1; idx++) {
 
         //determine range
         int2 range = determineRange(orderedGameObjects, idx, size - 1);
 
-        int first = range.x;
-        int last = range.y;
+        unsigned int first = range.x;
+        unsigned int last = range.y;
 
         //find partition point
-        int split = findSplit(orderedGameObjects, first, last);
+        unsigned int split = findSplit(orderedGameObjects, first, last);
 
         BVHNode* childA;
         BVHNode* childB;
