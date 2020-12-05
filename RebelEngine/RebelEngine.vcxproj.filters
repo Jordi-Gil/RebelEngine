@@ -116,7 +116,9 @@
     <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
     <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\GUIs\GUIHierarchy.cpp" />
-    <ClCompile Include="Engine\AcceleratorStructures\BSP.cpp" />
+    <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
+    <ClCompile Include="Engine\AccelerationDataStructures\BVH.cpp" />
+    <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -248,7 +250,9 @@
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\GUIs\GUIHierarchy.h" />
-    <ClInclude Include="Engine\AcceleratorStructures\BSP.h" />
+    <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
+    <ClInclude Include="Engine\AccelerationDataStructures\BVH.h" />
+    <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

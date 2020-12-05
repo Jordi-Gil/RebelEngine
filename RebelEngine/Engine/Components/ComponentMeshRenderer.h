@@ -19,6 +19,7 @@ public:
 	void Draw();
 
 	type_component GetType() const override { return type; }
+	uint32_t GetMorton() const { return mesh->GetMorton(); }
 
 private:
 

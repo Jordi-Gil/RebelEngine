@@ -9,6 +9,23 @@
 #include <GL/glew.h>
 #include "Math/float3x3.h"
 
+// method to seperate bits from a given integer 3 positions apart
+inline uint32_t splitBy3(unsigned int a) {
+	uint32_t x = a & 0x1fffff; // we only look at the first 21 bits
+	x = (x | x << 16) & 0x1f0000ff0000ff; // shift left 32 bits, OR with self, and 00011111000000000000000011111111000000000000000011111111
+	x = (x | x << 8) & 0x100f00f00f00f00f; // shift left 32 bits, OR with self, and 0001000000001111000000001111000000001111000000001111000000000000
+	x = (x | x << 4) & 0x10c30c30c30c30c3; // shift left 32 bits, OR with self, and 0001000011000011000011000011000011000011000011000011000100000000
+	x = (x | x << 2) & 0x1249249249249249;
+	
+	return x;
+}
+
+inline uint32_t mortonEncode_magicbits(unsigned int x, unsigned int y, unsigned int z) {
+	uint32_t answer = 0;
+	answer |= splitBy3(x) | splitBy3(y) << 1 | splitBy3(z) << 2;
+	return answer;
+}
+
 void Mesh::LoadVBO(const aiMesh* mesh) {
 
 	float max[3] = { FLT_MIN, FLT_MIN , FLT_MIN }, min[3] = { FLT_MAX , FLT_MAX , FLT_MAX };
@@ -55,6 +72,7 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	numVertices = mesh->mNumVertices;
 
 	aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
+	vec centroid = aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	//obb = OBB::OBB(aabb);
 
 }

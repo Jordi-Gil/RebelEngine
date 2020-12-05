@@ -23,8 +23,8 @@ void ModuleScene::DrawRecursive(GameObject &go) {
 		for (auto const& children : go.GetChildren()) {
 			if (children->GetNumChildren() == 0) {
 				if (children->HasComponent(type_component::MESHRENDERER)) {
-					auto comp = static_cast<ComponentMeshRenderer&>(children->GetComponent(type_component::MESHRENDERER));
-						comp.Draw();
+					ComponentMeshRenderer *comp = static_cast<ComponentMeshRenderer*>(children->GetComponent(type_component::MESHRENDERER));
+						comp->Draw();
 				}
 			}
 			else {

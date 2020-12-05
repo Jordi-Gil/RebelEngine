@@ -27,9 +27,9 @@ bool GameObject::HasComponent(type_component _type) const {
 
 }
 
-Component& GameObject::GetComponent(type_component type) const
+Component* GameObject::GetComponent(type_component type) const
 {
 	for (auto const& component : components) {
-		if (component->GetType() == type) return *component.get();
+		if (component->GetType() == type) return component.get();
 	}
 }

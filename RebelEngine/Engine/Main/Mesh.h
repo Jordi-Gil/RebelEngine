@@ -45,6 +45,8 @@ public:
 
 	void Clean();
 
+	uint32_t GetMorton() const { return mortonCode; }
+
 private:
 
 	unsigned int VBO;
@@ -54,6 +56,8 @@ private:
 	unsigned int numVertices;
 	unsigned int numIndices;
 	unsigned int numFaces;
+
+	uint32_t mortonCode;
 
 	AABB aabb;
 	OBB obb;

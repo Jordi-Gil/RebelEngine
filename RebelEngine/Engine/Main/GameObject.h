@@ -22,7 +22,7 @@ public:
 	int GetNumChildren() const { return children.size(); };
 	
 	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return children; }
-	Component& GetComponent(type_component type) const;
+	Component* GetComponent(type_component type) const;
 
 private:
 

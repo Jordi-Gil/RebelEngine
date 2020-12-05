@@ -49,7 +49,7 @@ namespace iware {
 		}
 
 	}
-
+	/*
 	namespace gpu {
 
 		static const char* vendor_name(iware::gpu::vendor_t vendor) noexcept {
@@ -70,4 +70,5 @@ namespace iware {
 		}
 
 	}
+	*/
 }

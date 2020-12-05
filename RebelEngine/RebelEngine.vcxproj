@@ -154,7 +154,8 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\AcceleratorStructures\BSP.h" />
+    <ClInclude Include="Engine\AccelerationDataStructures\BVH.h" />
+    <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\CoreModules\Module.h" />
@@ -282,11 +283,13 @@
     <ClInclude Include="MathGeoLib-1.5\Include\Time\Clock.h" />
     <ClInclude Include="Engine\CoreModules\ModuleGUI.h" />
     <ClInclude Include="Engine\CoreModules\ModuleScene.h" />
+    <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\AcceleratorStructures\BSP.cpp" />
+    <ClCompile Include="Engine\AccelerationDataStructures\BVH.cpp" />
+    <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
     <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
@@ -402,6 +405,7 @@
     <ClCompile Include="Engine\CoreModules\ModuleGUI.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleScene.cpp" />
     <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
+    <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\shaders\fragment.frag" />
