@@ -151,8 +151,8 @@ bool ModuleWindow::CleanUp() {
 
 	//Destroy window
 	if (window != NULL) {
-		SDL_DestroyWindow(window);
 		SDL_FreeSurface(screen_surface);
+		SDL_DestroyWindow(window);
 	}
 
 	//Quit SDL subsystems
