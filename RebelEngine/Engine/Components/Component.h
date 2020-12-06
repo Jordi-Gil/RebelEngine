@@ -7,7 +7,8 @@ class GameObject;
 enum  class type_component {
 	NONE,
 	TRANSFORM,
-	MESHRENDERER
+	MESHRENDERER,
+	CAMERA
 };
 
 class Component {

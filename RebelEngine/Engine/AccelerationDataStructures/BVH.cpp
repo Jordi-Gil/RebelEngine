@@ -45,7 +45,6 @@ int LongestCommonPrefix(int i, int j, int size, std::vector<GameObject>& ordered
 
 unsigned int findSplit(std::vector<GameObject>& orderedGameObjects, int first, int last) {
 
-
     if (first == last) {
         return -1;
     }

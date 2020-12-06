@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\AccelerationDataStructures\BVH.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
+    <ClInclude Include="Engine\Components\ComponentCamera.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\CoreModules\Module.h" />
@@ -286,10 +287,12 @@
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
+    <ClInclude Include="Engine\Main\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\AccelerationDataStructures\BVH.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
+    <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleEditorCamera.cpp" />
@@ -406,6 +409,7 @@
     <ClCompile Include="Engine\CoreModules\ModuleScene.cpp" />
     <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
+    <ClCompile Include="Engine\Main\Skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\shaders\fragment.frag" />

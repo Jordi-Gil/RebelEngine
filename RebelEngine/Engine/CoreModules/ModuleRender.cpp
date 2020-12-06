@@ -1,5 +1,7 @@
 #include "Main/Application.h"
 
+#include "Main/Skybox.h"
+
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
@@ -148,14 +150,13 @@ void ModuleRender::Draw(float width, float height) {
 	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
 
-	App->scene->Draw();
 	App->debugDraw->Draw(view, projection, width, height);
+	App->scene->Draw();
+	App->scene->skybox->Draw();
 
 	glBindVertexArray(0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 update_status ModuleRender::PostUpdate() {

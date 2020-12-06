@@ -5,6 +5,8 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+#include <vector>
+
 GLenum minification[] = {
 	GL_NEAREST, GL_LINEAR, GL_NEAREST_MIPMAP_NEAREST,
 	GL_LINEAR_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_LINEAR,
@@ -18,12 +20,12 @@ GLenum wrap[] = { GL_CLAMP_TO_EDGE, GL_CLAMP_TO_BORDER, GL_MIRRORED_REPEAT, GL_R
 bool ModuleTexture::Init() {
 
 	LOG(_INFO, "Creating DevIL context");
-	
+
 	if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION) {
 		LOG(_ERROR, "Wrong DevIL version");
 		return false;
 	}
-	
+
 	ilInit();
 	iluInit();
 	ilutInit();
@@ -31,7 +33,7 @@ bool ModuleTexture::Init() {
 	return true;
 }
 
-unsigned int ModuleTexture::loadTexture(const char* path, TextureInformation &info) {
+unsigned int ModuleTexture::loadTexture(const char* path, TextureInformation& info) {
 
 	unsigned int texId = 0, image;
 
@@ -39,14 +41,14 @@ unsigned int ModuleTexture::loadTexture(const char* path, TextureInformation &in
 	ilBindImage(image);
 
 	bool success = ilLoadImage(path);
-	
+
 	ILenum error = ilGetError();
 
 	if (error != IL_NO_ERROR) {
 		LOG(_ERROR, "Error loading image %s, iluError [%d]: %s", path, error, iluErrorString(error));
 	}
-	
-	if(success) {
+
+	if (success) {
 
 		ILinfo ilImageInfo;
 		iluGetImageInfo(&ilImageInfo);
@@ -54,9 +56,9 @@ unsigned int ModuleTexture::loadTexture(const char* path, TextureInformation &in
 		if (ilImageInfo.Origin == IL_ORIGIN_UPPER_LEFT) {
 			iluFlipImage();
 		}
-		
+
 		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-		
+
 		if (!success) {
 			LOG(_ERROR, "Cannot every colour component into unsigned byte");
 			return false;
@@ -78,6 +80,60 @@ unsigned int ModuleTexture::loadTexture(const char* path, TextureInformation &in
 
 	return texId;
 
+}
+
+unsigned int ModuleTexture::loadCubeMap(const char* path)
+{
+	LOG(_INFO, "LOADING CUBEMAP");
+
+	unsigned int texId;
+	glGenTextures(1, &texId);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
+
+	std::vector<char*> faces{ "right.png","left.png",
+	"top.png","bottom.png","front.png","back.png" };
+
+	for (unsigned int i = 0; i < faces.size(); i++) {
+		char realPath[_MAX_PATH];
+		sprintf_s(realPath, _MAX_PATH, "%s%s", path, faces[i]);
+		unsigned int image;
+		ilGenImages(1, &image);
+		ilBindImage(image);
+
+		bool success = ilLoadImage(realPath);
+
+		if (success) {
+
+			success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
+			if (!success) {
+				LOG(_ERROR, "Cannot every colour component into unsigned byte");
+				return false;
+			}
+
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+				0, ilGetInteger(IL_IMAGE_BPP),
+				ilGetInteger(IL_IMAGE_WIDTH),
+				ilGetInteger(IL_IMAGE_HEIGHT), 0,
+				ilGetInteger(IL_IMAGE_FORMAT),
+				GL_UNSIGNED_BYTE,
+				ilGetData());
+
+		}
+
+		ilDeleteImages(1, &image);
+
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	LOG(_INFO, "CUBEMAP FINISHED");
+
+	return texId;
 }
 
 void ModuleTexture::SetMinFilter(unsigned i, unsigned texID) {

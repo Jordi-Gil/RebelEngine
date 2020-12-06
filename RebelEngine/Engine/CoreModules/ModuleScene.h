@@ -1,18 +1,17 @@
 #pragma once
 #include "Module.h"
 
-#include "Main/GameObject.h"
+#include <memory>
+
+class Skybox;
+class GameObject;
 
 class ModuleScene : public Module {
 
 public:
 
 	ModuleScene();
-
-	~ModuleScene(){
-		delete goSelected;
-		goSelected = nullptr;
-	}
+	~ModuleScene();
 
 	bool Init() override;
 	
@@ -29,7 +28,7 @@ public:
 	std::unique_ptr<GameObject> root;
 	GameObject* goSelected = nullptr;
 
-	
+	Skybox* skybox;
 
 	bool frustum = false;
 

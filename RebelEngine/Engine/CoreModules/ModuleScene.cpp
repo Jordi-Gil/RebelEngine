@@ -1,11 +1,41 @@
 #include "ModuleScene.h"
+
+#include "Components/ComponentCamera.h"
+#include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
 
-ModuleScene::ModuleScene() {	
+#include "Main/Skybox.h"
+#include "Main/GameObject.h"
+
+ModuleScene::ModuleScene() {
+
 	root = std::make_unique<GameObject>();
+
+	std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
+	std::unique_ptr<ComponentTransform> comp = std::make_unique<ComponentTransform>();
+	std::unique_ptr<ComponentCamera> cam = std::make_unique<ComponentCamera>();
+
+	go->SetName("Camera");
+	go->AddComponent(std::move(comp));
+	go->AddComponent(std::move(cam));
+
+	root->AddChild(std::move(go));
+}
+
+ModuleScene::~ModuleScene() {
+
+	delete goSelected;
+	goSelected = nullptr;
+
+	delete skybox;
+	skybox = nullptr;
+
 }
 
 bool ModuleScene::Init() {
+
+	skybox = new Skybox();
+
 	return true;
 }
 

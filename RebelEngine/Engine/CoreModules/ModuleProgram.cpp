@@ -9,10 +9,15 @@ ModuleProgram::ModuleProgram() {}
 
 bool ModuleProgram::Start() {
 
-	GLuint vertexSahder = App->program->CompileShader(GL_VERTEX_SHADER, (App->program->readFile("Assets/Shaders/vertex.vert")).c_str());
-	GLuint fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, (App->program->readFile("Assets/Shaders/fragment.frag")).c_str());
+	GLuint vertexSahder, fragmentShader;
 
+	vertexSahder = App->program->CompileShader(GL_VERTEX_SHADER, (App->program->readFile("Assets/Shaders/vertex.vert")).c_str());
+	fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, (App->program->readFile("Assets/Shaders/fragment.frag")).c_str());
 	mainProgram = App->program->CreateProgram(vertexSahder, fragmentShader);
+
+	vertexSahder = App->program->CompileShader(GL_VERTEX_SHADER, (App->program->readFile("Assets/Shaders/skybox.vert")).c_str());
+	fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, (App->program->readFile("Assets/Shaders/skybox.frag")).c_str());
+	skyboxProgram = App->program->CreateProgram(vertexSahder, fragmentShader);
 
 	return true;
 
@@ -88,7 +93,7 @@ unsigned int ModuleProgram::CreateProgram(unsigned int vtx_shader, unsigned int 
 
 	glDeleteShader(vtx_shader);
 	glDeleteShader(frg_shader);
-	
+
 	return program_id;
 }
 

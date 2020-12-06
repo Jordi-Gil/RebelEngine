@@ -32,6 +32,7 @@ public:
 public:
 
 	float clearColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	
 
 private:
 
