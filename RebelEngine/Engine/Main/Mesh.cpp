@@ -123,7 +123,7 @@ void Mesh::CreateVAO() {
 
 }
 
-void Mesh::Draw(/*const std::vector<std::pair<unsigned int, TextureInformation>> &materials*/) {
+void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>> &materials) {
 
 	unsigned int program = App->program->GetMainProgram();
 
@@ -136,13 +136,13 @@ void Mesh::Draw(/*const std::vector<std::pair<unsigned int, TextureInformation>>
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*) &model);
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, (const float*) &view);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, (const float*) &projection);
-	glUniform1i(glGetUniformLocation(program, "textureEnabled"), false);
+	glUniform1i(glGetUniformLocation(program, "textureEnabled"), true);
 	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 
 	glBindVertexArray(VAO);
 	glActiveTexture(GL_TEXTURE0);
 
-	//glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
+	glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
 
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
 

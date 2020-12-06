@@ -41,7 +41,7 @@ public:
 	void LoadEBO(const aiMesh* mesh);
 	void CreateVAO();
 
-	void Draw(/*const std::vector<std::pair<unsigned int, TextureInformation>>& materials*/);
+	void Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& materials);
 
 	void Clean();
 

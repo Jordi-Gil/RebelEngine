@@ -119,6 +119,8 @@
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\BVH.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
+    <ClCompile Include="Engine\Main\Skybox.cpp" />
+    <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -253,6 +255,8 @@
     <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\BVH.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
+    <ClInclude Include="Engine\Main\Skybox.h" />
+    <ClInclude Include="Engine\Components\ComponentCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

@@ -13,7 +13,6 @@
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 
-
 void LogAssimp(const char* msg, char* userData) {
 	if(msg) LOG(_INFO, "Assimp Message: %s", msg);
 }
@@ -144,7 +143,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 		LoadNodeHierarchy(father, *go, scene);
 		App->scene->root->AddChild(std::move(go));
 
-		//LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
+		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
 		LOG(_INFO,"meshes loaded");
 	}
 	else {

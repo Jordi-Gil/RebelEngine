@@ -27,6 +27,8 @@ public:
 	void SetWrapS(int i);
 	void SetWrapT(int i);
 
+	std::vector<std::pair<unsigned int, TextureInformation>> textures;
+
 private:
 
 	void LoadTextures(aiMaterial** const materials, unsigned int mNumMaterials, const char* fbxPath);
@@ -35,6 +37,5 @@ private:
 private:
 
 	unsigned int numMaterials;
-	std::vector<std::pair<unsigned int, TextureInformation>> textures;
 };
 

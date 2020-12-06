@@ -15,12 +15,14 @@ public:
     unsigned int CompileShader(unsigned int type, const char* source);
 
     unsigned int GetMainProgram() { return mainProgram; }
+    unsigned int GetSkyboxProgram() { return skyboxProgram; }
 
     bool CleanUp() override;
 
 private:
 
     unsigned int mainProgram = 0;
+    unsigned int skyboxProgram = 0;
 
 };
 
