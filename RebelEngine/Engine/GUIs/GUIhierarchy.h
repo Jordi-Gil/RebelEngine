@@ -13,4 +13,5 @@ public:
 	const char* GetName() const { return name; }
 
 	void ToggleActive() override;
+
 };

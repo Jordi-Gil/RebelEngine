@@ -15,6 +15,7 @@ public:
 
 	void SetTransform(const float3 _position, const float3 _rotation, const float3 _scale);
 	void SetTransform(const aiMatrix4x4& matrix);
+	void UpdateTransform(const ComponentTransform& old_father, const ComponentTransform& new_father);
 
 	void Enable() override {}
 
@@ -22,6 +23,9 @@ public:
 
 	void Disable() override {}
 
+	float3 GetPosition() const { return position; }
+	float3 GetRotation() const { return rotation; }
+	float3 GetScale() const { return scale; }
 private:
 
 	float3 position = float3::zero;

@@ -139,7 +139,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 		go->SetName(_strdup(fn));
 		go->AddComponent(std::move(comp));
-		
+	
 		LoadNodeHierarchy(father, *go, scene);
 		App->scene->root->AddChild(std::move(go));
 
@@ -156,7 +156,6 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 
 	// assignar nombre edl mesh al name del game object
 	int unsigned num_children = node->mNumChildren;
-
 	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
 
 		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();

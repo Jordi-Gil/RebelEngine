@@ -20,7 +20,8 @@ public:
 
 	const char* GetName() const { return name; }
 	int GetNumChildren() const { return children.size(); };
-	
+	GameObject* GetParent() const { return parent; };
+
 	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return children; }
 	Component* GetComponent(type_component type) const;
 
