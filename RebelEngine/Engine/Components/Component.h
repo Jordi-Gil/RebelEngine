@@ -24,6 +24,8 @@ public:
 	virtual void Disable() {}
 	virtual type_component GetType() const { return type; }
 
+	virtual void SetOwner(GameObject* go) { owner = go; }
+
 protected:
 
 	GameObject* owner = nullptr;

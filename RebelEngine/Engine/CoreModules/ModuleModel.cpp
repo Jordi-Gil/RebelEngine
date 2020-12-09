@@ -27,6 +27,7 @@ bool ModuleModel::Init() {
 	aiAttachLogStream(&stream);
 
 	LoadModel("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
+	//LoadModel("Assets/Models/WithoutDDS/Street_Environment/Street_environment_V01.FBX");
 	return true;
 }
 
@@ -130,21 +131,23 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 	if (scene) {
 
-		char fn[_MAX_FNAME]; _splitpath_s(fileName,NULL,0,NULL,0,fn,_MAX_FNAME,NULL,0);
-		
-		aiNode* father = scene->mRootNode;
-		
-		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
-		std::unique_ptr<ComponentTransform> comp = std::make_unique<ComponentTransform>();
+		char fn[_MAX_FNAME]; _splitpath_s(fileName, NULL, 0, NULL, 0, fn, _MAX_FNAME, NULL, 0);
 
-		go->SetName(_strdup(fn));
-		go->AddComponent(std::move(comp));
-	
+		aiNode* father = scene->mRootNode;
+
+		std::unique_ptr<GameObject> go = std::make_unique<GameObject>(_strdup(fn));
+		std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
+
+		go->SetParent(App->scene->root.get());
+
+		transform->SetOwner(go.get());
+		go->AddComponent(std::move(transform));
+
 		LoadNodeHierarchy(father, *go, scene);
 		App->scene->root->AddChild(std::move(go));
 
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
-		LOG(_INFO,"meshes loaded");
+		LOG(_INFO, "3D Model %s loaded", _strdup(fn));
 	}
 	else {
 		LOG(_ERROR, "Error loading mesh %s: %s", fileName, aiGetErrorString());
@@ -156,57 +159,57 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 
 	// assignar nombre edl mesh al name del game object
 	int unsigned num_children = node->mNumChildren;
+	
 	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
 
-		std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
-		std::unique_ptr <ComponentTransform> comp_transform = std::make_unique <ComponentTransform>();
-		
-		aiMatrix4x4 trans_matrix = node->mChildren[i]->mTransformation;
-		comp_transform->SetTransform(trans_matrix);//modify transform here after ask
-		go->AddComponent(std::move(comp_transform));
+		std::unique_ptr<GameObject> go = std::make_unique<GameObject>(node->mChildren[i]->mName.C_Str());
+		std::unique_ptr <ComponentTransform> transform = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
 
-		go->SetName(node->mChildren[i]->mName.C_Str());
+		go->SetParent(&father);
+
+		transform->SetOwner(go.get());
+		go->AddComponent(std::move(transform));
 
 		if (node->mChildren[i]->mNumMeshes == 1) {
 			
-			std::unique_ptr<ComponentMeshRenderer> comp_renderer_mesh = std::make_unique<ComponentMeshRenderer>();
-			
+			std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
+
 			Mesh* mesh = new Mesh();
 			mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
 			mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
 			mesh->CreateVAO();
 
-			comp_renderer_mesh->SetMesh(mesh);
-
-			go->AddComponent(std::move(comp_renderer_mesh));
+			renderer_mesh->SetOwner(go.get());
+			renderer_mesh->SetMesh(mesh);
+			go->AddComponent(std::move(renderer_mesh));
 		}
 		else {
 			for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x) {//mesh iteration
 
-				std::unique_ptr<GameObject> go_mesh = std::make_unique<GameObject>();
-				std::unique_ptr<ComponentMeshRenderer> comp_renderer_mesh = std::make_unique<ComponentMeshRenderer>();
-				std::unique_ptr <ComponentTransform> comp_transform_mesh = std::make_unique <ComponentTransform>();
+				std::unique_ptr<GameObject> go_mesh = std::make_unique<GameObject>(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
+				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
+				std::unique_ptr <ComponentTransform> transform_mesh = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
 
-				aiMatrix4x4 trans_matrix_mesh = node->mChildren[i]->mTransformation;
-				comp_transform_mesh->SetTransform(trans_matrix_mesh); //modify transform here after ask
-
-				go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
+				transform_mesh->SetOwner(go_mesh.get());
+				renderer_mesh->SetOwner(go_mesh.get());
 
 				Mesh* mesh = new Mesh();
 				mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 				mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 				mesh->CreateVAO();
 
-				comp_renderer_mesh->SetMesh(mesh);
-				go_mesh->AddComponent(std::move(comp_transform_mesh));
-				go_mesh->AddComponent(std::move(comp_renderer_mesh));
+				renderer_mesh->SetMesh(mesh);
+
+				go_mesh->AddComponent(std::move(transform_mesh));
+				go_mesh->AddComponent(std::move(renderer_mesh));
 				go_mesh->SetParent(go.get());
+
 				go->AddChild(std::move(go_mesh));
 			}
 		}
 		go->SetParent(&father);
-		father.AddChild(std::move(go));
 		LoadNodeHierarchy(node->mChildren[i], *go, scene);
+		father.AddChild(std::move(go));
 	}
 	
 }

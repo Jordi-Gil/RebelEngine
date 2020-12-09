@@ -9,5 +9,6 @@ ComponentMeshRenderer::ComponentMeshRenderer() {
 }
 
 void ComponentMeshRenderer::Draw(){
-	mesh->Draw(App->models->textures);
+	assert(owner != nullptr && "Component without and owner");
+	mesh->Draw(App->models->textures, owner->GetGlobalMatrix());
 }

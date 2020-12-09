@@ -1,5 +1,11 @@
 #include "GameObject.h"
+
 #include "Components/Component.h"
+#include "Components/ComponentTransform.h"
+
+GameObject::GameObject(const char* _name) {
+	name = _name;
+}
 
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
 	children.push_back(std::move(go));
@@ -33,4 +39,10 @@ Component* GameObject::GetComponent(type_component type) const
 		if (component->GetType() == type) return component.get();
 	}
 	return nullptr;
+}
+
+const float4x4 GameObject::GetGlobalMatrix() const
+{
+	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
+	return transform->GetGlobalMatrix();
 }

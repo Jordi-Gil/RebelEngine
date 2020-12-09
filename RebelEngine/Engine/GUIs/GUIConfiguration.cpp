@@ -123,7 +123,6 @@ void GUIConfiguration::Draw() {
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Fullscreen Desktop", &fullScreenDesk)) { App->window->SetWindowFullScreenDesktop(fullScreenDesk); fullScreen = false; }
 	}
-	
 	if (ImGui::CollapsingHeader("Render")) {
 
 		float clear[3] = {
@@ -146,7 +145,6 @@ void GUIConfiguration::Draw() {
 		}
 
 	}
-
 	if (ImGui::CollapsingHeader("Texture")) {
 		
 		ImGui::PushItemWidth(100);
@@ -230,8 +228,8 @@ void GUIConfiguration::Draw() {
 		ImGui::DragFloat3("Right", RightAux);
 		ImGui::PopItemFlag();
 
-		if (ImGui::DragFloat("Near Plane", &znear, 0.1f)) App->editorCamera->SetZNear(znear);
-		if (ImGui::DragFloat("Far Plane", &zfar, 0.1f)) App->editorCamera->SetZFar(zfar);
+		if (ImGui::DragFloat("Near Plane", &znear, 0.01f, 0.01f)) App->editorCamera->SetZNear(znear);
+		if (ImGui::DragFloat("Far Plane", &zfar, 0.01f, 0.01f)) App->editorCamera->SetZFar(zfar);
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		float ar = App->editorCamera->GetAspectRatio();
 		ImGui::DragFloat("Aspect Ratio", &ar);

@@ -21,21 +21,6 @@ GUIHierarchy::GUIHierarchy(const char* _name) {
 	dragged = nullptr;
 }
 
-void GameObjectRelocation(GameObject& go, GameObject& new_father) {
-
-	GameObject* old_father = go.GetParent();
-	ComponentTransform* comp = (ComponentTransform*) go.GetComponent(type_component::TRANSFORM);
-	ComponentTransform* old_father_comp = (ComponentTransform*) old_father->GetComponent(type_component::TRANSFORM);
-	ComponentTransform* new_father_comp = (ComponentTransform*) new_father.GetComponent(type_component::TRANSFORM);
-
-	comp->UpdateTransform(*old_father_comp, *new_father_comp);
-	for (auto const& child : go.GetChildren()) {
-		GameObjectChildrenRelocation(*child, old_father_comp, new_father_comp);
-	}
-	go.SetParent(&new_father);
-	//old_father->RemoveChild();
-	//new_father.AddChild(&go);
-}
 void GameObjectChildrenRelocation(GameObject& go, const ComponentTransform* old_father_comp, const ComponentTransform* new_father_comp) {
 
 	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
@@ -46,7 +31,21 @@ void GameObjectChildrenRelocation(GameObject& go, const ComponentTransform* old_
 
 }
 
+void GameObjectRelocation(GameObject& go, GameObject& new_father) {
 
+	GameObject* old_father = go.GetParent();
+	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
+	ComponentTransform* old_father_comp = (ComponentTransform*)old_father->GetComponent(type_component::TRANSFORM);
+	ComponentTransform* new_father_comp = (ComponentTransform*)new_father.GetComponent(type_component::TRANSFORM);
+
+	comp->UpdateTransform(*old_father_comp, *new_father_comp);
+	for (auto const& child : go.GetChildren()) {
+		GameObjectChildrenRelocation(*child, old_father_comp, new_father_comp);
+	}
+	go.SetParent(&new_father);
+	//old_father->RemoveChild();
+	//new_father.AddChild(&go);
+}
 
 void DrawHierarchy(GameObject &go) {
 	for (auto const &child : go.GetChildren()){

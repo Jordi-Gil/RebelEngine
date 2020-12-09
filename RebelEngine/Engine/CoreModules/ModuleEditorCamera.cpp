@@ -14,12 +14,7 @@
 
 bool ModuleEditorCamera::Init() {
 
-	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-	frustum.SetViewPlaneDistances(currentZNear, currentZFar);
-	frustum.SetHorizontalFovAndAspectRatio(DegToRad(90), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
-	frustum.SetPos(float3(0, 4, 10));
-	frustum.SetFront(-float3::unitZ);
-	frustum.SetUp(float3::unitY);
+	camera = new ComponentCamera();
 
 	return true;
 }
@@ -33,14 +28,14 @@ void ModuleEditorCamera::TranslateKeyboard() {
 	float speedModifier = 1.0f;
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
-	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement += frustum.Front();
-	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement -= frustum.WorldRight();
-	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement -= frustum.Front();
-	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += frustum.WorldRight();
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += float3::unitY;
-	if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement -= float3::unitY;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement += camera->GetFront();
+	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement -= camera->GetRight();
+	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)	movement -= camera->GetFront();
+	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += camera->GetRight();
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement += float3::unitY;
+	if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT) movement -= float3::unitY;
 
-	frustum.Translate(movement * App->deltaTime * movSpeed * speedModifier);
+	camera->Translate(movement * App->deltaTime * movSpeed * speedModifier);
 }
 
 void ModuleEditorCamera::TranslateMouse(int x, int y) {
@@ -50,20 +45,20 @@ void ModuleEditorCamera::TranslateMouse(int x, int y) {
 	float speedModifier = 1.0f;
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && 
-		App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT &&  x != 0 && y != 0) {
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT &&
+		App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT && x != 0 && y != 0) {
 
 		movement.z -= (float)x;
 		movement.z -= (float)y;
 	}
 
-	frustum.Translate(movement * App->deltaTime * 0.5 * speedModifier);
+	camera->Translate(movement * App->deltaTime * 0.5 * speedModifier);
 }
 
 void ModuleEditorCamera::TranslateMouseWheel() {
 
 	float3 movement = float3::zero;
-	
+
 	float speedModifier = 1.0f;
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier *= 2;
 
@@ -71,11 +66,11 @@ void ModuleEditorCamera::TranslateMouseWheel() {
 
 	if (dir != 0) {
 
-		if (dir > 0)	movement += frustum.Front() * 2;
-		else movement -= frustum.Front() * 2;
+		if (dir > 0)	movement += camera->GetFront() * 2;
+		else movement -= camera->GetFront() * 2;
 	}
 
-	frustum.Translate(movement * App->deltaTime * zoomSpeed * speedModifier);
+	camera->Translate(movement * App->deltaTime * zoomSpeed * speedModifier);
 }
 
 void ModuleEditorCamera::RotateKeyboard() {
@@ -90,17 +85,17 @@ void ModuleEditorCamera::RotateKeyboard() {
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT) speedModifier += 2;
 
-	Quat quaternionX(frustum.WorldRight(), _yaw * App->deltaTime * rotSpeed * speedModifier);
+	Quat quaternionX(camera->GetRight(), _yaw * App->deltaTime * rotSpeed * speedModifier);
 	Quat quaternionY(float3::unitY, _pitch * App->deltaTime * rotSpeed * speedModifier);
 
 	float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
 	float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
 	float3x3 rotationMatrix = rotationMatrixX * rotationMatrixY;
 
-	vec oldFront = frustum.Front().Normalized();
-	frustum.SetFront(rotationMatrix.MulDir(oldFront));
-	vec oldUp = frustum.Up().Normalized();
-	frustum.SetUp(rotationMatrix.MulDir(oldUp));
+	vec oldFront = camera->GetFront().Normalized();
+	camera->SetFront(rotationMatrix.MulDir(oldFront));
+	vec oldUp = camera->GetUp().Normalized();
+	camera->SetUp(rotationMatrix.MulDir(oldUp));
 
 }
 
@@ -122,17 +117,17 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 
 
-		Quat quaternionX(frustum.WorldRight(), _pitch * speedModifier);
+		Quat quaternionX(camera->GetRight(), _pitch * speedModifier);
 		Quat quaternionY(float3::unitY, _yaw * speedModifier);
 
 		float3x3 rotationMatrixX = float3x3::FromQuat(quaternionX);
 		float3x3 rotationMatrixY = float3x3::FromQuat(quaternionY);
 		float3x3 rotationMatrix = rotationMatrixY * rotationMatrixX;
 
-		vec oldFront = frustum.Front().Normalized();
-		frustum.SetFront(rotationMatrix.MulDir(oldFront));
-		vec oldUp = frustum.Up().Normalized();
-		frustum.SetUp(rotationMatrix.MulDir(oldUp));
+		vec oldFront = camera->GetFront().Normalized();
+		camera->SetFront(rotationMatrix.MulDir(oldFront));
+		vec oldUp = camera->GetUp().Normalized();
+		camera->SetUp(rotationMatrix.MulDir(oldUp));
 	}
 }
 
@@ -149,30 +144,30 @@ void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
 
 		this->pitch += _pitch;
 
-		if (RadToDeg(pitch) > 85)  { pitch = DegToRad(85); _pitch *= 0; }
+		if (RadToDeg(pitch) > 85) { pitch = DegToRad(85); _pitch *= 0; }
 		if (RadToDeg(pitch) < -85) { pitch = DegToRad(-85); _pitch *= 0; }
 
 		vec focus = vec(0, 0, 0);//TODO: Get Center GameObject Clicked App->models->GetCenterScene();
 
 		Quat rotationY(float3::unitY, _yaw);
-		Quat rotationX(frustum.WorldRight().Normalized(), _pitch);
+		Quat rotationX(camera->GetRight().Normalized(), _pitch);
 
-		vec newPos = rotationY.Transform(frustum.Pos() - focus);
+		vec newPos = rotationY.Transform(camera->GetPosition() - focus);
 		newPos = rotationX.Transform(newPos);
 
-		frustum.SetPos(newPos + focus);
-	
+		camera->SetPosition(newPos + focus);
+
 		float3x3 rotationMatrix = float3x3::LookAt(
-			frustum.Front(),
-			(focus - frustum.Pos()).Normalized(),
-			frustum.Up(),
+			camera->GetFront(),
+			(focus - camera->GetPosition()).Normalized(),
+			camera->GetUp(),
 			float3::unitY
 		);
-		
-		vec oldFront = frustum.Front().Normalized();
-		frustum.SetFront(rotationMatrix.MulDir(oldFront));
-		vec oldUp = frustum.Up().Normalized();
-		frustum.SetUp(rotationMatrix.MulDir(oldUp));
+
+		vec oldFront = camera->GetFront().Normalized();
+		camera->SetFront(rotationMatrix.MulDir(oldFront));
+		vec oldUp = camera->GetUp().Normalized();
+		camera->SetUp(rotationMatrix.MulDir(oldUp));
 	}
 
 }
@@ -189,7 +184,7 @@ update_status ModuleEditorCamera::Update() {
 		TranslateMouseWheel();
 		RotateKeyboard();
 		RotateMouse(x, y);
-		OrbitCenterScene(x,y);
+		OrbitCenterScene(x, y);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN) {
@@ -204,43 +199,43 @@ void ModuleEditorCamera::Focus() {
 
 	vec size = vec(1, 1, 1);//App->models->GetSizeScene();
 	vec center = vec(0, 0, 0);//App->models->GetCenterScene();
-	frustum.SetPos(center + frustum.Front().Neg() * (size.Length() * 0.5f) * 2 );
-	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), frustum.FarPlaneDistance() * size.Length());
+	camera->SetPosition(center + camera->GetFront().Neg() * (size.Length() * 0.5f) * 2);
+	camera->SetZFar(camera->GetZFar() * size.Length());
 }
 
 void ModuleEditorCamera::WindowResized(unsigned width, unsigned height) {
 
 	if (width != 0 && height != 0) {
 		float aspectRatio = float(width) / height;
-		frustum.SetVerticalFovAndAspectRatio(frustum.VerticalFov(), aspectRatio);
+		camera->SetVerticalFov(RadToDeg(camera->GetVerticalFov()), aspectRatio);
 	}
 }
 
 void ModuleEditorCamera::GetMatrix(matrix_type _mType, float4x4& matrix) {
 
 	switch (_mType) {
-		case matrix_type::PROJECTION_MATRIX: {
-			matrix = frustum.ProjectionMatrix();
-			break;
-		}
-		case matrix_type::VIEW_MATRIX: {
-			matrix = frustum.ViewMatrix();
-			break;
-		}
+	case matrix_type::PROJECTION_MATRIX: {
+		matrix = camera->GetProjectionMatrix();
+		break;
+	}
+	case matrix_type::VIEW_MATRIX: {
+		matrix = camera->GetViewMatrix();
+		break;
+	}
 	}
 }
 
 void ModuleEditorCamera::GetOpenGLMatrix(matrix_type _mType, float4x4& matrix) {
 
 	switch (_mType) {
-		case matrix_type::PROJECTION_MATRIX: {
-			matrix = frustum.ProjectionMatrix();
-			break;
-		}
-		case matrix_type::VIEW_MATRIX: {
-			matrix = frustum.ViewMatrix();
-			break;
-		}
+	case matrix_type::PROJECTION_MATRIX: {
+		matrix = camera->GetProjectionMatrix();
+		break;
+	}
+	case matrix_type::VIEW_MATRIX: {
+		matrix = camera->GetViewMatrix();
+		break;
+	}
 	}
 
 	matrix.Transpose();
@@ -250,25 +245,23 @@ void ModuleEditorCamera::GetOpenGLMatrix(matrix_type _mType, float4x4& matrix) {
 #pragma region setters
 
 void ModuleEditorCamera::SetVerticalFov(float vFov, float aspectRatio) {
-	frustum.SetVerticalFovAndAspectRatio(DegToRad(vFov), aspectRatio);
+	camera->SetVerticalFov(vFov, aspectRatio);
 }
 
 void ModuleEditorCamera::SetHorizontalFov(float hFov, float aspectRatio) {
-	frustum.SetHorizontalFovAndAspectRatio(DegToRad(hFov), aspectRatio);
+	camera->SetHorizontalFov(hFov, aspectRatio);
 }
 
 void ModuleEditorCamera::SetPosition(float x, float y, float z) {
-	frustum.SetPos(vec(x,y,z));
+	camera->SetPosition(x, y, z);
 }
 
 void ModuleEditorCamera::SetZNear(float _znear) {
-	currentZNear = _znear;
-	frustum.SetViewPlaneDistances(currentZNear, currentZFar);
+	camera->SetZNear(_znear);
 }
 
 void ModuleEditorCamera::SetZFar(float _zfar) {
-	currentZFar = _zfar;
-	frustum.SetViewPlaneDistances(currentZNear, currentZFar);
+	camera->SetZFar(_zfar);
 }
 
 void ModuleEditorCamera::SetMovSpeed(float _speed) {

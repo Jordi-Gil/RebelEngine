@@ -5,10 +5,6 @@ class ComponentMeshRenderer : public Component
 {
 public:
 	ComponentMeshRenderer();
-	~ComponentMeshRenderer() {
-		//delete mesh;
-		//mesh = nullptr;
-	}; 
 
 	void Enable() override {}
 	void Update() override {}

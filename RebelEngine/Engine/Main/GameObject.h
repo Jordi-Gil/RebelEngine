@@ -4,12 +4,15 @@
 #include <vector>
 #include <memory>
 
+#include "Math/float4x4.h"
+
 class GameObject 
 {
 
 public:
 
 	GameObject() {}
+	GameObject(const char* _name);
 
 	void Update(){}
 	void AddChild(std::unique_ptr<GameObject>&& go);
@@ -20,10 +23,11 @@ public:
 
 	const char* GetName() const { return name; }
 	int GetNumChildren() const { return children.size(); };
-	GameObject* GetParent() const { return parent; };
-
+	GameObject* GetParent() const { return parent; }
+	Component* GetComponent(type_component _type) const;
+	
 	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return children; }
-	Component* GetComponent(type_component type) const;
+	const float4x4 GetGlobalMatrix() const;
 
 private:
 
@@ -35,5 +39,7 @@ private:
 	std::vector<std::unique_ptr<Component>> components;
 
 public: 
+
 	friend class GUIHierarchy;
+
 };
