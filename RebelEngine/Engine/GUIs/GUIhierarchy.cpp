@@ -42,10 +42,9 @@ void GameObjectRelocation(GameObject& go, GameObject& new_father) {
 	for (auto const& child : go.GetChildren()) {
 		GameObjectChildrenRelocation(*child);
 	}
-	std::unique_ptr<GameObject> _go;
-	_go.reset(&go);
-	new_father.AddChild(std::move(_go));
-	old_father->EraseChildrenByName(go.GetName());
+
+	new_father.AddChild(std::make_unique<GameObject>(std::move(go)));
+	old_father->EraseChildrenNull();
 
 }
 

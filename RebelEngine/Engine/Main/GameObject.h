@@ -13,27 +13,7 @@ public:
 
 	GameObject() {}
 	GameObject(const char* _name);
-	GameObject(GameObject&& _go) {
-
-		this->active = _go.active;
-		this->name = _go.name;
-		this->parent = _go.parent;
-
-		_go.parent = nullptr;
-		_go.name = nullptr;
-
-		for (auto it = _go.children.begin(); it != _go.children.end(); ++it) {
-			this->children.emplace_back(std::move(*it));
-		}
-		_go.children.clear();
-		_go.children.shrink_to_fit();
-
-		for (auto it = _go.components.begin(); it != _go.components.end(); ++it) {
-			this->components.emplace_back(std::move(*it));
-		}
-		_go.components.clear();
-		_go.components.shrink_to_fit();
-	}
+	GameObject(GameObject&& _go);
 
 	void Update(){}
 	void AddChild(std::unique_ptr<GameObject>&& go);
@@ -41,7 +21,7 @@ public:
 	void SetName(const char* _name);
 	void SetParent(GameObject* _go);
 	bool HasComponent(type_component _type) const;
-	void EraseChildrenByName(const char* name);
+	void EraseChildrenNull();
 
 	const char* GetName() const { return name; }
 	int GetNumChildren() const { return children.size(); };

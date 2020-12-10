@@ -7,16 +7,43 @@ GameObject::GameObject(const char* _name) {
 	name = _name;
 }
 
-void GameObject::EraseChildrenByName(const char* name) {
+GameObject::GameObject(GameObject&& _go) {
+
+	this->active = _go.active;
+	this->name = _go.name;
+	this->parent = _go.parent;
+
+	_go.parent = nullptr;
+	_go.name = nullptr;
+
+	for (auto it = _go.children.begin(); it != _go.children.end(); ++it) {
+		(*it)->parent = this;
+		this->children.emplace_back(std::move(*it));
+	}
+	_go.children.clear();
+	_go.children.shrink_to_fit();
+
+	for (auto it = _go.components.begin(); it != _go.components.end(); ++it) {
+		(*it)->SetOwner(this);
+		this->components.emplace_back(std::move(*it));
+	}
+	_go.components.clear();
+	_go.components.shrink_to_fit();
+	
+}
+
+//TODO: Modify to UUID
+void GameObject::EraseChildrenNull() {
 	bool found = false;
 	auto it_found = children.begin();
 	for (auto it = children.begin();!found && it != children.end(); ++it) {
-		if (it->get()->name == name) {
+		if (!it->get()->name) { //null if is destroyed
 			found = true;
 			it_found = it;
 		}
 	}
-	if (found) children.erase(it_found);
+	if (found) 
+		children.erase(it_found);
 }
 
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
