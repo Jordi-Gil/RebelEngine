@@ -61,7 +61,7 @@ void DrawHierarchy(GameObject &go) {
 
 				ImGui::SetDragDropPayload("hierarchy_move", "", sizeof(const char*));
 				ImGui::TextUnformatted(child->GetName());
-				dragged = &(*child);
+				dragged = child.get();
 				ImGui::EndDragDropSource();
 
 			}
