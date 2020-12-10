@@ -19,7 +19,6 @@ public:
 
 	void SetTransform(const float3 _position, const float3 _rotation, const float3 _scale);
 	void SetTransform(const aiMatrix4x4& matrix);
-	void UpdateTransform(const ComponentTransform& old_father, const ComponentTransform& new_father);
 
 	void UpdateGlobalMatrix();
 

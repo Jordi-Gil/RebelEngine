@@ -7,6 +7,18 @@ GameObject::GameObject(const char* _name) {
 	name = _name;
 }
 
+void GameObject::EraseChildrenByName(const char* name) {
+	bool found = false;
+	auto it_found = children.begin();
+	for (auto it = children.begin();!found && it != children.end(); ++it) {
+		if (it->get()->name == name) {
+			found = true;
+			it_found = it;
+		}
+	}
+	if (found) children.erase(it_found);
+}
+
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
 	children.push_back(std::move(go));
 }

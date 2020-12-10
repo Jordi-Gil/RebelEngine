@@ -21,12 +21,12 @@ GUIHierarchy::GUIHierarchy(const char* _name) {
 	dragged = nullptr;
 }
 
-void GameObjectChildrenRelocation(GameObject& go, const ComponentTransform* old_father_comp, const ComponentTransform* new_father_comp) {
+void GameObjectChildrenRelocation(GameObject& go) {
 
 	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
-	comp->UpdateTransform(*old_father_comp, *new_father_comp);
+	comp->UpdateGlobalMatrix();
 	for (auto const& child : go.GetChildren()) {
-		GameObjectChildrenRelocation(*child, old_father_comp, new_father_comp);
+		GameObjectChildrenRelocation(*child);
 	}
 
 }
@@ -35,20 +35,22 @@ void GameObjectRelocation(GameObject& go, GameObject& new_father) {
 
 	GameObject* old_father = go.GetParent();
 	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
-	ComponentTransform* old_father_comp = (ComponentTransform*)old_father->GetComponent(type_component::TRANSFORM);
-	ComponentTransform* new_father_comp = (ComponentTransform*)new_father.GetComponent(type_component::TRANSFORM);
 
-	comp->UpdateTransform(*old_father_comp, *new_father_comp);
-	for (auto const& child : go.GetChildren()) {
-		GameObjectChildrenRelocation(*child, old_father_comp, new_father_comp);
-	}
 	go.SetParent(&new_father);
-	//old_father->RemoveChild();
-	//new_father.AddChild(&go);
+	comp->UpdateGlobalMatrix();
+
+	for (auto const& child : go.GetChildren()) {
+		GameObjectChildrenRelocation(*child);
+	}
+	std::unique_ptr<GameObject> _go;
+	_go.reset(&go);
+	new_father.AddChild(std::move(_go));
+	old_father->EraseChildrenByName(go.GetName());
+
 }
 
 void DrawHierarchy(GameObject &go) {
-	for (auto const &child : go.GetChildren()){
+	for (auto &child : go.GetChildren()){
 		bool open = false;
 			if (child->GetNumChildren() == 0) {
 				ImGui::Selectable(child->GetName());

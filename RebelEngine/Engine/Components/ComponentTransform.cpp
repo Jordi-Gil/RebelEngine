@@ -74,18 +74,6 @@ void ComponentTransform::SetTransform(const aiMatrix4x4& matrix) {
 	UpdateGlobalMatrix();
 }
 
-void ComponentTransform::UpdateTransform(const ComponentTransform& old_father, const ComponentTransform& new_father) {
-
-	position = position.Sub(old_father.GetPosition()).Add(new_father.GetPosition());
-	rotation = rotation.Sub(old_father.GetRotation()).Add(new_father.GetRotation());
-	scale = scale.Sub(old_father.GetScale()).Add(new_father.GetScale());
-
-	rotationQuat = Quat::FromEulerXYZ(DegToRad(position.x), DegToRad(rotation.y), DegToRad(scale.z));
-
-	localMatrix = float4x4::FromTRS(position, rotationQuat, scale);
-	
-}
-
 void ComponentTransform::UpdateGlobalMatrix() {
 	
 	if (owner != nullptr) {
