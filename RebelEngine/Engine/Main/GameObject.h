@@ -29,6 +29,7 @@ public:
 	Component* GetComponent(type_component _type) const;
 	
 	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return children; }
+	std::vector<std::unique_ptr<GameObject>>& GetChildren() { return children; }
 	const float4x4 GetGlobalMatrix() const;
 
 private:

@@ -55,20 +55,13 @@ update_status ModuleScene::PreUpdate() {
 
 void ModuleScene::DrawRecursive(GameObject &go) {
 
-	if (go.GetNumChildren() != 0) {
+	if (go.HasComponent(type_component::MESHRENDERER)) {
+		ComponentMeshRenderer* comp = static_cast<ComponentMeshRenderer*>(go.GetComponent(type_component::MESHRENDERER));
+		comp->Draw();
+	}
 
-		for (auto const& children : go.GetChildren()) {
-			if (children->GetNumChildren() == 0) {
-				if (children->HasComponent(type_component::MESHRENDERER)) {
-					ComponentMeshRenderer *comp = static_cast<ComponentMeshRenderer*>(children->GetComponent(type_component::MESHRENDERER));
-						comp->Draw();
-				}
-			}
-			else {
-				DrawRecursive(*children);
-			}
-		}
-
+	for (auto const& children : go.GetChildren()) {
+		DrawRecursive(*children);
 	}
 
 }

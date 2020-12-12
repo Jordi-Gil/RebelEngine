@@ -1,6 +1,8 @@
 #pragma once
 #include "CoreModules/ModuleGUI.h"
 
+class GameObject;
+
 class GUIHierarchy : public ModuleGUI {
 
 public:
@@ -14,4 +16,11 @@ public:
 
 	void ToggleActive() override;
 
+private:
+
+	void DrawHierarchy(GameObject& go, unsigned int depth);
+
+	int dragged;
+	unsigned int dragged_depth;
+	GameObject* go_dragged;
 };
