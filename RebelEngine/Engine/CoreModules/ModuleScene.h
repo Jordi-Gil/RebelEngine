@@ -14,8 +14,6 @@ public:
 	~ModuleScene();
 
 	bool Init() override;
-	
-	update_status PreUpdate() override;
 
 	void Draw();
 

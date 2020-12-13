@@ -19,6 +19,15 @@ GUIHierarchy::GUIHierarchy(const char* _name) {
 	go_dragged = nullptr;
 }
 
+bool IsNotRelative(GameObject& target, GameObject& dragged) {
+	
+	//nullptr -> root reached
+	if (!target.GetParent()) return true;
+	else if (target.GetParent()->GetName() == dragged.GetName()) return false;
+	else return IsNotRelative(*target.GetParent(), dragged);
+
+}
+
 void GameObjectChildrenRelocation(GameObject& go) {
 
 	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
@@ -55,13 +64,12 @@ void GUIHierarchy::DrawHierarchy(GameObject &go, unsigned int depth) {
 			ImGui::Selectable(children[i]->GetName());
 		}
 		else {
-			open = ImGui::TreeNode(children[i]->GetName());
+			open = ImGui::TreeNodeEx(children[i]->GetName(), ImGuiTreeNodeFlags_OpenOnArrow);
 		}
 
 		if (ImGui::BeginDragDropSource()) {
 
 			ImGui::SetDragDropPayload("hierarchy_move", "", sizeof(const char*));
-			ImGui::TextUnformatted(children[i]->GetName());
 			dragged = i;
 			dragged_depth = depth;
 			go_dragged = &go;
@@ -69,23 +77,23 @@ void GUIHierarchy::DrawHierarchy(GameObject &go, unsigned int depth) {
 
 		}
 
-		if (ImGui::BeginDragDropTarget() && dragged != -1 && depth <= dragged_depth) {
+		if (ImGui::BeginDragDropTarget() && dragged != -1) {
 
-			ImGui::TextUnformatted(children[i]->GetName());
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("hierarchy_move");
 			if (payload) {
 
 				std::vector<std::unique_ptr<GameObject>>& dragged_children = go_dragged->GetChildren();
-				GameObjectRelocation(std::move(dragged_children[dragged]), *children[i]);
-				dragged_children.erase(dragged_children.begin() + dragged);
-				if (go_dragged == &go) {
-					if (dragged < i) --i;
+				if (IsNotRelative(*children[i], *dragged_children[dragged])) {
+					GameObjectRelocation(std::move(dragged_children[dragged]), *children[i]);
+					dragged_children.erase(dragged_children.begin() + dragged);
+					if (go_dragged == &go) {
+						if (dragged < i) --i;
+					}
+					dragged = -1;
+					go_dragged = nullptr;
 				}
-				dragged = -1;
-				go_dragged = nullptr;
 			}
 			ImGui::EndDragDropTarget();
-
 		}
 
 		if (open) {
@@ -99,8 +107,29 @@ void GUIHierarchy::Draw() {
 
 	std::string wName(ICON_FA_SITEMAP " "); wName.append(name);
 	ImGui::Begin(wName.c_str(), &active, ImGuiWindowFlags_NoCollapse);
-	if(ImGui::TreeNode("Hierarchy")) {
+	bool open = ImGui::TreeNodeEx("Hierarchy", ImGuiTreeNodeFlags_OpenOnArrow);
+	
+	if (ImGui::BeginDragDropSource()) { ImGui::EndDragDropSource(); }
+
+	if (ImGui::BeginDragDropTarget() && dragged != -1) {
+
+		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("hierarchy_move");
+		if (payload) {
+
+			std::vector<std::unique_ptr<GameObject>>& dragged_children = go_dragged->GetChildren();
+			if (IsNotRelative(*App->scene->root, *dragged_children[dragged])) {
+				GameObjectRelocation(std::move(dragged_children[dragged]), *App->scene->root);
+				dragged_children.erase(dragged_children.begin() + dragged);
+				dragged = -1;
+				go_dragged = nullptr;
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	if(open) {
 		DrawHierarchy(*App->scene->root, 0);
+
 		ImGui::TreePop();
 	}
 	ImGui::End();
