@@ -9,6 +9,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
+#include "GUIInspector.h"
 #include "Components/ComponentTransform.h"
 
 
@@ -28,16 +29,6 @@ bool IsNotRelative(GameObject& target, GameObject& dragged) {
 
 }
 
-void GameObjectChildrenRelocation(GameObject& go) {
-
-	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
-	comp->UpdateGlobalMatrix();
-	for (auto const& child : go.GetChildren()) {
-		GameObjectChildrenRelocation(*child);
-	}
-
-}
-
 void GameObjectRelocation(std::unique_ptr<GameObject>&& go, GameObject& new_father) {
 
 	GameObject* old_father = go->GetParent();
@@ -45,10 +36,7 @@ void GameObjectRelocation(std::unique_ptr<GameObject>&& go, GameObject& new_fath
 
 	go->SetParent(&new_father);
 	comp->UpdateGlobalMatrix();
-
-	for (auto const& child : go->GetChildren()) {
-		GameObjectChildrenRelocation(*child);
-	}
+	go->UpdateChildrenTransform();
 
 	new_father.AddChild(std::move(go));
 
@@ -65,6 +53,9 @@ void GUIHierarchy::DrawHierarchy(GameObject &go, unsigned int depth) {
 		}
 		else {
 			open = ImGui::TreeNodeEx(children[i]->GetName(), ImGuiTreeNodeFlags_OpenOnArrow);
+		}
+		if (ImGui::IsItemClicked(0)) {
+			App->gui->inspector->SetFocusedGameObject(*children[i]);
 		}
 
 		if (ImGui::BeginDragDropSource()) {

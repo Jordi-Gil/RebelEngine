@@ -22,7 +22,7 @@ public:
 	void SetParent(GameObject* _go);
 	bool HasComponent(type_component _type) const;
 	void EraseChildrenNull();
-
+	void UpdateChildrenTransform();
 	const char* GetName() const { return name; }
 	int GetNumChildren() const { return children.size(); };
 	GameObject* GetParent() const { return parent; }

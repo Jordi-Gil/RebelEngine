@@ -85,3 +85,16 @@ const float4x4 GameObject::GetGlobalMatrix() const
 	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
 	return transform->GetGlobalMatrix();
 }
+
+void UpdateChildrenTransform_rec(GameObject& go) {
+
+	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
+	comp->UpdateGlobalMatrix();
+	for (auto const& child : go.GetChildren()) {
+		UpdateChildrenTransform_rec(*child);
+	}
+}
+
+void GameObject :: UpdateChildrenTransform() {
+	UpdateChildrenTransform_rec(*this);
+}
