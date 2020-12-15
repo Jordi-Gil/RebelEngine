@@ -30,9 +30,10 @@ void ModuleGUI::PreInit() {
 	windows.push_back(std::make_unique<GUIInspector>("Inspector")); inspector = (GUIInspector*)windows.rbegin()->get();
 	windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); config = (GUIConfiguration *) windows.rbegin()->get();
 	windows.push_back(std::make_unique<GUITerminal>("Terminal")); terminal = (GUITerminal *) windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy"));
+	windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy")); hierarchy = (GUIHierarchy*)windows.rbegin()->get();
 	scene->ToggleActive();
 	inspector->ToggleActive();
+	hierarchy->ToggleActive();
 }
 
 bool ModuleGUI::Init() {

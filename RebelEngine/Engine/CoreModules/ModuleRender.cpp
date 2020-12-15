@@ -145,14 +145,16 @@ void ModuleRender::Draw(float width, float height) {
 
 	glViewport(0, 0, width, height);
 	glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
 
+	App->scene->skybox->Draw();
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+
 	App->debugDraw->Draw(view, projection, width, height);
 	App->scene->Draw();
-	App->scene->skybox->Draw();
 
 	glBindVertexArray(0);
 

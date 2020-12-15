@@ -82,22 +82,24 @@ Skybox::~Skybox() {
 
 void Skybox::Draw() {
 
+    glDisable(GL_DEPTH_TEST);
+
     glDepthMask(GL_FALSE);
     glDepthFunc(GL_LEQUAL);
     unsigned int program = App->program->GetSkyboxProgram();
-
+    
     float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
     float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
-
+    
     glUseProgram(program);
-
+    
     glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, (const float*)&view);
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, (const float*)&projection);
     glUniform1i(glGetUniformLocation(program, "skybox"), 0);
-
+    
     glBindVertexArray(VAO);
     glActiveTexture(GL_TEXTURE0);
-
+    
     glBindTexture(GL_TEXTURE_CUBE_MAP, skyTexture);
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -105,5 +107,7 @@ void Skybox::Draw() {
     glBindVertexArray(0);
     glDepthFunc(GL_LESS);
     glDepthMask(GL_TRUE);
+
+    glEnable(GL_DEPTH_TEST);
 
 }

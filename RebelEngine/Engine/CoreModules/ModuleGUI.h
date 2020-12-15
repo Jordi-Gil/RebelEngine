@@ -9,6 +9,7 @@ class GUIScene;
 class GUITerminal;
 class GUIInspector;
 class GUIConfiguration;
+class GUIHierarchy;
 
 class ModuleGUI :  public Module {
 
@@ -38,6 +39,7 @@ public:
 	GUITerminal* terminal = nullptr;
 	GUIInspector* inspector = nullptr;
 	GUIConfiguration* config = nullptr;
+	GUIHierarchy* hierarchy = nullptr;
 
 private:
 
