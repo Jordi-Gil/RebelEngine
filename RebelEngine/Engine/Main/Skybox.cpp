@@ -82,10 +82,7 @@ Skybox::~Skybox() {
 
 void Skybox::Draw() {
 
-    glDisable(GL_DEPTH_TEST);
-
-    glDepthMask(GL_FALSE);
-    glDepthFunc(GL_LEQUAL);
+    glDepthFunc(GL_ALWAYS);
     unsigned int program = App->program->GetSkyboxProgram();
     
     float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
@@ -106,8 +103,5 @@ void Skybox::Draw() {
 
     glBindVertexArray(0);
     glDepthFunc(GL_LESS);
-    glDepthMask(GL_TRUE);
-
-    glEnable(GL_DEPTH_TEST);
 
 }

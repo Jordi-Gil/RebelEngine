@@ -121,6 +121,7 @@
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
     <ClCompile Include="Engine\Main\Skybox.cpp" />
     <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
+    <ClCompile Include="Engine\Main\Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -257,6 +258,8 @@
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
     <ClInclude Include="Engine\Main\Skybox.h" />
     <ClInclude Include="Engine\Components\ComponentCamera.h" />
+    <ClInclude Include="Engine\Main\Material.h" />
+    <ClInclude Include="Engine\Main\Pool.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">
