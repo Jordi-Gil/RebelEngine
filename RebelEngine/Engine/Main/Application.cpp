@@ -13,6 +13,8 @@
 #include "GUIs/GUITerminal.h"
 #include "GUIs/GUIConfiguration.h"
 
+#include <Brofiler.h>
+
 #define TIME_PER_FRAME 1000.0f / 60.f // Approx. 60 fps
 
 Application::Application() {
@@ -46,6 +48,8 @@ Application::~Application() {
 
 bool Application::Init() {
 
+	BROFILER_CATEGORY("Init", Profiler::Color::Orchid);
+
 	bool ret = true;
 
 	for (auto it = modules.begin(); it != modules.end() && ret; ++it)
@@ -58,6 +62,7 @@ bool Application::Init() {
 }
 
 update_status Application::Update() {
+
 
 #ifdef  _DEBUG
 	//dump openGL Log - Only in debug, because the log is only traced in debug mode
@@ -79,8 +84,8 @@ update_status Application::Update() {
 
 	Uint32 prevTime = applicationTimer.read();
 
-	if (prevTime < TIME_PER_FRAME)
-		SDL_Delay(TIME_PER_FRAME - prevTime);
+	//if (prevTime < TIME_PER_FRAME)
+	//	SDL_Delay(TIME_PER_FRAME - prevTime);
 
 	App->gui->config->AddFPS(1/deltaTime, applicationTimer.read());
 
@@ -89,6 +94,9 @@ update_status Application::Update() {
 
 bool Application::CleanUp()
 {
+
+	BROFILER_CATEGORY("CleanUp", Profiler::Color::Red);
+
 	bool ret = true;
 
 	for (auto it = modules.rbegin(); it != modules.rend() && ret; ++it)

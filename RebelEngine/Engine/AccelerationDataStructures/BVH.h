@@ -17,9 +17,9 @@ public:
 
 	AABB box;
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	const char* name = "";
-#endif // _DEBUG
+//#endif // _DEBUG
 
 };
 
