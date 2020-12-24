@@ -77,8 +77,9 @@ void ComponentTransform::SetTransform(const aiMatrix4x4& matrix) {
 void ComponentTransform::UpdateGlobalMatrix() {
 	
 	if (owner != nullptr) {
-		if (owner->GetParent() != nullptr)
+		if (owner->GetParent() != nullptr) {
 			globalMatrix = owner->GetParent()->GetGlobalMatrix() * localMatrix;
+		}
 		else
 			globalMatrix = localMatrix;
 	}

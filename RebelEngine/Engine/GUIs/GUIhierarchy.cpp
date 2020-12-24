@@ -24,7 +24,7 @@ bool IsNotRelative(GameObject& target, GameObject& dragged) {
 	
 	//nullptr -> root reached
 	if (!target.GetParent()) return true;
-	else if (target.GetParent()->GetName() == dragged.GetName()) return false;
+	else if (target.GetParent() == &dragged) return false;
 	else return IsNotRelative(*target.GetParent(), dragged);
 
 }

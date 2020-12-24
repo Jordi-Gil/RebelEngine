@@ -5,12 +5,14 @@
 #include <memory>
 #include <vector>
 
-template <class T>
+template <class T, class D = std::default_delete<T>>
 class Pool {
 
 public:
 
-	Pool(){}
+	Pool(uint size){
+		_size = size;
+	}
 
 	void Init(uint size) {
 		_size = size;
@@ -23,7 +25,7 @@ public:
 
 private:
 
-	unsigned int _size = 0;
+	uint _size = 0;
 	std::vector<std::unique_ptr<T>> _pool;
 
 };

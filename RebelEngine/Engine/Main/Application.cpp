@@ -27,16 +27,16 @@ Application::Application() {
 	deltaTime = (float)applicationTimer.read();
 
 	// Order matters: they will Init/start/update in this order
-	modules.push_back(std::make_unique<ModuleGUI>()); gui = (ModuleGUI*) modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleWindow>()); window = (ModuleWindow*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleInput>()); input = (ModuleInput*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleTexture>()); texturer = (ModuleTexture*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleRender>()); renderer = (ModuleRender*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleEditorCamera>()); editorCamera = (ModuleEditorCamera*)modules.rbegin()->get();
-	modules.push_back(std::make_unique<ModuleProgram>()); program = (ModuleProgram*)modules.rbegin()->get();
-	modules.push_back(std::make_unique<ModuleDebugDraw>()); debugDraw = (ModuleDebugDraw*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleGUI>()); gui = (ModuleGUI*) modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleScene>()); scene = (ModuleScene*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleModel>()); models = (ModuleModel*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleProgram>()); program = (ModuleProgram*)modules.rbegin()->get();
+	modules.push_back(std::make_unique<ModuleDebugDraw>()); debugDraw = (ModuleDebugDraw*)modules.rbegin()->get();
 
 	gui->PreInit();
 
