@@ -7,16 +7,18 @@
 
 class ModuleResourceManagement : public Module {
 
+public:
+
 	ModuleResourceManagement();
 
 	bool Init() override;
+	void Load3DModel(const char* path);
 
-private:
+public:
 
-	Pool<GameObject> *gameObjects;
-	//Pool<Materials>
-	//Pool<Textrues>
-	//...
+	Pool<GameObject> _gameObjects;
+	Pool<Component> _components;
 
 };
+
 

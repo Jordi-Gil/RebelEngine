@@ -124,6 +124,7 @@
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\system\OS_info\os_info_windows.cpp" />
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\pci.cpp" />
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\version.cpp" />
+    <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -265,6 +266,7 @@
     <ClInclude Include="External-Libraries\infoware-0.5.5\include\infoware\utils.hpp" />
     <ClInclude Include="External-Libraries\infoware-0.5.5\include\infoware\version.hpp" />
     <ClInclude Include="External-Libraries\infoware-0.5.5\include\infoware_generated\pci_data.hpp" />
+    <ClInclude Include="Engine\GUIs\GUIProject.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

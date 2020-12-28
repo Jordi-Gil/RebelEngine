@@ -18,6 +18,7 @@ class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleModel;
 class ModuleScene;
+class ModuleResourceManagement;
 
 class ModuleGUI;
 
@@ -45,8 +46,8 @@ public:
 	ModuleTexture* texturer = nullptr;
 	ModuleModel* models = nullptr;
 	ModuleScene* scene = nullptr;
-
 	ModuleGUI *gui = nullptr;
+	ModuleResourceManagement* resourcemanager = nullptr;
 
 	float deltaTime;
 

@@ -1,17 +1,18 @@
 #pragma once
 #include "Application.h"
 
-#include "CoreModules/ModuleWindow.h"
-#include "CoreModules/ModuleRender.h"
-#include "CoreModules/ModuleInput.h"
+#include "CoreModules/ModuleResourceManagement.h"
 #include "CoreModules/ModuleEditorCamera.h"
-#include "CoreModules/ModuleProgram.h"
 #include "CoreModules/ModuleDebugDraw.h"
+#include "CoreModules/ModuleProgram.h"
 #include "CoreModules/ModuleTexture.h"
+#include "CoreModules/ModuleRender.h"
+#include "CoreModules/ModuleWindow.h"
+#include "CoreModules/ModuleInput.h"
 #include "CoreModules/ModuleModel.h"
 #include "CoreModules/ModuleScene.h"
-#include "GUIs/GUITerminal.h"
 #include "GUIs/GUIConfiguration.h"
+#include "GUIs/GUITerminal.h"
 
 #include <Brofiler.h>
 
@@ -27,6 +28,7 @@ Application::Application() {
 	deltaTime = (float)applicationTimer.read();
 
 	// Order matters: they will Init/start/update in this order
+	modules.push_back(std::make_unique<ModuleResourceManagement>()); resourcemanager = (ModuleResourceManagement*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleWindow>()); window = (ModuleWindow*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleInput>()); input = (ModuleInput*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleTexture>()); texturer = (ModuleTexture*)modules.rbegin()->get();

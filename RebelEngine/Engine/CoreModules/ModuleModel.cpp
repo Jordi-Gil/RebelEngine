@@ -1,10 +1,13 @@
 #include "ModuleModel.h"
-#include "ModuleTexture.h"
+
+#include "ModuleResourceManagement.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleTexture.h"
 #include "ModuleScene.h"
 
 #include "Main/Application.h"
 #include "Utils/Globals.h"
+
 #include "Components/ComponentMeshRenderer.h"
 #include "Components/ComponentTransform.h"
 
@@ -135,7 +138,8 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 		aiNode* father = scene->mRootNode;
 
-		std::unique_ptr<GameObject> go = std::make_unique<GameObject>(_strdup(fn));
+		std::unique_ptr<GameObject> go = App->resourcemanager->_gameObjects.get();
+		go->SetName(_strdup(fn));
 		std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
 
 		go->SetParent(App->scene->root.get());
@@ -162,7 +166,8 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 	
 	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
 
-		std::unique_ptr<GameObject> go = std::make_unique<GameObject>(node->mChildren[i]->mName.C_Str());
+		std::unique_ptr<GameObject> go = App->resourcemanager->_gameObjects.get(); 
+		go->SetName(node->mChildren[i]->mName.C_Str());
 		std::unique_ptr <ComponentTransform> transform = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
 
 		go->SetParent(&father);
@@ -186,7 +191,8 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 		else {
 			for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x) {//mesh iteration
 
-				std::unique_ptr<GameObject> go_mesh = std::make_unique<GameObject>(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
+				std::unique_ptr<GameObject> go_mesh = App->resourcemanager->_gameObjects.get();
+				go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
 				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 				std::unique_ptr <ComponentTransform> transform_mesh = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
 
