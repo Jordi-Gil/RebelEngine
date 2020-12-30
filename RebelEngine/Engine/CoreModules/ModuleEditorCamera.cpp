@@ -12,6 +12,13 @@
 #include <SDL/SDL.h>
 #include <cmath>
 
+ModuleEditorCamera::~ModuleEditorCamera() {
+
+	delete camera;
+	camera = nullptr;
+
+}
+
 bool ModuleEditorCamera::Init() {
 
 	camera = new ComponentCamera();

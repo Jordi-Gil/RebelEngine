@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Components/Component.h"
+#include "Components/ComponentMeshRenderer.h"
+
 #include <vector>
 #include <memory>
 
@@ -12,34 +14,45 @@ class GameObject
 public:
 
 	GameObject() {}
-	GameObject(const char* _name);
-	GameObject(GameObject&& _go);
+	GameObject(const char* name);
+	GameObject(GameObject&& go);
+
+	~GameObject() { 
+		free((char*)_name); 
+		_name = nullptr; 
+	}
 
 	void Update(){}
 	void AddChild(std::unique_ptr<GameObject>&& go);
 	void AddComponent(std::unique_ptr<Component>&& comp);
-	void SetName(const char* _name);
-	void SetParent(GameObject* _go);
-	bool HasComponent(type_component _type) const;
+	void SetName(const char* name);
+	void SetParent(GameObject* go);
+	bool HasComponent(type_component type) const;
 	void EraseChildrenNull();
 	void UpdateChildrenTransform();
-	const char* GetName() const { return name; }
-	int GetNumChildren() const { return children.size(); };
-	GameObject* GetParent() const { return parent; }
-	Component* GetComponent(type_component _type) const;
-	
-	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return children; }
-	std::vector<std::unique_ptr<GameObject>>& GetChildren() { return children; }
+
+#pragma region getters
+	const char* GetName() const { return _name; }
+	int GetNumChildren() const { return _children.size(); };
+	GameObject* GetParent() const { return _parent; }
+	Component* GetComponent(type_component type) const;
+	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return _children; }
+	std::vector<std::unique_ptr<GameObject>>& GetChildren() { return _children; }
 	const float4x4 GetGlobalMatrix() const;
+	uint32_t GetMorton() const;
+	bool HasMesh() const { return _hasMesh; }
+#pragma endregion getters
 
 private:
 
-	bool active = false;
-	const char* name = "";
+	bool _active = false;
+	char* _name = nullptr;
 	
-	GameObject *parent = nullptr;
-	std::vector<std::unique_ptr<GameObject>> children;
-	std::vector<std::unique_ptr<Component>> components;
+	GameObject *_parent = nullptr;
+	std::vector<std::unique_ptr<GameObject>> _children;
+	std::vector<std::unique_ptr<Component>> _components;
+
+	bool _hasMesh = false;
 
 public: 
 

@@ -86,6 +86,7 @@ update_status Application::Update() {
 
 	Uint32 prevTime = applicationTimer.read();
 
+	//TODO: Mirar si VSYNC no esta activado
 	//if (prevTime < TIME_PER_FRAME)
 	//	SDL_Delay(TIME_PER_FRAME - prevTime);
 

@@ -17,7 +17,7 @@ public:
 
 	Pool(uint size) { 
 		_size = size;
-		for(int i = 0; i < _size; i++) _pool.push_back(std::make_unique<T>());
+		for(uint i = 0; i < _size; i++) _pool.push_back(std::make_unique<T>());
 	}
 
 	std::unique_ptr<T> get() {

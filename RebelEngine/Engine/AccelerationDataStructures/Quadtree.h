@@ -1,5 +1,12 @@
 #pragma once
-class Quadtree
-{
+class Quadtree {
+
+public:
+
+	Quadtree(){}
+
+private:
+
+
 };
 

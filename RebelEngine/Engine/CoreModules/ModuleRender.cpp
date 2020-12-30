@@ -153,7 +153,7 @@ void ModuleRender::Draw(float width, float height) {
 	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
 
-	App->scene->skybox->Draw();
+	App->scene->_skybox->Draw();
 
 	App->debugDraw->Draw(view, projection, width, height);
 	App->scene->Draw();

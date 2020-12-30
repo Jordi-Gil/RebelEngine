@@ -10,8 +10,8 @@
 #include "Utils/Globals.h"
 
 #include <SDL/SDL.h>
-#pragma comment( lib, "SDL/lib/x86/SDL2.lib" )
-#pragma comment( lib, "SDL/lib/x86/SDL2main.lib" )
+#pragma comment( lib, "External-Libraries/SDL/lib/x86/SDL2.lib" )
+#pragma comment( lib, "External-Libraries/SDL/lib/x86/SDL2main.lib" )
 
 #include <Brofiler.h>
 

@@ -2,6 +2,8 @@
 
 #include "Component.h"
 
+#include "Utils/debugdraw.h"
+
 #include <Geometry/Frustum.h>
 
 enum class background_type {
@@ -44,6 +46,10 @@ public:
 
 	float4x4 GetProjectionMatrix() { return frustum.ProjectionMatrix(); }
 	float4x4 GetViewMatrix() { return frustum.ViewMatrix(); }
+
+	void Draw() {
+		dd::frustum(frustum.ProjectionMatrix().Inverted(), dd::colors::Tomato);
+	}
 	
 private:
 

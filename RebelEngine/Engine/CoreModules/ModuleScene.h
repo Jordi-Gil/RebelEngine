@@ -2,7 +2,9 @@
 #include "Module.h"
 
 #include <memory>
+#include <vector>
 
+class BVH;
 class Skybox;
 class GameObject;
 
@@ -14,21 +16,31 @@ public:
 	~ModuleScene();
 
 	bool Init() override;
+	bool Start() override;
 
 	void Draw();
+
+	void InsertOrdered(GameObject& go);
 
 private:
 
 	void DrawRecursive(GameObject &go);
+	void CreateAABBTree();
 
 public:
 
-	std::unique_ptr<GameObject> root;
-	GameObject* goSelected = nullptr;
+	std::unique_ptr<GameObject> _root;
+	Skybox* _skybox;
 
-	Skybox* skybox;
+private:
 
-	bool frustum = false;
+	GameObject* _goSelected = nullptr;
+
+	std::vector<GameObject *> _meshObjects;
+
+	bool _frustum = false;
+
+	BVH* _BVH;
 
 };
 

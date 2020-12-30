@@ -31,7 +31,6 @@ bool IsNotRelative(GameObject& target, GameObject& dragged) {
 
 void GameObjectRelocation(std::unique_ptr<GameObject>&& go, GameObject& new_father) {
 
-	GameObject* old_father = go->GetParent();
 	ComponentTransform* comp = (ComponentTransform*)go->GetComponent(type_component::TRANSFORM);
 
 	go->SetParent(&new_father);
@@ -45,7 +44,7 @@ void GameObjectRelocation(std::unique_ptr<GameObject>&& go, GameObject& new_fath
 void GUIHierarchy::DrawHierarchy(GameObject &go, unsigned int depth) {
 	
 	std::vector<std::unique_ptr<GameObject>>& children = go.GetChildren();
-	for (int i = 0; i < children.size(); i++) {
+	for (uint i = 0; i < children.size(); i++) {
 		
 		bool open = false;
 		if (children[i]->GetNumChildren() == 0) {
@@ -108,8 +107,8 @@ void GUIHierarchy::Draw() {
 		if (payload) {
 
 			std::vector<std::unique_ptr<GameObject>>& dragged_children = go_dragged->GetChildren();
-			if (IsNotRelative(*App->scene->root, *dragged_children[dragged])) {
-				GameObjectRelocation(std::move(dragged_children[dragged]), *App->scene->root);
+			if (IsNotRelative(*App->scene->_root, *dragged_children[dragged])) {
+				GameObjectRelocation(std::move(dragged_children[dragged]), *App->scene->_root);
 				dragged_children.erase(dragged_children.begin() + dragged);
 				dragged = -1;
 				go_dragged = nullptr;
@@ -119,7 +118,7 @@ void GUIHierarchy::Draw() {
 	}
 
 	if(open) {
-		DrawHierarchy(*App->scene->root, 0);
+		DrawHierarchy(*App->scene->_root, 0);
 
 		ImGui::TreePop();
 	}

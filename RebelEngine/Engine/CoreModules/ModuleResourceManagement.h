@@ -17,7 +17,6 @@ public:
 public:
 
 	Pool<GameObject> _gameObjects;
-	Pool<Component> _components;
 
 };
 

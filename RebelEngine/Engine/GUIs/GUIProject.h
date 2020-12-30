@@ -5,7 +5,5 @@ class GUIProject : public ModuleGUI {
 
 public:
 
-
-
 };
 

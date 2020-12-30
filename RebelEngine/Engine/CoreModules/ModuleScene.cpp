@@ -4,44 +4,64 @@
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
 
+#include "CoreModules/ModuleResourceManagement.h"
+
+#include "Main/Application.h"
+
 #include "Main/Skybox.h"
 #include "Main/GameObject.h"
 
+#include "AccelerationDataStructures/BVH.h"
+
+#include <algorithm>
+
 ModuleScene::ModuleScene() {
 
-	root = std::make_unique<GameObject>("Hierarchy");
+}
+
+bool ModuleScene::Start() {
+	return true;
+}
+
+ModuleScene::~ModuleScene() {
+
+	delete _goSelected;
+	_goSelected = nullptr;
+
+	delete _skybox;
+	_skybox = nullptr;
+
+	for (uint i = 0; i < _meshObjects.size(); i++) delete _meshObjects[i];
+	_meshObjects.clear();
+	_meshObjects.shrink_to_fit();
+
+}
+
+bool ModuleScene::Init() {
+
+	_skybox = new Skybox();
+
+	_root = std::make_unique<GameObject>("Hierarchy");
 
 	std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
-	transform->SetOwner(root.get());
-	root->AddComponent(std::move(transform));
+	transform->SetOwner(_root.get());
+	_root->AddComponent(std::move(transform));
 
-	std::unique_ptr<GameObject> go = std::make_unique<GameObject>("Camera");
+	std::unique_ptr<GameObject> go = App->resourcemanager->_gameObjects.get();
+	go->SetName("Camera");
 	transform = std::make_unique<ComponentTransform>();
 	std::unique_ptr<ComponentCamera> cam = std::make_unique<ComponentCamera>();
 
-	go->SetParent(root.get());
+	go->SetParent(_root.get());
 	transform->SetOwner(go.get());
 	cam->SetOwner(go.get());
 
 	go->AddComponent(std::move(transform));
 	go->AddComponent(std::move(cam));
 
-	root->AddChild(std::move(go));
-}
+	_root->AddChild(std::move(go));
 
-ModuleScene::~ModuleScene() {
-
-	delete goSelected;
-	goSelected = nullptr;
-
-	delete skybox;
-	skybox = nullptr;
-
-}
-
-bool ModuleScene::Init() {
-
-	skybox = new Skybox();
+	CreateAABBTree();
 
 	return true;
 }
@@ -60,5 +80,22 @@ void ModuleScene::DrawRecursive(GameObject &go) {
 }
 
 void ModuleScene::Draw() {
-	DrawRecursive(*root);
+	DrawRecursive(*_root);
+}
+
+void ModuleScene::InsertOrdered(GameObject &go) {
+
+	auto cutoffCompare = [](const GameObject *a, const GameObject *b) {
+		return a->GetMorton() < b->GetMorton();
+	};
+
+	auto it = std::upper_bound(_meshObjects.begin(), _meshObjects.end(), &go, cutoffCompare);
+	_meshObjects.insert(it, &go);
+
+}
+
+void ModuleScene::CreateAABBTree() {
+
+	
+
 }

@@ -3,69 +3,69 @@
 #include "Components/Component.h"
 #include "Components/ComponentTransform.h"
 
-GameObject::GameObject(const char* _name) {
-	name = _name;
+GameObject::GameObject(const char* name) {
+	_name = _strdup(name);
 }
 
-GameObject::GameObject(GameObject&& _go) {
+GameObject::GameObject(GameObject&& go) {
 
-	this->active = _go.active;
-	this->name = _go.name;
-	this->parent = _go.parent;
+	this->_active = go._active;
+	this->_name = go._name;
+	this->_parent = go._parent;
 
-	_go.parent = nullptr;
-	_go.name = nullptr;
+	go._parent = nullptr;
+	go._name = nullptr;
 
-	for (auto it = _go.children.begin(); it != _go.children.end(); ++it) {
-		(*it)->parent = this;
-		this->children.emplace_back(std::move(*it));
+	for (auto it = go._children.begin(); it != go._children.end(); ++it) {
+		(*it)->_parent = this;
+		this->_children.emplace_back(std::move(*it));
 	}
-	_go.children.clear();
-	_go.children.shrink_to_fit();
+	go._children.clear();
+	go._children.shrink_to_fit();
 
-	for (auto it = _go.components.begin(); it != _go.components.end(); ++it) {
+	for (auto it = go._components.begin(); it != go._components.end(); ++it) {
 		(*it)->SetOwner(this);
-		this->components.emplace_back(std::move(*it));
+		this->_components.emplace_back(std::move(*it));
 	}
-	_go.components.clear();
-	_go.components.shrink_to_fit();
+	go._components.clear();
+	go._components.shrink_to_fit();
 	
 }
 
 //TODO: Modify to UUID
 void GameObject::EraseChildrenNull() {
 	bool found = false;
-	auto it_found = children.begin();
-	for (auto it = children.begin();!found && it != children.end(); ++it) {
-		if (!it->get()->name) { //null if is destroyed
+	auto it_found = _children.begin();
+	for (auto it = _children.begin(); !found && it != _children.end(); ++it) {
+		if (!it->get()->_name) { //null if is destroyed
 			found = true;
 			it_found = it;
 		}
 	}
 	if (found) 
-		children.erase(it_found);
+		_children.erase(it_found);
 }
 
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
-	children.push_back(std::move(go));
+	_children.push_back(std::move(go));
 }
 
 void GameObject::AddComponent(std::unique_ptr<Component>&& comp) { 
-	components.push_back(std::move(comp)); 
+	_components.push_back(std::move(comp)); 
 }
 
-void GameObject::SetName(const char* _name) {
-	name = _name;
+void GameObject::SetName(const char* name) {
+	_name = _strdup(name);
 }
 
-void GameObject::SetParent(GameObject* _go) {
-	parent = _go;
+void GameObject::SetParent(GameObject* go) {
+	_parent = go;
 }
 
-bool GameObject::HasComponent(type_component _type) const {
+bool GameObject::HasComponent(type_component type) const {
 
-	for (auto const &component : components) {
-		if (component->GetType() == _type) return true;
+	for (auto const &component : _components) {
+		if (component->GetType() == type) return true;
 	}
 
 	return false;
@@ -74,7 +74,7 @@ bool GameObject::HasComponent(type_component _type) const {
 
 Component* GameObject::GetComponent(type_component type) const
 {
-	for (auto const& component : components) {
+	for (auto const& component : _components) {
 		if (component->GetType() == type) return component.get();
 	}
 	return nullptr;
@@ -84,6 +84,11 @@ const float4x4 GameObject::GetGlobalMatrix() const
 {
 	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
 	return transform->GetGlobalMatrix();
+}
+
+uint32_t GameObject::GetMorton() const {
+	auto comp = (ComponentMeshRenderer *) GetComponent(type_component::MESHRENDERER);
+	return comp->GetMorton();
 }
 
 void UpdateChildrenTransform_rec(GameObject& go) {

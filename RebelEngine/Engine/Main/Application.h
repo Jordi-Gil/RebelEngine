@@ -37,6 +37,7 @@ public:
 
 public:
 
+	ModuleResourceManagement* resourcemanager = nullptr;
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
@@ -47,7 +48,6 @@ public:
 	ModuleModel* models = nullptr;
 	ModuleScene* scene = nullptr;
 	ModuleGUI *gui = nullptr;
-	ModuleResourceManagement* resourcemanager = nullptr;
 
 	float deltaTime;
 

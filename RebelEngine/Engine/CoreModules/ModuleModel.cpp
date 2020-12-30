@@ -139,19 +139,22 @@ void ModuleModel::LoadModel(const char* fileName) {
 		aiNode* father = scene->mRootNode;
 
 		std::unique_ptr<GameObject> go = App->resourcemanager->_gameObjects.get();
-		go->SetName(_strdup(fn));
+		go->SetName(fn);
 		std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
 
-		go->SetParent(App->scene->root.get());
+		go->SetParent(App->scene->_root.get());
 
 		transform->SetOwner(go.get());
 		go->AddComponent(std::move(transform));
 
 		LoadNodeHierarchy(father, *go, scene);
-		App->scene->root->AddChild(std::move(go));
+		App->scene->_root->AddChild(std::move(go));
 
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
-		LOG(_INFO, "3D Model %s loaded", _strdup(fn));
+		LOG(_INFO, "3D Model %s loaded", fn);
+
+		aiReleaseImport(scene);
+
 	}
 	else {
 		LOG(_ERROR, "Error loading mesh %s: %s", fileName, aiGetErrorString());
@@ -166,7 +169,7 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 	
 	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
 
-		std::unique_ptr<GameObject> go = App->resourcemanager->_gameObjects.get(); 
+		std::unique_ptr<GameObject> go = App->resourcemanager->_gameObjects.get();
 		go->SetName(node->mChildren[i]->mName.C_Str());
 		std::unique_ptr <ComponentTransform> transform = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
 
@@ -187,6 +190,7 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 			renderer_mesh->SetOwner(go.get());
 			renderer_mesh->SetMesh(mesh);
 			go->AddComponent(std::move(renderer_mesh));
+
 		}
 		else {
 			for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x) {//mesh iteration

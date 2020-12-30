@@ -14,8 +14,8 @@ class ModuleEditorCamera : public Module {
 
 public:
 
-	ModuleEditorCamera::ModuleEditorCamera() : movSpeed(2), rotSpeed(0.5), zoomSpeed(2) {}
-	ModuleEditorCamera::~ModuleEditorCamera() {}
+	ModuleEditorCamera() : movSpeed(2), rotSpeed(0.5), zoomSpeed(2) {}
+	~ModuleEditorCamera();
 
 	bool Init() override;
 

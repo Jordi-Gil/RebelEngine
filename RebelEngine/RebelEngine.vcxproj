@@ -95,12 +95,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
@@ -115,7 +116,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Brofiler-1.1.2/include;./infoware-0.5.5/include;./SDL2_image/include;./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include;./ImGui/Include;./DevIL-1.8.0/include;./assimp-5.0.1/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Engine;./External-Libraries/Brofiler-1.1.2/include;./External-Libraries/infoware-0.5.5/include;./External-Libraries/SDL2_image/include;./External-Libraries/SDL/include;./External-Libraries/glew-2.1.0/include;./External-Libraries/MathGeoLib-1.5/include;./External-Libraries/ImGui/Include;./External-Libraries/DevIL-1.8.0/include;./External-Libraries/assimp-5.0.1/include</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>
       <PreprocessorDefinitions>INFOWARE_USE_D3D;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -124,7 +125,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./External-Libraries/SDL/lib/x86;./External-Libraries/Brofiler-1.1.2;./External-Libraries/infoware-0.5.5/lib/Release;./External-Libraries/assimp-5.0.1/lib/;./External-Libraries/DevIL-1.8.0/lib/x86/Release;./External-Libraries/SDL2_image/libx86/;./External-Libraries/glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./External-Libraries/SDL/lib/x86;./External-Libraries/Brofiler-1.1.2/lib;./External-Libraries/infoware-0.5.5/lib/Release;./External-Libraries/assimp-5.0.1/lib/;./External-Libraries/DevIL-1.8.0/lib/x86/Release;./External-Libraries/SDL2_image/libx86/;./External-Libraries/glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ProfilerCore32.lib;infoware.lib;assimp-vc141-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;SDL2.lib;SDL2_image.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;wbemuuid.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
@@ -139,14 +140,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;./glew-2.1.0/include;./Engine;./MathGeoLib-1.5/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
