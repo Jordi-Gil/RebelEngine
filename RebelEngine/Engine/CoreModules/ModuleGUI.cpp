@@ -25,15 +25,16 @@ ModuleGUI::ModuleGUI() {
 
 void ModuleGUI::PreInit() {
 
-	windows.push_back(std::make_unique<GUIAbout>("About Rebel"));
-	windows.push_back(std::make_unique<GUIScene>("Scene")); scene = (GUIScene*) windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUIInspector>("Inspector")); inspector = (GUIInspector*)windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); config = (GUIConfiguration *) windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUITerminal>("Terminal")); terminal = (GUITerminal *) windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy")); hierarchy = (GUIHierarchy*)windows.rbegin()->get();
-	scene->ToggleActive();
-	inspector->ToggleActive();
-	hierarchy->ToggleActive();
+	_windows.push_back(std::make_unique<GUIAbout>("About Rebel"));
+	_windows.push_back(std::make_unique<GUIScene>("Scene")); _scene = (GUIScene*) _windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUIInspector>("Inspector")); _inspector = (GUIInspector*)_windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); _config = (GUIConfiguration *)_windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUITerminal>("Terminal")); _terminal = (GUITerminal *)_windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy")); _hierarchy = (GUIHierarchy*)_windows.rbegin()->get();
+	
+	_scene->ToggleActive();
+	_inspector->ToggleActive();
+	_hierarchy->ToggleActive();
 }
 
 bool ModuleGUI::Init() {
@@ -110,7 +111,7 @@ update_status ModuleGUI::Update() {
 	
 	DrawMainMenu();
 
-	for (auto it = windows.begin(); it != windows.end(); ++it) {
+	for (auto it = _windows.begin(); it != _windows.end(); ++it) {
 		if ((*it)->IsActive()) (*it)->Draw();
 	}
 	
@@ -146,9 +147,9 @@ void ModuleGUI::DrawMainMenu() {
 		}
 
 		if (ImGui::BeginMenu("Windows")) {
-			for (auto it = windows.begin(); it != windows.end(); ++it) {
+			for (auto it = _windows.begin(); it != _windows.end(); ++it) {
 				auto ptr = it->get();
-				if(std::strcmp(ptr->name, "About Rebel")) ImGui::MenuItem(ptr->name, NULL, &ptr->active, &ptr->active);
+				if(std::strcmp(ptr->_name, "About Rebel")) ImGui::MenuItem(ptr->_name, NULL, &ptr->_active, &ptr->_active);
 			}
 			ImGui::EndMenu();
 		}
@@ -158,7 +159,7 @@ void ModuleGUI::DrawMainMenu() {
 			if (ImGui::MenuItem("Download latest")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/releases");
 			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/issues");
 			ImGui::Separator();
-			ImGui::MenuItem("About Rebel", NULL, &(windows[0]->active));
+			ImGui::MenuItem("About Rebel", NULL, &(_windows[0]->_active));
 			ImGui::EndMenu();
 		}
 

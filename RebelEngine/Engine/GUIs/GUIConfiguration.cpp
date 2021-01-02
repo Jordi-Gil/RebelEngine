@@ -36,18 +36,18 @@ constexpr int MAX_FRAMES = 60;
 
 iware::cpu::quantities_t quantities = iware::cpu::quantities();
 
-GUIConfiguration::GUIConfiguration(const char* _name) {
+GUIConfiguration::GUIConfiguration(const char* name) {
 
-	name = _name;
+	_name = name;
 
-	fpsHist = std::vector<float>(MAX_FRAMES, 0);
-	msHist = std::vector<float>(MAX_FRAMES, 0);
+	_fpsHist = std::vector<float>(MAX_FRAMES, 0);
+	_msHist = std::vector<float>(MAX_FRAMES, 0);
 }
 
 void GUIConfiguration::Draw() {
 
-	std::string wName(ICON_FA_COGS " "); wName.append(name);
-	ImGui::Begin(wName.c_str() , &active, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking);
+	std::string wName(ICON_FA_COGS " "); wName.append(_name);
+	ImGui::Begin(wName.c_str() , &_active, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking);
 
 	static bool vsync = VSYNC;
 #pragma region texture
@@ -92,10 +92,10 @@ void GUIConfiguration::Draw() {
 		if (ImGui::Checkbox("VSYNC", &vsync)) App->renderer->SetVSYNC(vsync);
 
 		ImGui::Separator();
-		char title[32]; sprintf_s(title, 32, "Framerate: %.2f", fpsHist[fpsHist.size()-1]);
-		ImGui::PlotHistogram("##framerate", &fpsHist[0], fpsHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
-		sprintf_s(title, 32, "Milliseconds: %.2f", msHist[msHist.size() - 1]);
-		ImGui::PlotHistogram("##milliseconds", &msHist[0], msHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
+		char title[32]; sprintf_s(title, 32, "Framerate: %.2f", _fpsHist[_fpsHist.size()-1]);
+		ImGui::PlotHistogram("##framerate", &_fpsHist[0], _fpsHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
+		sprintf_s(title, 32, "Milliseconds: %.2f", _msHist[_msHist.size() - 1]);
+		ImGui::PlotHistogram("##milliseconds", &_msHist[0], _msHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
 
 	}
 	if (ImGui::CollapsingHeader("Window")) {
@@ -316,17 +316,17 @@ void GUIConfiguration::Draw() {
 }
 
 void GUIConfiguration::ToggleActive() {
-	active = !active;
+	_active = !_active;
 }
 
 void GUIConfiguration::AddFPS(float FPS, float ms) {
 
 	for (unsigned i = 0; i < MAX_FRAMES - 1; i++) {
-		fpsHist[i] = fpsHist[i + 1];
-		msHist[i] = msHist[i + 1];
+		_fpsHist[i] = _fpsHist[i + 1];
+		_msHist[i] = _msHist[i + 1];
 	}
 
-	fpsHist[MAX_FRAMES-1] = FPS;
-	msHist[MAX_FRAMES - 1] = ms;
+	_fpsHist[MAX_FRAMES-1] = FPS;
+	_msHist[MAX_FRAMES - 1] = ms;
 
 }

@@ -183,7 +183,7 @@ void ModuleEditorCamera::OrbitCenterScene(int x, int y) {
 
 update_status ModuleEditorCamera::Update() {
 
-	if (App->gui->scene->IsSceneFocused()) {
+	if (App->gui->_scene->IsSceneFocused()) {
 		int x, y;
 		SDL_GetRelativeMouseState(&x, &y);
 		TranslateKeyboard();

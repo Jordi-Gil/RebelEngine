@@ -13,11 +13,11 @@
 #include "Components/ComponentTransform.h"
 
 
-GUIHierarchy::GUIHierarchy(const char* _name) {
-	name = _name;
-	dragged = -1;
-	dragged_depth = 0;
-	go_dragged = nullptr;
+GUIHierarchy::GUIHierarchy(const char* name) {
+	_name = name;
+	_dragged = -1;
+	_dragged_depth = 0;
+	_go_dragged = nullptr;
 }
 
 bool IsNotRelative(GameObject& target, GameObject& dragged) {
@@ -41,7 +41,7 @@ void GameObjectRelocation(std::unique_ptr<GameObject>&& go, GameObject& new_fath
 
 }
 
-void GUIHierarchy::DrawHierarchy(GameObject &go, unsigned int depth) {
+void GUIHierarchy::DrawHierarchy(GameObject &go, uint depth) {
 	
 	std::vector<std::unique_ptr<GameObject>>& children = go.GetChildren();
 	for (uint i = 0; i < children.size(); i++) {
@@ -54,33 +54,33 @@ void GUIHierarchy::DrawHierarchy(GameObject &go, unsigned int depth) {
 			open = ImGui::TreeNodeEx(children[i]->GetName(), ImGuiTreeNodeFlags_OpenOnArrow);
 		}
 		if (ImGui::IsItemClicked(0)) {
-			App->gui->inspector->SetFocusedGameObject(*children[i]);
+			App->gui->_inspector->SetFocusedGameObject(*children[i]);
 		}
 
 		if (ImGui::BeginDragDropSource()) {
 
 			ImGui::SetDragDropPayload("hierarchy_move", "", sizeof(const char*));
-			dragged = i;
-			dragged_depth = depth;
-			go_dragged = &go;
+			_dragged = i;
+			_dragged_depth = depth;
+			_go_dragged = &go;
 			ImGui::EndDragDropSource();
 
 		}
 
-		if (ImGui::BeginDragDropTarget() && dragged != -1) {
+		if (ImGui::BeginDragDropTarget() && _dragged != -1) {
 
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("hierarchy_move");
 			if (payload) {
 
-				std::vector<std::unique_ptr<GameObject>>& dragged_children = go_dragged->GetChildren();
-				if (IsNotRelative(*children[i], *dragged_children[dragged])) {
-					GameObjectRelocation(std::move(dragged_children[dragged]), *children[i]);
-					dragged_children.erase(dragged_children.begin() + dragged);
-					if (go_dragged == &go) {
-						if (dragged < i) --i;
+				std::vector<std::unique_ptr<GameObject>>& dragged_children = _go_dragged->GetChildren();
+				if (IsNotRelative(*children[i], *dragged_children[_dragged])) {
+					GameObjectRelocation(std::move(dragged_children[_dragged]), *children[i]);
+					dragged_children.erase(dragged_children.begin() + _dragged);
+					if (_go_dragged == &go) {
+						if (_dragged < i) --i;
 					}
-					dragged = -1;
-					go_dragged = nullptr;
+					_dragged = -1;
+					_go_dragged = nullptr;
 				}
 			}
 			ImGui::EndDragDropTarget();
@@ -95,23 +95,23 @@ void GUIHierarchy::DrawHierarchy(GameObject &go, unsigned int depth) {
 
 void GUIHierarchy::Draw() {
 
-	std::string wName(ICON_FA_SITEMAP " "); wName.append(name);
-	ImGui::Begin(wName.c_str(), &active, ImGuiWindowFlags_NoCollapse);
+	std::string wName(ICON_FA_SITEMAP " "); wName.append(_name);
+	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
 	bool open = ImGui::TreeNodeEx("Hierarchy", ImGuiTreeNodeFlags_OpenOnArrow);
 	
 	if (ImGui::BeginDragDropSource()) { ImGui::EndDragDropSource(); }
 
-	if (ImGui::BeginDragDropTarget() && dragged != -1) {
+	if (ImGui::BeginDragDropTarget() && _dragged != -1) {
 
 		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("hierarchy_move");
 		if (payload) {
 
-			std::vector<std::unique_ptr<GameObject>>& dragged_children = go_dragged->GetChildren();
-			if (IsNotRelative(*App->scene->_root, *dragged_children[dragged])) {
-				GameObjectRelocation(std::move(dragged_children[dragged]), *App->scene->_root);
-				dragged_children.erase(dragged_children.begin() + dragged);
-				dragged = -1;
-				go_dragged = nullptr;
+			std::vector<std::unique_ptr<GameObject>>& dragged_children = _go_dragged->GetChildren();
+			if (IsNotRelative(*App->scene->_root, *dragged_children[_dragged])) {
+				GameObjectRelocation(std::move(dragged_children[_dragged]), *App->scene->_root);
+				dragged_children.erase(dragged_children.begin() + _dragged);
+				_dragged = -1;
+				_go_dragged = nullptr;
 			}
 		}
 		ImGui::EndDragDropTarget();
@@ -126,5 +126,5 @@ void GUIHierarchy::Draw() {
 }
 
 void GUIHierarchy::ToggleActive() {
-	active = !active;
+	_active = !_active;
 }

@@ -16,20 +16,22 @@ class Component {
 public:
 
 	Component() {}
+	Component(const Component& comp);
+
 
 	virtual ~Component() = default;
 
 	virtual void Enable() {}
 	virtual void Update() {}
 	virtual void Disable() {}
-	virtual type_component GetType() const { return type; }
+	virtual type_component GetType() const { return _type; }
 
-	virtual void SetOwner(GameObject* go) { owner = go; }
+	virtual void SetOwner(GameObject* go) { _owner = go; }
 
 protected:
 
-	GameObject* owner = nullptr;
-	bool active = false;
-	type_component type = type_component::NONE;
+	GameObject* _owner = nullptr;
+	bool _active = false;
+	type_component _type = type_component::NONE;
 
 };

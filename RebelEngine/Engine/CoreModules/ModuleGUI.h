@@ -23,8 +23,8 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	virtual bool IsActive() const { return active; }
-	virtual const char* GetName() const { return name; }
+	virtual bool IsActive() const { return _active; }
+	virtual const char* GetName() const { return _name; }
 	virtual void ToggleActive() {}
 	virtual void Draw() {}
 
@@ -35,19 +35,19 @@ private:
 
 public:
 
-	GUIScene* scene = nullptr;
-	GUITerminal* terminal = nullptr;
-	GUIInspector* inspector = nullptr;
-	GUIConfiguration* config = nullptr;
-	GUIHierarchy* hierarchy = nullptr;
+	GUIScene* _scene = nullptr;
+	GUITerminal* _terminal = nullptr;
+	GUIInspector* _inspector = nullptr;
+	GUIConfiguration* _config = nullptr;
+	GUIHierarchy* _hierarchy = nullptr;
 
 private:
 
-	std::vector<std::unique_ptr<ModuleGUI>> windows;
+	std::vector<std::unique_ptr<ModuleGUI>> _windows;
 
 protected:
 
-	bool active = false;
-	const char* name = "";
+	bool _active = false;
+	const char* _name = "";
 };
 

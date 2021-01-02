@@ -36,6 +36,6 @@ private:
 
 private:
 
-	unsigned int numMaterials;
+	unsigned int numMaterials = 0;
 };
 

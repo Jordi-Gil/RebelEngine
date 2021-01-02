@@ -125,6 +125,7 @@
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\pci.cpp" />
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\version.cpp" />
     <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
+    <ClCompile Include="Engine\Components\Component.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />

@@ -300,6 +300,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\AccelerationDataStructures\BVH.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
+    <ClCompile Include="Engine\Components\Component.cpp" />
     <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleDebugDraw.cpp" />

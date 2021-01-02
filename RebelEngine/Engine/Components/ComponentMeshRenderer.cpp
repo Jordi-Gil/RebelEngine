@@ -5,7 +5,7 @@
 #include "CoreModules/ModuleModel.h"
 
 ComponentMeshRenderer::ComponentMeshRenderer() {
-	type = type_component::MESHRENDERER;
+	_type = type_component::MESHRENDERER;
 }
 
 ComponentMeshRenderer::~ComponentMeshRenderer() {
@@ -18,6 +18,6 @@ void ComponentMeshRenderer::SetMesh(Mesh* component_mesh) {
 }
 
 void ComponentMeshRenderer::Draw(){
-	assert(owner != nullptr && "Component without and owner");
-	_mesh->Draw(App->models->textures, owner->GetGlobalMatrix());
+	assert(_owner != nullptr && "Component without and owner");
+	_mesh->Draw(App->models->textures, _owner->GetGlobalMatrix());
 }

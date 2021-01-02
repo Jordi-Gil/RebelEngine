@@ -8,8 +8,7 @@
 
 #include "Math/float4x4.h"
 
-class GameObject 
-{
+class GameObject {
 
 public:
 
@@ -17,10 +16,7 @@ public:
 	GameObject(const char* name);
 	GameObject(GameObject&& go);
 
-	~GameObject() { 
-		free((char*)_name); 
-		_name = nullptr; 
-	}
+	~GameObject();
 
 	void Update(){}
 	void AddChild(std::unique_ptr<GameObject>&& go);
@@ -43,6 +39,12 @@ public:
 	bool HasMesh() const { return _hasMesh; }
 #pragma endregion getters
 
+#pragma region operators
+
+	GameObject& operator=(const GameObject& go);
+
+#pragma endregion operators
+
 private:
 
 	bool _active = false;
@@ -50,6 +52,7 @@ private:
 	
 	GameObject *_parent = nullptr;
 	std::vector<std::unique_ptr<GameObject>> _children;
+
 	std::vector<std::unique_ptr<Component>> _components;
 
 	bool _hasMesh = false;

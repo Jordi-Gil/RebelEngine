@@ -20,14 +20,14 @@ static float3 position;
 static float3 rotation;
 static float3 scale;
 
-GUIInspector::GUIInspector(const char* _name) {
-	name = _name;
+GUIInspector::GUIInspector(const char* name) {
+	_name = name;
 }
 
 void GUIInspector::UpdateTransform() {
-	ComponentTransform* ct = (ComponentTransform*)focused_go->GetComponent(type_component::TRANSFORM);
+	ComponentTransform* ct = (ComponentTransform*) _focused_go->GetComponent(type_component::TRANSFORM);
 	ct->SetTransform(position, rotation, scale);
-	focused_go->UpdateChildrenTransform();
+	_focused_go->UpdateChildrenTransform();
 }
 
 void GUIInspector::DrawDragFloat3(const char* name, float3& vector, float speed) {
@@ -53,16 +53,16 @@ void GUIInspector::DrawDragFloat3(const char* name, float3& vector, float speed)
 }
 void GUIInspector::Draw() {
 
-	std::string wName(ICON_FA_INFO " "); wName.append(name);
-	ImGui::Begin(wName.c_str(), &active, ImGuiWindowFlags_NoCollapse);
+	std::string wName(ICON_FA_INFO " "); wName.append(_name);
+	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
 	ImVec4 yellow(1.0000f, 0.8275f, 0.4112f, 1.0000f);
 	//TODO: Take the real transform model of each mesh.
-	if (focused_go) {
+	if (_focused_go) {
 		if (ImGui::CollapsingHeader("Transform")) {
 
-			ComponentTransform* ct = (ComponentTransform*) focused_go->GetComponent(type_component::TRANSFORM);
+			ComponentTransform* ct = (ComponentTransform*) _focused_go->GetComponent(type_component::TRANSFORM);
 
-			ImGui::Text(focused_go->GetName());
+			ImGui::Text(_focused_go->GetName());
 			ImGui::Separator();
 
 			position = ct->GetPosition();
@@ -104,5 +104,5 @@ void GUIInspector::Draw() {
 }
 
 void GUIInspector::ToggleActive() {
-	active = !active;
+	_active = !_active;
 }

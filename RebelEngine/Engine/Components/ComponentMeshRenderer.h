@@ -16,7 +16,7 @@ public:
 
 	void Draw();
 
-	type_component GetType() const override { return type; }
+	type_component GetType() const override { return _type; }
 	uint32_t GetMorton() const { return _mesh->GetMorton(); }
 
 private:

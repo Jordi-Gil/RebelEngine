@@ -7,15 +7,15 @@ class GUITerminal : public ModuleGUI {
 
 public:
 
-	GUITerminal(const char *_name);
+	GUITerminal(const char *name);
 
 	~GUITerminal();
 
 	void Draw() override;
 
-	bool IsActive() const override { return active; };
+	bool IsActive() const override { return _active; };
 
-	const char* GetName() const override { return name; }
+	const char* GetName() const override { return _name; }
 
 	void ToggleActive() override;
 

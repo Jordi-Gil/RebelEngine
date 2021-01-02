@@ -7,51 +7,51 @@
 #include <assimp/cimport.h>
 
 ComponentTransform::ComponentTransform() {
-	type = type_component::TRANSFORM;
+	_type = type_component::TRANSFORM;
 }
 
-ComponentTransform::ComponentTransform(const float3 _position, const float3 _rotation, const float3 _scale) {
+ComponentTransform::ComponentTransform(const float3 position, const float3 rotation, const float3 scale) {
 
-	type = type_component::TRANSFORM;
+	_type = type_component::TRANSFORM;
 
-	position = _position;
-	rotation = _rotation;
-	scale = _scale;
+	_position = position;
+	_rotation = rotation;
+	_scale = scale;
 
-	rotationQuat = Quat::FromEulerXYZ(DegToRad(_rotation.x), DegToRad(_rotation.y), DegToRad(_rotation.z));
+	_rotationQuat = Quat::FromEulerXYZ(DegToRad(rotation.x), DegToRad(rotation.y), DegToRad(rotation.z));
 
-	localMatrix = float4x4::FromTRS(position, rotationQuat, scale);
+	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
 }
 
 ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
 
-	type = type_component::TRANSFORM;
+	_type = type_component::TRANSFORM;
 
 	aiVector3D pos, sca;
 	aiQuaternion rot;
 
 	aiDecomposeMatrix(&matrix, &sca, &rot, &pos);
 
-	position = float3(pos.x, pos.y, pos.z);
-	rotation = float3(matrix.b1, matrix.b2, matrix.b3);
-	scale = float3(sca.x, sca.y, sca.z);
+	_position = float3(pos.x, pos.y, pos.z);
+	_rotation = float3(matrix.b1, matrix.b2, matrix.b3);
+	_scale = float3(sca.x, sca.y, sca.z);
 
-	rotationQuat = Quat(rot.x, rot.y, rot.z, rot.w);
+	_rotationQuat = Quat(rot.x, rot.y, rot.z, rot.w);
 
-	localMatrix = float4x4::FromTRS(position, rotationQuat, scale);
+	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
 }
 
-void ComponentTransform::SetTransform(const float3 _position, const float3 _rotation, const float3 _scale) {
+void ComponentTransform::SetTransform(const float3 position, const float3 rotation, const float3 scale) {
 	
-	position = _position;
-	rotation = _rotation;
-	scale = _scale;
+	_position = position;
+	_rotation = rotation;
+	_scale = scale;
 
-	rotationQuat = Quat::FromEulerXYZ(DegToRad(_rotation.x), DegToRad(_rotation.y), DegToRad(_rotation.z));
+	_rotationQuat = Quat::FromEulerXYZ(DegToRad(rotation.x), DegToRad(rotation.y), DegToRad(rotation.z));
 
-	localMatrix = float4x4::FromTRS(position, rotationQuat, scale);
+	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
 	UpdateGlobalMatrix();
 }
@@ -63,30 +63,30 @@ void ComponentTransform::SetTransform(const aiMatrix4x4& matrix) {
 
 	aiDecomposeMatrix(&matrix, &sca, &rot, &pos);
 
-	position = float3(pos.x, pos.y, pos.z);
-	rotation = float3(matrix.b1, matrix.b2, matrix.b3);
-	scale = float3(sca.x, sca.y, sca.z);
+	_position = float3(pos.x, pos.y, pos.z);
+	_rotation = float3(matrix.b1, matrix.b2, matrix.b3);
+	_scale = float3(sca.x, sca.y, sca.z);
 
-	rotationQuat = Quat(rot.x, rot.y, rot.z, rot.w);
+	_rotationQuat = Quat(rot.x, rot.y, rot.z, rot.w);
 
-	localMatrix = float4x4::FromTRS(position, rotationQuat, scale);
+	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
 	UpdateGlobalMatrix();
 }
 
 void ComponentTransform::UpdateGlobalMatrix() {
 	
-	if (owner != nullptr) {
-		if (owner->GetParent() != nullptr) {
-			globalMatrix = owner->GetParent()->GetGlobalMatrix() * localMatrix;
+	if (_owner != nullptr) {
+		if (_owner->GetParent() != nullptr) {
+			_globalMatrix = _owner->GetParent()->GetGlobalMatrix() * _localMatrix;
 		}
 		else
-			globalMatrix = localMatrix;
+			_globalMatrix = _localMatrix;
 	}
 }
 
 void ComponentTransform::Draw() {
-	dd::axisTriad(localMatrix, 0.1f, 0.1f);
+	dd::axisTriad(_globalMatrix, 0.1f, 0.1f);
 }
 
 void ComponentTransform::SetOwner(GameObject* go) {

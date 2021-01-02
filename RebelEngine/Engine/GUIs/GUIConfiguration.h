@@ -6,13 +6,13 @@ class GUIConfiguration : public ModuleGUI {
 
 public:
 
-	GUIConfiguration(const char* _name);
+	GUIConfiguration(const char* name);
 
 	void Draw() override;
 
-	bool IsActive() const override { return active; };
+	bool IsActive() const override { return _active; };
 
-	const char* GetName() const override { return name; }
+	const char* GetName() const override { return _name; }
 
 	void ToggleActive() override;
 
@@ -20,8 +20,8 @@ public:
 
 private:
 
-	std::vector<float> fpsHist;
-	std::vector<float> msHist;
+	std::vector<float> _fpsHist;
+	std::vector<float> _msHist;
 
 };
 

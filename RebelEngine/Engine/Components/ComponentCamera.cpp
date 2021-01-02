@@ -11,7 +11,7 @@ ComponentCamera::ComponentCamera() {
 	frustum.SetFront(-float3::unitZ);
 	frustum.SetUp(float3::unitY);
 
-	type = type_component::CAMERA;
+	_type = type_component::CAMERA;
 }
 
 void ComponentCamera::Translate(vec _offset) {

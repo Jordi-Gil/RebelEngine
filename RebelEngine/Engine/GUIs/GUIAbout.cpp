@@ -29,19 +29,19 @@ const std::vector<std::string> MyReadFile(const char* path) {
 const std::vector<std::string> libs = MyReadFile("Assets/Windows/libraries.txt");
 const unsigned int size = libs.size();
 
-GUIAbout::GUIAbout(const char* _name) {
-	name = _name;
+GUIAbout::GUIAbout(const char* name) {
+	_name = name;
 }
 
 void GUIAbout::ToggleActive() {
-	active = !active;
+	_active = !_active;
 }
 
 void GUIAbout::Draw() {
 
-	ImGui::OpenPopup(name);
+	ImGui::OpenPopup(_name);
 
-	if (ImGui::BeginPopupModal(name, NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove)) {
+	if (ImGui::BeginPopupModal(_name, NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove)) {
 
 		ImGui::SetWindowSize(ImVec2(0, 0));
 
@@ -60,7 +60,7 @@ void GUIAbout::Draw() {
 		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 30);
 		if (ImGui::Button("Ok")) {
 			ImGui::CloseCurrentPopup();
-			active = false;
+			_active = false;
 		}
 
 		ImGui::EndPopup();

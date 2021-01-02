@@ -68,7 +68,7 @@ update_status Application::Update() {
 
 #ifdef  _DEBUG
 	//dump openGL Log - Only in debug, because the log is only traced in debug mode
-	if (terminalTimer.read() >= 30000) { App->gui->terminal->deletingOGLLog = true; gui->terminal->ClearOpenGLLog(); terminalTimer.start(); }
+	if (terminalTimer.read() >= 30000) { App->gui->_terminal->deletingOGLLog = true; gui->_terminal->ClearOpenGLLog(); terminalTimer.start(); }
 #endif
 	deltaTime = (float)applicationTimer.read() / 1000.0f;
 	applicationTimer.start();
@@ -90,7 +90,7 @@ update_status Application::Update() {
 	//if (prevTime < TIME_PER_FRAME)
 	//	SDL_Delay(TIME_PER_FRAME - prevTime);
 
-	App->gui->config->AddFPS(1/deltaTime, applicationTimer.read());
+	App->gui->_config->AddFPS(1/deltaTime, applicationTimer.read());
 
 	return ret;
 }

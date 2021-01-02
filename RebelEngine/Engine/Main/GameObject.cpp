@@ -3,6 +3,9 @@
 #include "Components/Component.h"
 #include "Components/ComponentTransform.h"
 
+#include "Application.h"
+#include "CoreModules/ModuleResourceManagement.h"
+
 GameObject::GameObject(const char* name) {
 	_name = _strdup(name);
 }
@@ -30,6 +33,11 @@ GameObject::GameObject(GameObject&& go) {
 	go._components.clear();
 	go._components.shrink_to_fit();
 	
+}
+
+GameObject::~GameObject() {
+	free((char*)_name);
+	_name = nullptr;
 }
 
 //TODO: Modify to UUID
@@ -91,6 +99,27 @@ uint32_t GameObject::GetMorton() const {
 	return comp->GetMorton();
 }
 
+GameObject& GameObject::operator=(const GameObject& go) {
+
+	this->_active = go._active;
+	this->_name = go._name;
+	this->_parent = go._parent;
+
+	for (const auto& child : go._children) {
+		std::unique_ptr<GameObject> aux = App->resourcemanager->_poolGameObjects.get();
+		*aux = *child;
+		this->_children.push_back(std::move(aux));
+	}
+
+	for (const auto& component : go._components) {
+		this->_components.push_back(std::make_unique<Component>(*component));
+	}
+
+	this->_hasMesh = go._hasMesh;
+
+	return *this;
+}
+
 void UpdateChildrenTransform_rec(GameObject& go) {
 
 	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
@@ -100,6 +129,6 @@ void UpdateChildrenTransform_rec(GameObject& go) {
 	}
 }
 
-void GameObject :: UpdateChildrenTransform() {
+void GameObject::UpdateChildrenTransform() {
 	UpdateChildrenTransform_rec(*this);
 }

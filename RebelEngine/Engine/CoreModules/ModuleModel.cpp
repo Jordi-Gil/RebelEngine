@@ -138,7 +138,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 		aiNode* father = scene->mRootNode;
 
-		std::unique_ptr<GameObject> go = App->resourcemanager->_gameObjects.get();
+		std::unique_ptr<GameObject> go = App->resourcemanager->_poolGameObjects.get();
 		go->SetName(fn);
 		std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
 
@@ -169,7 +169,7 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 	
 	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
 
-		std::unique_ptr<GameObject> go = App->resourcemanager->_gameObjects.get();
+		std::unique_ptr<GameObject> go = App->resourcemanager->_poolGameObjects.get();
 		go->SetName(node->mChildren[i]->mName.C_Str());
 		std::unique_ptr <ComponentTransform> transform = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
 
@@ -195,7 +195,7 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 		else {
 			for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x) {//mesh iteration
 
-				std::unique_ptr<GameObject> go_mesh = App->resourcemanager->_gameObjects.get();
+				std::unique_ptr<GameObject> go_mesh = App->resourcemanager->_poolGameObjects.get();
 				go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
 				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 				std::unique_ptr <ComponentTransform> transform_mesh = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
@@ -229,6 +229,8 @@ bool ModuleModel::CleanUp() {
 	for (unsigned i = 0; i < textures.size(); i++) glDeleteTextures(1, &textures[i].first);
 	textures.clear();
 	textures.shrink_to_fit();
+
+	aiDetachAllLogStreams();
 
 	return true;
 }

@@ -6,8 +6,8 @@
 #include "ImGui/IconsFontAwesome5.h"
 #include "ImGui/imgui_utils.h"
 
-GUITerminal::GUITerminal(const char* _name) {
-	name = _name;
+GUITerminal::GUITerminal(const char* name) {
+	_name = name;
 }
 
 GUITerminal::~GUITerminal() {
@@ -53,8 +53,8 @@ void GUITerminal::Draw() {
 
 	static std::map<std::string, bool> log_filter = { {_INFO, false}, {_WARNING, false}, {_ERROR, false} };
 
-	std::string wName(ICON_FA_TERMINAL " "); wName.append(name);
-	ImGui::Begin(wName.c_str(), &active, ImGuiWindowFlags_NoCollapse);
+	std::string wName(ICON_FA_TERMINAL " "); wName.append(_name);
+	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
 
 	ImGui::Columns(2);
 
@@ -117,5 +117,5 @@ void GUITerminal::Draw() {
 }
 
 void GUITerminal::ToggleActive() {
-	active = !active;
+	_active = !_active;
 }
