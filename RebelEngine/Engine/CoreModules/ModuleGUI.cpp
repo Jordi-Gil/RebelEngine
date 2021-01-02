@@ -18,6 +18,7 @@
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_utils.h"
 #include "ImGui/imgui_internal.h"
+#include "ImGui/imfilebrowser.h"
 
 ModuleGUI::ModuleGUI() {
 	
@@ -71,6 +72,8 @@ bool ModuleGUI::Init() {
 	ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
 	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/" FONT_ICON_FILE_NAME_FAS, 12.0f, &icons_config, icons_ranges);
 	
+	fileDialog.SetTitle("title");
+
 	return true;
 }
 
@@ -137,6 +140,9 @@ void ModuleGUI::DrawMainMenu() {
 
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Open", "Ctrl+O")) {
+				fileDialog.Open();
+			}
 			ImGui::Separator();
 			if (ImGui::MenuItem("Exit", "ALT+F4")) {
 				SDL_Event event;
@@ -145,6 +151,8 @@ void ModuleGUI::DrawMainMenu() {
 			}
 			ImGui::EndMenu();
 		}
+
+		fileDialog.Display();
 
 		if (ImGui::BeginMenu("Windows")) {
 			for (auto it = _windows.begin(); it != _windows.end(); ++it) {

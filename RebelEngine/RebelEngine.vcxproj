@@ -75,7 +75,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Engine;./External-Libraries/Brofiler-1.1.2/include;./External-Libraries/infoware-0.5.5/include;./External-Libraries/SDL2_image/include;./External-Libraries/SDL/include;./External-Libraries/glew-2.1.0/include;./External-Libraries/MathGeoLib-1.5/include;./External-Libraries/ImGui/Include;./External-Libraries/DevIL-1.8.0/include;./External-Libraries/assimp-5.0.1/include;./External-Libraries/Visual Leak Detector/include</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>INFOWARE_USE_D3D;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -97,6 +97,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -117,7 +118,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Engine;./External-Libraries/Brofiler-1.1.2/include;./External-Libraries/infoware-0.5.5/include;./External-Libraries/SDL2_image/include;./External-Libraries/SDL/include;./External-Libraries/glew-2.1.0/include;./External-Libraries/MathGeoLib-1.5/include;./External-Libraries/ImGui/Include;./External-Libraries/DevIL-1.8.0/include;./External-Libraries/assimp-5.0.1/include</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>INFOWARE_USE_D3D;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -142,6 +143,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -184,7 +186,9 @@
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsFontAwesome5.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsMaterialDesignIcons.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imconfig.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_impl_opengl3.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_impl_sdl.h" />

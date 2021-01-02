@@ -5,6 +5,8 @@
 #include<memory>
 #include <vector>
 
+#include "ImGui/imfilebrowser.h"
+
 class GUIScene;
 class GUITerminal;
 class GUIInspector;
@@ -44,6 +46,7 @@ public:
 private:
 
 	std::vector<std::unique_ptr<ModuleGUI>> _windows;
+	ImGui::FileBrowser fileDialog;
 
 protected:
 
