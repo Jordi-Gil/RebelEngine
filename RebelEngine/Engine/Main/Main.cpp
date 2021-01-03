@@ -1,8 +1,11 @@
 #include <cstdlib>
 
+#if __has_include(<vld.h>)
 #ifdef _DEBUG
 #include <vld.h>
 #endif // DEBUG
+#endif
+
 
 #include "Application.h"
 

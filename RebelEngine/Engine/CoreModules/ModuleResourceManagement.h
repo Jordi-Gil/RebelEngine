@@ -18,7 +18,7 @@ public:
 public:
 
 	Pool<GameObject> _poolGameObjects;
-	std::vector<std::unique_ptr<GameObject>> _gameObjects;
+	std::vector<std::unique_ptr<GameObject>> _gameObjects; //3D models
 
 };
 

@@ -35,7 +35,7 @@ public:
 private:
 
 	GameObject* _goSelected = nullptr;
-
+	//TODO: Move pool here
 	std::vector<GameObject *> _meshObjects;
 
 	bool _frustum = false;
