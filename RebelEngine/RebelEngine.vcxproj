@@ -185,10 +185,11 @@
     <ClInclude Include="Engine\GUIs\GUITerminal.h" />
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsMaterialDesignIcons.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imconfig.h" />
-    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_impl_opengl3.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_impl_sdl.h" />
@@ -329,6 +330,7 @@
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_impl_sdl.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_widgets.cpp" />

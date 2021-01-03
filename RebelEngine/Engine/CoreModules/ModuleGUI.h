@@ -12,6 +12,7 @@ class GUITerminal;
 class GUIInspector;
 class GUIConfiguration;
 class GUIHierarchy;
+class GUIProject;
 
 class ModuleGUI :  public Module {
 
@@ -42,6 +43,7 @@ public:
 	GUIInspector* _inspector = nullptr;
 	GUIConfiguration* _config = nullptr;
 	GUIHierarchy* _hierarchy = nullptr;
+	GUIProject* _project = nullptr;
 
 private:
 
@@ -52,5 +54,7 @@ protected:
 
 	bool _active = false;
 	const char* _name = "";
+	
+
 };
 

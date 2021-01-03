@@ -65,8 +65,14 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 		data[pos++] = mesh->mNormals[i].z;
 
 		//UV
-		data[pos++] = mesh->mTextureCoords[0][i].x;
-		data[pos++] = mesh->mTextureCoords[0][i].y;
+		if (mesh->mTextureCoords[0]) {
+			data[pos++] = mesh->mTextureCoords[0][i].x;
+			data[pos++] = mesh->mTextureCoords[0][i].y;
+		}
+		else {
+			data[pos++] = 0;
+			data[pos++] = 0;
+		}
 	}
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	numVertices = mesh->mNumVertices;
@@ -88,12 +94,10 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 	
 	if(!indices) LOG("glMapBuffer error", _ERROR);
 
-	for (unsigned i = 0; i < mesh->mNumFaces; ++i)
-	{
-		assert(mesh->mFaces[i].mNumIndices == 3); // note: assume triangles = 3 indices per face
-		*(indices++) = mesh->mFaces[i].mIndices[0];
-		*(indices++) = mesh->mFaces[i].mIndices[1];
-		*(indices++) = mesh->mFaces[i].mIndices[2];
+	for (unsigned i = 0; i < mesh->mNumFaces; ++i) {
+		for (uint j = 0; j < mesh->mFaces[i].mNumIndices; j++) {
+			*(indices++) = mesh->mFaces[i].mIndices[j];
+		}
 	}
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	

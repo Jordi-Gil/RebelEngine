@@ -126,6 +126,7 @@
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\version.cpp" />
     <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
     <ClCompile Include="Engine\Components\Component.cpp" />
+    <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -268,8 +269,9 @@
     <ClInclude Include="External-Libraries\infoware-0.5.5\include\infoware\version.hpp" />
     <ClInclude Include="External-Libraries\infoware-0.5.5\include\infoware_generated\pci_data.hpp" />
     <ClInclude Include="Engine\GUIs\GUIProject.h" />
-    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsMaterialDesignIcons.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

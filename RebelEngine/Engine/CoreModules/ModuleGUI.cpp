@@ -11,8 +11,10 @@
 #include "GUIs/GUITerminal.h"
 #include "GUIs/GUIInspector.h"
 #include "GUIs/GUIHierarchy.h"
+#include "GUIs/GUIProject.h"
 
 #include "ImGui/IconsFontAwesome5.h"
+#include "ImGui/IconsMaterialDesignIcons.h"
 
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
@@ -32,7 +34,8 @@ void ModuleGUI::PreInit() {
 	_windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); _config = (GUIConfiguration *)_windows.rbegin()->get();
 	_windows.push_back(std::make_unique<GUITerminal>("Terminal")); _terminal = (GUITerminal *)_windows.rbegin()->get();
 	_windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy")); _hierarchy = (GUIHierarchy*)_windows.rbegin()->get();
-	
+	_windows.push_back(std::make_unique<GUIProject>("Project")); _project = (GUIProject*)_windows.rbegin()->get();
+
 	_scene->ToggleActive();
 	_inspector->ToggleActive();
 	_hierarchy->ToggleActive();
@@ -71,6 +74,7 @@ bool ModuleGUI::Init() {
 	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 	ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
 	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/" FONT_ICON_FILE_NAME_FAS, 12.0f, &icons_config, icons_ranges);
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/" FONT_ICON_FILE_NAME_MDI, 12.0f, &icons_config, icons_ranges);
 	
 	fileDialog.SetTitle("title");
 

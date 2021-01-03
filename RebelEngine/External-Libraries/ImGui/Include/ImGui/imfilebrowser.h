@@ -65,7 +65,8 @@ namespace ImGui
         bool HasSelected() const noexcept;
 
         // set current browsing directory
-        bool SetPwd(const std::filesystem::path &pwd = std::filesystem::current_path());
+        bool SetPwd(const std::filesystem::path &pwd =
+                                    std::filesystem::current_path());
 
         // get current browsing directory
         const std::filesystem::path &GetPwd() const noexcept;

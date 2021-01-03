@@ -1,16 +1,17 @@
 #include "GUIHierarchy.h"
 
 #include <string>
+
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/IconsFontAwesome5.h"
 
 #include "CoreModules/ModuleScene.h"
+#include "Components/ComponentTransform.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
 #include "GUIInspector.h"
-#include "Components/ComponentTransform.h"
 
 
 GUIHierarchy::GUIHierarchy(const char* name) {
@@ -48,11 +49,12 @@ void GUIHierarchy::DrawHierarchy(GameObject &go, uint depth) {
 		
 		bool open = false;
 		if (children[i]->GetNumChildren() == 0) {
-			ImGui::Selectable(children[i]->GetName());
+			ImGui::Selectable(children[i]->GetName()); //TODO: Add boolean variable to mark selected object
 		}
 		else {
 			open = ImGui::TreeNodeEx(children[i]->GetName(), ImGuiTreeNodeFlags_OpenOnArrow);
 		}
+
 		if (ImGui::IsItemClicked(0)) {
 			App->gui->_inspector->SetFocusedGameObject(*children[i]);
 		}
