@@ -11,7 +11,7 @@
 #include "GUIs/GUITerminal.h"
 #include "GUIs/GUIInspector.h"
 #include "GUIs/GUIHierarchy.h"
-#include "GUIs/GUIProject.h"
+//#include "GUIs/GUIProject.h"
 
 #include "ImGui/IconsFontAwesome5.h"
 #include "ImGui/IconsMaterialDesignIcons.h"
@@ -34,7 +34,7 @@ void ModuleGUI::PreInit() {
 	_windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); _config = (GUIConfiguration *)_windows.rbegin()->get();
 	_windows.push_back(std::make_unique<GUITerminal>("Terminal")); _terminal = (GUITerminal *)_windows.rbegin()->get();
 	_windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy")); _hierarchy = (GUIHierarchy*)_windows.rbegin()->get();
-	_windows.push_back(std::make_unique<GUIProject>("Project")); _project = (GUIProject*)_windows.rbegin()->get();
+	//_windows.push_back(std::make_unique<GUIProject>("Project")); _project = (GUIProject*)_windows.rbegin()->get();
 
 	_scene->ToggleActive();
 	_inspector->ToggleActive();

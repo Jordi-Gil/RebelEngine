@@ -1,6 +1,8 @@
 #pragma once
 #include "Module.h"
 
+#include "Main/Pool.h"
+
 #include <memory>
 #include <vector>
 
@@ -29,13 +31,13 @@ private:
 
 public:
 
+	Pool<GameObject> _poolGameObjects;
 	std::unique_ptr<GameObject> _root;
 	Skybox* _skybox;
 
 private:
 
 	GameObject* _goSelected = nullptr;
-	//TODO: Move pool here
 	std::vector<GameObject *> _meshObjects;
 
 	bool _frustum = false;

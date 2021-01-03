@@ -18,7 +18,6 @@ class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleModel;
 class ModuleScene;
-class ModuleResourceManagement;
 
 class ModuleGUI;
 
@@ -37,7 +36,6 @@ public:
 
 public:
 
-	ModuleResourceManagement* resourcemanager = nullptr;
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;

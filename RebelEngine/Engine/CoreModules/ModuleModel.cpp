@@ -1,6 +1,5 @@
 #include "ModuleModel.h"
 
-#include "ModuleResourceManagement.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleTexture.h"
 #include "ModuleScene.h"
@@ -139,7 +138,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 		aiNode* father = scene->mRootNode;
 
-		std::unique_ptr<GameObject> go = App->resourcemanager->_poolGameObjects.get();
+		std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get();
 		go->SetName(fn);
 		std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
 
@@ -176,7 +175,7 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 			LoadNodeHierarchy(node->mChildren[i], father, scene);
 		}
 		else {
-			std::unique_ptr<GameObject> go = App->resourcemanager->_poolGameObjects.get();
+			std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get();
 			go->SetName(node->mChildren[i]->mName.C_Str());
 			std::unique_ptr <ComponentTransform> transform = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
 
@@ -202,7 +201,7 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 			else {
 				for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x) {//mesh iteration
 
-					std::unique_ptr<GameObject> go_mesh = App->resourcemanager->_poolGameObjects.get();
+					std::unique_ptr<GameObject> go_mesh = App->scene->_poolGameObjects.get();
 					go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
 					std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 					std::unique_ptr <ComponentTransform> transform_mesh = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);

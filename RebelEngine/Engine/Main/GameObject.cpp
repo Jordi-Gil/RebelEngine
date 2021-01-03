@@ -4,7 +4,8 @@
 #include "Components/ComponentTransform.h"
 
 #include "Application.h"
-#include "CoreModules/ModuleResourceManagement.h"
+
+#include "CoreModules/ModuleScene.h"
 
 GameObject::GameObject(const char* name) {
 	_name = _strdup(name);
@@ -106,7 +107,7 @@ GameObject& GameObject::operator=(const GameObject& go) {
 	this->_parent = go._parent;
 
 	for (const auto& child : go._children) {
-		std::unique_ptr<GameObject> aux = App->resourcemanager->_poolGameObjects.get();
+		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
 		*aux = *child;
 		this->_children.push_back(std::move(aux));
 	}

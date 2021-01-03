@@ -30,7 +30,6 @@
     <ClCompile Include="Engine\Main\Skybox.cpp" />
     <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Main\Material.cpp" />
-    <ClCompile Include="Engine\CoreModules\ModuleResourceManagement.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Quadtree.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_demo.cpp" />
@@ -124,7 +123,6 @@
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\system\OS_info\os_info_windows.cpp" />
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\pci.cpp" />
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\version.cpp" />
-    <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
     <ClCompile Include="Engine\Components\Component.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.cpp" />
   </ItemGroup>
@@ -164,7 +162,6 @@
     <ClInclude Include="Engine\Components\ComponentCamera.h" />
     <ClInclude Include="Engine\Main\Material.h" />
     <ClInclude Include="Engine\Main\Pool.h" />
-    <ClInclude Include="Engine\CoreModules\ModuleResourceManagement.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Quadtree.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imconfig.h" />
@@ -268,7 +265,6 @@
     <ClInclude Include="External-Libraries\infoware-0.5.5\include\infoware\utils.hpp" />
     <ClInclude Include="External-Libraries\infoware-0.5.5\include\infoware\version.hpp" />
     <ClInclude Include="External-Libraries\infoware-0.5.5\include\infoware_generated\pci_data.hpp" />
-    <ClInclude Include="Engine\GUIs\GUIProject.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsMaterialDesignIcons.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />

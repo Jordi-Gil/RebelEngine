@@ -4,8 +4,6 @@
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
 
-#include "CoreModules/ModuleResourceManagement.h"
-
 #include "Main/Application.h"
 
 #include "Main/Skybox.h"
@@ -39,6 +37,8 @@ ModuleScene::~ModuleScene() {
 
 bool ModuleScene::Init() {
 
+	_poolGameObjects = Pool<GameObject>(1000);
+
 	_skybox = new Skybox();
 
 	_root = std::make_unique<GameObject>("Hierarchy");
@@ -47,7 +47,7 @@ bool ModuleScene::Init() {
 	transform->SetOwner(_root.get());
 	_root->AddComponent(std::move(transform));
 
-	std::unique_ptr<GameObject> go = App->resourcemanager->_poolGameObjects.get();
+	std::unique_ptr<GameObject> go = _poolGameObjects.get();
 	go->SetName("Camera");
 	transform = std::make_unique<ComponentTransform>();
 	std::unique_ptr<ComponentCamera> cam = std::make_unique<ComponentCamera>();
