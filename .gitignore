@@ -353,4 +353,4 @@ MigrationBackup/
 
 #Exceptions
 
-!External-Libraries/
+!External-Libraries/**
