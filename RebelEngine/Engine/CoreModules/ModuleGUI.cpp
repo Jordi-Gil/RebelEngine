@@ -137,7 +137,6 @@ update_status ModuleGUI::Update() {
 	}
 
 	return ret;
-
 }
 
 void ModuleGUI::DrawMainMenu() {
