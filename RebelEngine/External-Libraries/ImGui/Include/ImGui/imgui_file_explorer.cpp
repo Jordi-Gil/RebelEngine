@@ -55,10 +55,10 @@ namespace ImGui {
 
 			(*count)--;
 
-			if (!entryIsFile)
-			{
-				if (node_open)
-				{
+			if (!entryIsFile) {
+
+				if (node_open) {
+
 					lookupFolders[name] = true;
 					auto clickState = DirectoryTreeViewRecursive(entry.path(), count, selection_mask);
 
@@ -70,6 +70,7 @@ namespace ImGui {
 
 					ImGui::TreePop();
 				}
+				else lookupFolders[name] = false;
 			}
 		}
 

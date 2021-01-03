@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+!External-Libraries/
+
 #imGui init
 
 RebelEngine/Game/imgui.ini
