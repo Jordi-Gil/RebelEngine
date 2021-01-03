@@ -80,6 +80,7 @@ void ModuleEditorCamera::TranslateMouseWheel() {
 	camera->Translate(movement * App->deltaTime * zoomSpeed * speedModifier);
 }
 
+//TODO: Merge with mouse rotation
 void ModuleEditorCamera::RotateKeyboard() {
 
 	float _yaw = 0.0f; float _pitch = 0.0f;
@@ -120,9 +121,6 @@ void ModuleEditorCamera::RotateMouse(int x, int y) {
 
 		_pitch = -(float)y * App->deltaTime * rotSpeed;
 		_yaw = -(float)x * App->deltaTime * rotSpeed;
-
-
-
 
 		Quat quaternionX(camera->GetRight(), _pitch * speedModifier);
 		Quat quaternionY(float3::unitY, _yaw * speedModifier);

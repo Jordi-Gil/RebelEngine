@@ -33,10 +33,14 @@ bool IsNotRelative(GameObject& target, GameObject& dragged) {
 void GameObjectRelocation(std::unique_ptr<GameObject>&& go, GameObject& new_father) {
 
 	ComponentTransform* comp = (ComponentTransform*)go->GetComponent(type_component::TRANSFORM);
+	ComponentTransform* compPadre = (ComponentTransform*)new_father.GetComponent(type_component::TRANSFORM);
 
 	go->SetParent(&new_father);
-	comp->UpdateGlobalMatrix();
-	go->UpdateChildrenTransform();
+	//go->UpdateLocal();
+	//local = global padreT * global hijo
+	comp->_localMatrix = compPadre->_globalMatrix.Transposed() * comp->_globalMatrix;
+	//comp->UpdateGlobalMatrix();
+	//go->UpdateChildrenTransform();
 
 	new_father.AddChild(std::move(go));
 

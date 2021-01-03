@@ -32,7 +32,7 @@ public:
 	float3 GetRotation() const { return _rotation; }
 	float3 GetScale() const { return _scale; }
 
-private:
+public:
 
 	float3 _position = float3::zero;
 	float3 _rotation = float3::zero;
