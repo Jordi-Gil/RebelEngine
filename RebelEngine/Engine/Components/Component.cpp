@@ -15,10 +15,10 @@ Component::Component(const Component& comp) {
 
 bool Component::ToJson(Json::Value& value, int pos) {
 
-	value[pos]["UUID"] = _uuid;
-	(_owner != nullptr) ? value[pos]["OWNER"] = _owner->GetUUID() : value[pos]["OWNER"] = "";
-	value[pos]["Active"] = _active;
-	value[pos]["Type"] = (int)_type;
+	value[pos][JSON_TAG_UUID] = _uuid;
+	(_owner != nullptr) ? value[pos][JSON_TAG_OWNER] = _owner->GetUUID() : value[pos][JSON_TAG_OWNER] = "";
+	value[pos][JSON_TAG_ACTIVE] = _active;
+	value[pos][JSON_TAG_TYPE] = (int)_type;
 
 	return true;
 }

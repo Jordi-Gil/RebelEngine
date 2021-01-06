@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "json/json.h"
+#include "Utils/Globals.h"
 
 class GameObject;
 

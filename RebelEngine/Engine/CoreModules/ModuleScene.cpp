@@ -117,8 +117,8 @@ bool ModuleScene::ToJson(Json::Value& value, int pos)
 {
 	Json::Value childrenList;
 	_root->ToJson(childrenList, 0);
-	value[pos]["Name"] = DEFAULT_SCENE_NAME;
-	value[pos]["GameObjects"] = childrenList;
+	value[pos][JSON_TAG_NAME] = DEFAULT_SCENE_NAME;
+	value[pos][JSON_TAG_ROOT] = childrenList;
 
 	return true;
 }

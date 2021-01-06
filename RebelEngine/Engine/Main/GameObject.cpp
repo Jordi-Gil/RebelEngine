@@ -141,6 +141,9 @@ bool GameObject::ToJson(Json::Value& value, int pos)
 	Json::Value childrenList;
 	Json::Value componentList;
 
+	value[pos][JSON_TAG_NAME] = _name;
+	value[pos][JSON_TAG_UUID] = _uuid;
+
 	int go_cont = 0;
 	for (const auto& child : _children)
 	{
@@ -154,7 +157,9 @@ bool GameObject::ToJson(Json::Value& value, int pos)
 		comp->ToJson(componentList, comp_cont);
 		++comp_cont;
 	}
-	value[pos]["GameObjects"] = childrenList;
-	value[pos]["Components"] = componentList;
+
+	value[pos][JSON_TAG_GAMEOBJECTS] = childrenList;
+	value[pos][JSON_TAG_COMPONENTS] = componentList;
+
 	return true;
 }

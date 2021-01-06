@@ -20,6 +20,7 @@ public:
 	type_component GetType() const override { return _type; }
 	uint32_t GetMorton() const { return _mesh->GetMorton(); }
 	bool ToJson(Json::Value& value, int pos);
+
 private:
 
 	Mesh* _mesh = nullptr;

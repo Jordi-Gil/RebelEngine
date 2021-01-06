@@ -1,7 +1,5 @@
 #include "ComponentCamera.h"
 
-#include "Utils/Globals.h"
-
 ComponentCamera::ComponentCamera() {
 
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
@@ -56,10 +54,10 @@ bool ComponentCamera::ToJson(Json::Value& value, int pos)
 {
 	//TODO: SE GUARDA FRUSTRUM?
 	Component::ToJson(value, pos);
-	value[pos]["Background_type"] = (int)back_type;
-	value[pos]["Color"] = color.ToString();
-	value[pos]["ZNear"] = znear;
-	value[pos]["ZFar"] = zfar;
+	value[pos][JSON_TAG_BACKGROUND_TYPE] = (int)back_type;
+	value[pos][JSON_TAG_COLOR] = color.ToString();
+	value[pos][JSON_TAG_ZNEAR] = znear;
+	value[pos][JSON_TAG_ZFAR] = zfar;
 
 	return true;
 }

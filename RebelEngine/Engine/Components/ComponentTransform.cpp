@@ -97,12 +97,12 @@ void ComponentTransform::SetOwner(GameObject* go) {
 bool ComponentTransform::ToJson(Json::Value& value, int pos) {
 
 	Component::ToJson(value, pos);
-	value[pos]["Position"] = _position.ToString();
-	value[pos]["Rotation"] = _rotation.ToString();
-	value[pos]["Scale"] = _scale.ToString();
-	value[pos]["LocalMatrix"] = _localMatrix.ToString();
-	value[pos]["GlobalMatrix"] = _globalMatrix.ToString();
-	value[pos]["RotationQuat"] = _rotationQuat.ToString();
+	value[pos][JSON_TAG_POSITION] = _position.ToString();
+	value[pos][JSON_TAG_ROTATION] = _rotation.ToString();
+	value[pos][JSON_TAG_SCALE] = _scale.ToString();
+	value[pos][JSON_TAG_LOCAL_MATRIX] = _localMatrix.ToString();
+	value[pos][JSON_TAG_GLOBAL_MATRIX] = _globalMatrix.ToString();
+	value[pos][JSON_TAG_ROTATION_QUAT] = _rotationQuat.ToString();
 
 	return true;
 
