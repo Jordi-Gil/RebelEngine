@@ -36,3 +36,8 @@ enum update_status
 #define _ERROR "[error]"
 #define _INFO "[info]"
 #define _WARNING "[warning]"
+
+#define DEFAULT_SCENE_PATH "./Assets/Scenes/"
+#define DEFAULT_SCENE_NAME "Scene_default.Meta"
+
+

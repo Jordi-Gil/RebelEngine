@@ -5,9 +5,11 @@
 
 #include "Application.h"
 #include "CoreModules/ModuleResourceManagement.h"
+#include "Utils/RUUID.h"
 
 GameObject::GameObject(const char* name) {
 	_name = _strdup(name);
+	_uuid = RUUID::generate_uuid_v4();
 }
 
 GameObject::GameObject(GameObject&& go) {
@@ -15,6 +17,7 @@ GameObject::GameObject(GameObject&& go) {
 	this->_active = go._active;
 	this->_name = go._name;
 	this->_parent = go._parent;
+	this->_uuid = go._uuid;
 
 	go._parent = nullptr;
 	go._name = nullptr;
@@ -131,4 +134,27 @@ void UpdateChildrenTransform_rec(GameObject& go) {
 
 void GameObject::UpdateChildrenTransform() {
 	UpdateChildrenTransform_rec(*this);
+}
+
+bool GameObject::ToJson(Json::Value& value, int pos) 
+{
+	Json::Value childrenList;
+	Json::Value componentList;
+
+	int go_cont = 0;
+	for (const auto& child : _children)
+	{
+		child->ToJson(childrenList, go_cont);
+		++go_cont;
+	}
+
+	int comp_cont = 0;
+	for (const auto& comp : _components)
+	{
+		comp->ToJson(componentList, comp_cont);
+		++comp_cont;
+	}
+	value[pos]["GameObjects"] = childrenList;
+	value[pos]["Components"] = componentList;
+	return true;
 }

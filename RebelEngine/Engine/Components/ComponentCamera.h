@@ -51,6 +51,8 @@ public:
 		dd::frustum(frustum.ProjectionMatrix().Inverted(), dd::colors::Tomato);
 	}
 	
+	bool ToJson(Json::Value& value, int pos);
+
 private:
 
 	Frustum frustum;

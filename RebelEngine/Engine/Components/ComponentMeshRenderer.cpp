@@ -21,3 +21,9 @@ void ComponentMeshRenderer::Draw(){
 	assert(_owner != nullptr && "Component without and owner");
 	_mesh->Draw(App->models->textures, _owner->GetGlobalMatrix());
 }
+
+bool ComponentMeshRenderer::ToJson(Json::Value& value, int pos) 
+{
+	//TODO: Mesh to json
+	return true;
+}

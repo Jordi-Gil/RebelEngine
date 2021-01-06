@@ -51,3 +51,15 @@ void ComponentCamera::SetZFar(float _zfar) {
 	zfar = _zfar;
 	frustum.SetViewPlaneDistances(znear, zfar);
 }
+
+bool ComponentCamera::ToJson(Json::Value& value, int pos) 
+{
+	//TODO: SE GUARDA FRUSTRUM?
+	Component::ToJson(value, pos);
+	value[pos]["Background_type"] = (int)back_type;
+	value[pos]["Color"] = color.ToString();
+	value[pos]["ZNear"] = znear;
+	value[pos]["ZFar"] = zfar;
+
+	return true;
+}

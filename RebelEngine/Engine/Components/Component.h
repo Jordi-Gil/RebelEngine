@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "json/json.h"
 
 class GameObject;
 
@@ -15,7 +16,7 @@ class Component {
 
 public:
 
-	Component() {}
+	Component();
 	Component(const Component& comp);
 
 
@@ -28,10 +29,12 @@ public:
 
 	virtual void SetOwner(GameObject* go) { _owner = go; }
 
+	virtual bool ToJson(Json::Value& value, int pos);
+
 protected:
 
 	GameObject* _owner = nullptr;
 	bool _active = false;
 	type_component _type = type_component::NONE;
-
+	std::string _uuid;
 };

@@ -32,6 +32,8 @@ public:
 	float3 GetRotation() const { return _rotation; }
 	float3 GetScale() const { return _scale; }
 
+	bool ToJson(Json::Value& value, int pos);
+
 public:
 
 	float3 _position = float3::zero;

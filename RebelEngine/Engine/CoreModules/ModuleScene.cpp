@@ -14,6 +14,8 @@
 #include "AccelerationDataStructures/BVH.h"
 
 #include <algorithm>
+#include <iostream>
+#include <fstream>
 
 ModuleScene::ModuleScene() {
 
@@ -98,4 +100,25 @@ void ModuleScene::CreateAABBTree() {
 
 	
 
+}
+
+bool ModuleScene::Save() 
+{
+	Json::Value value;
+	this->ToJson(value,0);
+	Json::StyledWriter wr;
+	std::ofstream ofs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME);
+	std::string st = wr.write(value);
+	ofs.write(st.c_str(), st.size());
+
+	return true;
+}
+bool ModuleScene::ToJson(Json::Value& value, int pos)
+{
+	Json::Value childrenList;
+	_root->ToJson(childrenList, 0);
+	value[pos]["Name"] = DEFAULT_SCENE_NAME;
+	value[pos]["GameObjects"] = childrenList;
+
+	return true;
 }

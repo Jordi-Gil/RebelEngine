@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+#include "json/json.h"
+
 class BVH;
 class Skybox;
 class GameObject;
@@ -21,6 +23,8 @@ public:
 	void Draw();
 
 	void InsertOrdered(GameObject& go);
+	bool Save();
+	bool ToJson(Json::Value& value, int pos);
 
 private:
 
