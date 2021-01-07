@@ -59,8 +59,10 @@ void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
 	_children.push_back(std::move(go));
 }
 
-void GameObject::AddComponent(std::unique_ptr<Component>&& comp) { 
+void GameObject::AddComponent(std::unique_ptr<Component>&& comp, GAME_OBJECT_MASK mask) {
+	_mask |= mask;
 	_components.push_back(std::move(comp)); 
+	if (_mask & GO_MASK_MESH) _meshRenderer = (ComponentMeshRenderer *) static_cast<ComponentMeshRenderer*>(_components.rbegin()->get());
 }
 
 void GameObject::SetName(const char* name) {
@@ -71,6 +73,10 @@ void GameObject::SetParent(GameObject* go) {
 	_parent = go;
 }
 
+void GameObject::AddMask(GAME_OBJECT_MASK mask){ 
+	_mask |= mask;
+}
+
 bool GameObject::HasComponent(type_component type) const {
 
 	for (auto const &component : _components) {
@@ -78,7 +84,6 @@ bool GameObject::HasComponent(type_component type) const {
 	}
 
 	return false;
-
 }
 
 Component* GameObject::GetComponent(type_component type) const
@@ -96,8 +101,11 @@ const float4x4 GameObject::GetGlobalMatrix() const
 }
 
 uint32_t GameObject::GetMorton() const {
-	auto comp = (ComponentMeshRenderer *) GetComponent(type_component::MESHRENDERER);
-	return comp->GetMorton();
+	return _meshRenderer->GetMorton();
+}
+
+void GameObject::GetAABB(AABB& aabb) const {
+	return _meshRenderer->GetAABB(aabb);
 }
 
 GameObject& GameObject::operator=(const GameObject& go) {
@@ -116,7 +124,7 @@ GameObject& GameObject::operator=(const GameObject& go) {
 		this->_components.push_back(std::make_unique<Component>(*component));
 	}
 
-	this->_hasMesh = go._hasMesh;
+	this->_mask = go._mask;
 
 	return *this;
 }
@@ -132,4 +140,8 @@ void UpdateChildrenTransform_rec(GameObject& go) {
 
 void GameObject::UpdateChildrenTransform() {
 	UpdateChildrenTransform_rec(*this);
+}
+
+void GameObject::ToggleSelected(){
+	_selected = !_selected;
 }

@@ -8,6 +8,11 @@
 #include <string>
 #include <omp.h>
 
+#include <stack>
+#include <queue>
+
+#include <iomanip>
+
 struct int2 {
 
     int2(unsigned int _x, unsigned int _y) : x(_x), y(_y) {};
@@ -26,15 +31,12 @@ static unsigned int clz32d(uint32_t x) /* 32-bit clz */{
     return n;
 }
 
-int LongestCommonPrefix(int i, int j, int size, std::vector<GameObject>& orderedGameObjects) {
+int LongestCommonPrefix(int i, int j, int size, std::vector<GameObject *>& orderedGameObjects) {
 
     if (i < 0 || i > size - 1 || j < 0 || j > size - 1) return -1;
 
-    ComponentMeshRenderer* compF = static_cast<ComponentMeshRenderer*>(orderedGameObjects[i].GetComponent(type_component::MESHRENDERER));
-    ComponentMeshRenderer* compL = static_cast<ComponentMeshRenderer*>(orderedGameObjects[j].GetComponent(type_component::MESHRENDERER));
-
-    uint32_t codeI = compF->GetMorton();
-    uint32_t codeJ = compL->GetMorton();
+    uint32_t codeI = orderedGameObjects[i]->GetMorton();
+    uint32_t codeJ = orderedGameObjects[j]->GetMorton();
 
     if (i == j) {
         return clz32d(codeI ^ codeJ);
@@ -43,17 +45,14 @@ int LongestCommonPrefix(int i, int j, int size, std::vector<GameObject>& ordered
 
 }
 
-unsigned int findSplit(std::vector<GameObject>& orderedGameObjects, int first, int last) {
+unsigned int findSplit(std::vector<GameObject *>& orderedGameObjects, int first, int last) {
 
     if (first == last) {
         return -1;
     }
 
-    ComponentMeshRenderer* compF = static_cast<ComponentMeshRenderer*>(orderedGameObjects[first].GetComponent(type_component::MESHRENDERER));
-    ComponentMeshRenderer* compL = static_cast<ComponentMeshRenderer*>(orderedGameObjects[last].GetComponent(type_component::MESHRENDERER));
-
-    uint32_t firstCode = compF->GetMorton();
-    uint32_t lastCode = compL->GetMorton();
+    uint32_t firstCode = orderedGameObjects[first]->GetMorton();
+    uint32_t lastCode = orderedGameObjects[last]->GetMorton();
 
     unsigned int commonPrefix = clz32d(firstCode ^ lastCode);
 
@@ -66,8 +65,7 @@ unsigned int findSplit(std::vector<GameObject>& orderedGameObjects, int first, i
 
         if (newSplit < last) {
 
-            ComponentMeshRenderer* aux = static_cast<ComponentMeshRenderer*>(orderedGameObjects[newSplit].GetComponent(type_component::MESHRENDERER));
-            uint32_t splitCode = aux->GetMorton();
+            uint32_t splitCode = orderedGameObjects[newSplit]->GetMorton();
 
             unsigned int splitPrefix = clz32d(firstCode ^ splitCode);
 
@@ -83,7 +81,7 @@ unsigned int findSplit(std::vector<GameObject>& orderedGameObjects, int first, i
 
 }
 
-int2 determineRange(std::vector<GameObject>& orderedGameObjects, int idx, unsigned int size) {
+int2 determineRange(std::vector<GameObject *>& orderedGameObjects, int idx, unsigned int size) {
 
     int d = LongestCommonPrefix(idx, idx + 1, size, orderedGameObjects) -
         LongestCommonPrefix(idx, idx - 1, size, orderedGameObjects) >= 0 ? 1 : -1;
@@ -112,7 +110,104 @@ int2 determineRange(std::vector<GameObject>& orderedGameObjects, int idx, unsign
 
 }
 
-BVHNode* BVH::GenerateBVH(std::vector<GameObject>& orderedGameObjects, unsigned int size) {
+void computeBoundingBox(BVHNode* root) {
+
+    std::stack <BVHNode*> stack;
+    std::queue <BVHNode*> queue;
+
+    queue.push(root);
+
+    while (!queue.empty()) {
+
+        root = queue.front();
+
+        queue.pop();
+        stack.push(root);
+
+        if (root->left) queue.push(root->left);
+        if (root->right) queue.push(root->right);
+    }
+
+    while (!stack.empty()) {
+
+        root = stack.top();
+
+        
+        if(!root->is_leaf) { //Internal node
+
+            root->box = root->left->box;
+            AABB right_aabb = root->right->box;
+
+            root->box.Enclose(right_aabb);
+
+        }
+        stack.pop();
+    }
+}
+
+BVH::~BVH() {
+    //if (_root) {
+    //    delete _root;
+    //    _root = nullptr;
+    //}
+}
+
+// Helper function to print branches of the binary tree
+void showTrunks(Trunk* p, std::ostringstream& oss)
+{
+    if (p == nullptr)
+        return;
+
+    showTrunks(p->prev, oss);
+
+    oss << p->str;
+}
+
+// Recursive function to print binary tree
+// It uses inorder traversal
+void BVH::Inorder(BVHNode* root, Trunk* prev, bool isLeft)
+{
+    if (root == nullptr)
+        return;
+
+    std::string prev_str = "    ";
+    Trunk* trunk = new Trunk(prev, prev_str);
+
+    Inorder(root->left, trunk, true);
+
+    if (!prev)
+        trunk->str = "---";
+    else if (isLeft)
+    {
+        trunk->str = ".---";
+        prev_str = "   |";
+    }
+    else
+    {
+        trunk->str = "`---";
+        prev->str = prev_str;
+    }
+
+    std::ostringstream oss;
+    showTrunks(trunk, oss);
+    oss << root->name;
+    LOG(_ERROR, "%s", std::string(oss.str()).c_str());
+
+    if (prev)
+        prev->str = prev_str;
+    trunk->str = "   |";
+
+    Inorder(root->right, trunk, false);
+    delete trunk;
+    trunk = nullptr;
+}
+
+BVH::BVH(std::vector<GameObject*>& orderedGameObjects){
+    _root = GenerateBVH(orderedGameObjects, orderedGameObjects.size());
+    computeBoundingBox(_root);
+}
+
+BVHNode* BVH::GenerateBVH(std::vector<GameObject *>& orderedGameObjects, unsigned int size) {
 
     BVHNode* leaf_nodes = new BVHNode[size];
     BVHNode* internal_nodes = new BVHNode[size-1];
@@ -120,12 +215,14 @@ BVHNode* BVH::GenerateBVH(std::vector<GameObject>& orderedGameObjects, unsigned 
     MSTimer constructionTime; constructionTime.start();
 
     for (unsigned int i = 0; i < size; i++) {
-        leaf_nodes[i].go = &orderedGameObjects[i];
+        leaf_nodes[i].is_leaf = true;
+        orderedGameObjects[i]->GetAABB(leaf_nodes[i].box);
+        leaf_nodes[i].name = orderedGameObjects[i]->GetName();
     }
 
-    int maxthreads = omp_get_max_threads();
-    omp_set_num_threads(maxthreads);
-    #pragma omp parallel for schedule(static, maxthreads)
+    //int maxthreads = omp_get_max_threads();
+    //omp_set_num_threads(maxthreads);
+    //#pragma omp parallel for schedule(static, maxthreads)
     for (unsigned int idx = 0; idx < size - 1; idx++) {
 
         //determine range
@@ -147,28 +244,28 @@ BVHNode* BVH::GenerateBVH(std::vector<GameObject>& orderedGameObjects, unsigned 
 
         if (split == first) {
             childA = &leaf_nodes[split];
-            childA->name = leaf_nodes[split].name;
         }
         else {
             childA = &internal_nodes[split];
             std::string aux("internal+" + std::to_string(split));
-            childA->name = aux.c_str();
+            childA->name = _strdup(aux.c_str());
         }
 
         if (split + 1 == last) {
             childB = &leaf_nodes[split + 1];
-            childB->name = leaf_nodes[split + 1].name;
         }
         else {
             childB = &internal_nodes[split + 1];
             std::string aux("internal+" + std::to_string(split+1));
-            childB->name = aux.c_str();
+            childB->name = _strdup(aux.c_str());
         }
+
+        childA->parent = &internal_nodes[idx];
+        childB->parent = &internal_nodes[idx];
 
         internal_nodes[idx].left = childA;
         internal_nodes[idx].right = childB;
-        childA->parent = &internal_nodes[idx];
-        childB->parent = &internal_nodes[idx];
+        
 
     }
 

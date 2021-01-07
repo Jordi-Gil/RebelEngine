@@ -23,7 +23,6 @@ GUIHierarchy::GUIHierarchy(const char* name) {
 
 bool IsNotRelative(GameObject& target, GameObject& dragged) {
 	
-	//nullptr -> root reached
 	if (!target.GetParent()) return true;
 	else if (target.GetParent() == &dragged) return false;
 	else return IsNotRelative(*target.GetParent(), dragged);
@@ -36,12 +35,7 @@ void GameObjectRelocation(std::unique_ptr<GameObject>&& go, GameObject& new_fath
 	ComponentTransform* compPadre = (ComponentTransform*)new_father.GetComponent(type_component::TRANSFORM);
 
 	go->SetParent(&new_father);
-	//go->UpdateLocal();
-	//local = global padreT * global hijo
 	comp->_localMatrix = compPadre->_globalMatrix.Transposed() * comp->_globalMatrix;
-	//comp->UpdateGlobalMatrix();
-	//go->UpdateChildrenTransform();
-
 	new_father.AddChild(std::move(go));
 
 }

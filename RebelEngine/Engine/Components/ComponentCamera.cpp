@@ -2,6 +2,8 @@
 
 #include "Utils/Globals.h"
 
+#include "Main/GameObject.h"
+
 ComponentCamera::ComponentCamera() {
 
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
@@ -50,4 +52,26 @@ void ComponentCamera::SetZNear(float _znear) {
 void ComponentCamera::SetZFar(float _zfar) {
 	zfar = _zfar;
 	frustum.SetViewPlaneDistances(znear, zfar);
+}
+
+float4x4 ComponentCamera::GetOpenGLProjectionMatrix() const
+{
+	float4x4 matrix = frustum.ProjectionMatrix();
+	matrix.Transpose();
+	return matrix;
+}
+
+float4x4 ComponentCamera::GetOpenGLViewMatrix() const
+{
+	float4x4 matrix = frustum.ViewMatrix();
+	matrix.Transpose();
+	return matrix;
+}
+
+void ComponentCamera::Draw() {
+	if (_owner->IsSelected()) {
+		float4x4 matrix = this->GetProjectionMatrix() * this->GetViewMatrix();
+		matrix.Inverse();
+		dd::frustum(matrix, dd::colors::Tomato);
+	}
 }

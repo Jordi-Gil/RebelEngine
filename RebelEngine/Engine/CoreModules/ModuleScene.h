@@ -20,14 +20,16 @@ public:
 	bool Init() override;
 	bool Start() override;
 
+	update_status PreUpdate() override;
+
 	void Draw();
 
 	void InsertOrdered(GameObject& go);
 
 private:
 
+	void IterateRoot(GameObject &go);
 	void DrawRecursive(GameObject &go);
-	void CreateAABBTree();
 
 public:
 
@@ -39,10 +41,11 @@ private:
 
 	GameObject* _goSelected = nullptr;
 	std::vector<GameObject *> _meshObjects;
+	std::vector<GameObject *> _GameObjectsToDraw;
 
 	bool _frustum = false;
 
-	BVH* _BVH;
+	BVH* _bvh = nullptr;
 
 };
 

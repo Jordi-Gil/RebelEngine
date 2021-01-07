@@ -186,6 +186,7 @@
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsMaterialDesignIcons.h" />
@@ -326,6 +327,7 @@
     <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="Engine\GUIs\GUIHierarchy.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui.cpp" />
+    <ClCompile Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_draw.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.cpp" />

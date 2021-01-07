@@ -136,6 +136,22 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 		char fn[_MAX_FNAME]; _splitpath_s(fileName, NULL, 0, NULL, 0, fn, _MAX_FNAME, NULL, 0);
 
+		std::vector<std::string> lights;
+		std::vector<std::string> cameras;
+
+		//Retrieve light and cameras information
+		if (scene->HasLights()) {
+			for (uint i = 0; i < scene->mNumLights; ++i) {
+				lights.push_back(scene->mLights[i]->mName.C_Str());
+			}
+		}
+
+		if (scene->HasCameras()) {
+			for (uint i = 0; i < scene->mNumCameras; ++i) {
+				cameras.push_back(scene->mCameras[i]->mName.C_Str());
+			}
+		}
+
 		aiNode* father = scene->mRootNode;
 
 		std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get();
@@ -147,7 +163,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 		transform->SetOwner(go.get());
 		go->AddComponent(std::move(transform));
 
-		LoadNodeHierarchy(father, *go, scene);
+		LoadNodeHierarchy(father, *go, scene, lights, cameras);
 		App->scene->_root->AddChild(std::move(go));
 
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
@@ -162,7 +178,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 }
 
-void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiScene* scene) {
+void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiScene* scene, const std::vector<std::string> &lights, const std::vector<std::string>& cameras) {
 
 	// assignar nombre edl mesh al name del game object
 	int unsigned num_children = node->mNumChildren;
@@ -170,9 +186,9 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
 
 		std::string str = node->mChildren[i]->mName.C_Str();
-
+		
 		if (str.find("$AssimpFbx$") != std::string::npos) {
-			LoadNodeHierarchy(node->mChildren[i], father, scene);
+			LoadNodeHierarchy(node->mChildren[i], father, scene, lights, cameras);
 		}
 		else {
 			std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get();
@@ -195,7 +211,7 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 
 				renderer_mesh->SetOwner(go.get());
 				renderer_mesh->SetMesh(mesh);
-				go->AddComponent(std::move(renderer_mesh));
+				go->AddComponent(std::move(renderer_mesh), GO_MASK_MESH);
 
 			}
 			else {
@@ -217,14 +233,14 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 					renderer_mesh->SetMesh(mesh);
 
 					go_mesh->AddComponent(std::move(transform_mesh));
-					go_mesh->AddComponent(std::move(renderer_mesh));
+					go_mesh->AddComponent(std::move(renderer_mesh), GO_MASK_MESH);
 					go_mesh->SetParent(go.get());
 
 					go->AddChild(std::move(go_mesh));
 				}
 			}
 			go->SetParent(&father);
-			LoadNodeHierarchy(node->mChildren[i], *go, scene);
+			LoadNodeHierarchy(node->mChildren[i], *go, scene, lights, cameras);
 			father.AddChild(std::move(go));
 		}
 	}

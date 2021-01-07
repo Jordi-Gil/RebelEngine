@@ -24,6 +24,7 @@ public:
 	virtual void Enable() {}
 	virtual void Update() {}
 	virtual void Disable() {}
+	virtual void Draw() {}
 	virtual type_component GetType() const { return _type; }
 
 	virtual void SetOwner(GameObject* go) { _owner = go; }

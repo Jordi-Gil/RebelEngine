@@ -21,6 +21,7 @@
 #include "ImGui/imgui_utils.h"
 #include "ImGui/imgui_internal.h"
 #include "ImGui/imfilebrowser.h"
+#include "ImGui/ImGuizmo.h"
 
 ModuleGUI::ModuleGUI() {
 	
@@ -34,7 +35,6 @@ void ModuleGUI::PreInit() {
 	_windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); _config = (GUIConfiguration *)_windows.rbegin()->get();
 	_windows.push_back(std::make_unique<GUITerminal>("Terminal")); _terminal = (GUITerminal *)_windows.rbegin()->get();
 	_windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy")); _hierarchy = (GUIHierarchy*)_windows.rbegin()->get();
-	//_windows.push_back(std::make_unique<GUIProject>("Project")); _project = (GUIProject*)_windows.rbegin()->get();
 
 	_scene->ToggleActive();
 	_inspector->ToggleActive();
@@ -77,6 +77,8 @@ bool ModuleGUI::Init() {
 	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/" FONT_ICON_FILE_NAME_MDI, 12.0f, &icons_config, icons_ranges);
 	
 	fileDialog.SetTitle("title");
+
+	ImGuizmo::SetImGuiContext(ImGui::GetCurrentContext());
 
 	return true;
 }

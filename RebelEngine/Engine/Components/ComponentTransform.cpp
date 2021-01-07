@@ -86,7 +86,9 @@ void ComponentTransform::UpdateGlobalMatrix() {
 }
 
 void ComponentTransform::Draw() {
-	dd::axisTriad(_globalMatrix, 0.1f, 0.1f);
+	if (_owner->IsSelected()) { 
+		dd::axisTriad(_localMatrix, 0.1f, 2.0f); 
+	}
 }
 
 void ComponentTransform::SetOwner(GameObject* go) {

@@ -44,12 +44,13 @@ public:
 
 	const float3 GetPosition() const { return frustum.Pos(); }
 
-	float4x4 GetProjectionMatrix() { return frustum.ProjectionMatrix(); }
-	float4x4 GetViewMatrix() { return frustum.ViewMatrix(); }
+	float4x4 GetProjectionMatrix() const { return frustum.ProjectionMatrix(); }
+	float4x4 GetViewMatrix() const { return frustum.ViewMatrix(); }
 
-	void Draw() {
-		dd::frustum(frustum.ProjectionMatrix().Inverted(), dd::colors::Tomato);
-	}
+	float4x4 GetOpenGLProjectionMatrix() const;
+	float4x4 GetOpenGLViewMatrix() const;
+
+	void Draw() override;
 	
 private:
 
@@ -58,5 +59,5 @@ private:
 	float4 color = float4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	float znear = 0.01f;
-	float zfar = 1000.0f;
+	float zfar = 100.0f;
 };

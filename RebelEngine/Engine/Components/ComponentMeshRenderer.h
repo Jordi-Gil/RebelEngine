@@ -14,10 +14,11 @@ public:
 
 	void SetMesh(Mesh* component_mesh);
 
-	void Draw();
+	void Draw() override;
 
 	type_component GetType() const override { return _type; }
 	uint32_t GetMorton() const { return _mesh->GetMorton(); }
+	void GetAABB(AABB& aabb) { _mesh->GetAABB(aabb); };
 
 private:
 

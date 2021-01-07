@@ -18,7 +18,6 @@ class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleModel;
 class ModuleScene;
-
 class ModuleGUI;
 
 class Application {

@@ -15,24 +15,24 @@ friend class GUIInspector;
 public: 
 		
 	Mesh() : 
-		VBO(0), EBO(0), VAO(0), matIndex(0), 
-		numVertices(0), numIndices(0), numFaces(0)
+		_VBO(0), _EBO(0), _VAO(0), _matIndex(0), 
+		_numVertices(0), _numIndices(0), _numFaces(0)
 	{
-		aabb.SetNegativeInfinity();
-		obb.SetNegativeInfinity();
+		_aabb.SetNegativeInfinity();
+		_obb.SetNegativeInfinity();
 	}
 
 	Mesh(Mesh&& _mesh) {
 
-		VBO = _mesh.VAO;
-		EBO = _mesh.EBO;
-		VAO = _mesh.VAO;
-		matIndex = _mesh.matIndex;
-		numVertices = _mesh.numVertices;
-		numIndices = _mesh.numIndices;
-		numFaces = _mesh.numFaces;
-		aabb = aabb;
-		obb = obb;
+		_VBO = _mesh._VAO;
+		_EBO = _mesh._EBO;
+		_VAO = _mesh._VAO;
+		_matIndex = _mesh._matIndex;
+		_numVertices = _mesh._numVertices;
+		_numIndices = _mesh._numIndices;
+		_numFaces = _mesh._numFaces;
+		_aabb = _mesh._aabb;
+		_obb = _mesh._obb;
 	}
 
 	~Mesh() {}
@@ -45,21 +45,22 @@ public:
 
 	void Clean();
 
-	uint32_t GetMorton() const { return mortonCode; }
+	uint32_t GetMorton() const { return _mortonCode; }
+	void GetAABB(AABB& aabb) const { aabb = _aabb; }
 
 private:
 
-	unsigned int VBO;
-	unsigned int EBO;
-	unsigned int VAO;
-	unsigned int matIndex;
-	unsigned int numVertices;
-	unsigned int numIndices;
-	unsigned int numFaces;
+	unsigned int _VBO;
+	unsigned int _EBO;
+	unsigned int _VAO;
+	unsigned int _matIndex;
+	unsigned int _numVertices;
+	unsigned int _numIndices;
+	unsigned int _numFaces;
 
-	uint32_t mortonCode;
+	uint32_t _mortonCode;
 
-	AABB aabb;
-	OBB obb;
+	AABB _aabb;
+	OBB _obb;
 };
 

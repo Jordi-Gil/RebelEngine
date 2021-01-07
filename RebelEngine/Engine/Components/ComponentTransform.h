@@ -24,13 +24,14 @@ public:
 
 	float4x4 GetGlobalMatrix() const { return _globalMatrix; }
 
-	void Draw();
+	void Draw() override;
 
 	void SetOwner(GameObject* go) override;
 
 	float3 GetPosition() const { return _position; }
 	float3 GetRotation() const { return _rotation; }
 	float3 GetScale() const { return _scale; }
+	Quat GetRotationQuat() const { return _rotationQuat; }
 
 public:
 

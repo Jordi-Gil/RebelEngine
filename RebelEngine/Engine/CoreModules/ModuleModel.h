@@ -32,7 +32,7 @@ public:
 private:
 
 	void LoadTextures(aiMaterial** const materials, unsigned int mNumMaterials, const char* fbxPath);
-	void LoadNodeHierarchy(aiNode* node, GameObject &father,const aiScene* scene);
+	void LoadNodeHierarchy(aiNode* node, GameObject &father, const aiScene* scene, const std::vector<std::string>& lights, const std::vector<std::string>& cameras);
 
 private:
 
