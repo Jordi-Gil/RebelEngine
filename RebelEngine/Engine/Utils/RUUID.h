@@ -12,7 +12,7 @@ namespace RUUID {
     static std::uniform_int_distribution<> dis(0, 15);
     static std::uniform_int_distribution<> dis2(8, 11);
 
-   static std::string generate_uuid_v4() {
+   static const std::string generate_uuid_v4() {
         std::stringstream ss;
         int i;
         ss << std::hex;

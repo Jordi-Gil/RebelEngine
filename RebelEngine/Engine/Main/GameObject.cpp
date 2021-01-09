@@ -2,6 +2,7 @@
 
 #include "Components/Component.h"
 #include "Components/ComponentTransform.h"
+#include "Components/ComponentCamera.h"
 
 #include "Application.h"
 #include "CoreModules/ModuleResourceManagement.h"
@@ -36,6 +37,11 @@ GameObject::GameObject(GameObject&& go) {
 	go._components.clear();
 	go._components.shrink_to_fit();
 	
+}
+
+GameObject::GameObject(const Json::Value& value) 
+{
+	this->FromJson(value);
 }
 
 GameObject::~GameObject() {
@@ -161,5 +167,40 @@ bool GameObject::ToJson(Json::Value& value, int pos)
 	value[pos][JSON_TAG_GAMEOBJECTS] = childrenList;
 	value[pos][JSON_TAG_COMPONENTS] = componentList;
 
+	return true;
+}
+bool GameObject::FromJson(const Json::Value& value) 
+{
+	if (!value.isNull()) 
+	{
+		_name = _strdup(value[JSON_TAG_NAME].asCString());
+		_uuid = _strdup(value[JSON_TAG_UUID].asCString());
+		_active = value[JSON_TAG_ACTIVE].asBool();
+	}
+	else {
+
+		for(Json::Value go:value[JSON_TAG_GAMEOBJECTS])
+		{
+			std::unique_ptr<GameObject> go = std::make_unique<GameObject>(value);
+			go->SetParent(this);
+			AddChild(std::move(go));
+		}
+
+		for (Json::Value comp : value[JSON_TAG_COMPONENTS])
+		{
+			type_component type = (type_component) comp[JSON_TAG_TYPE].asInt();
+			std::unique_ptr<Component> comp;
+			switch (type)
+			{
+				case type_component::NONE: comp = std::make_unique<Component>(value);  break;
+				case type_component::CAMERA: comp = std::make_unique<ComponentCamera>(value); break;
+				case type_component::MESHRENDERER:  comp = std::make_unique<ComponentCamera>(value); break;
+				case type_component::TRANSFORM: comp = std::make_unique<ComponentTransform>(value); break;
+			}
+			comp->SetOwner(this);
+			AddComponent(std::move(comp));
+		}
+		//TODO: JSON ERROR
+	}
 	return true;
 }

@@ -17,7 +17,7 @@ public:
 	GameObject() {}
 	GameObject(const char* name);
 	GameObject(GameObject&& go);
-
+	GameObject(const Json::Value& value);
 	~GameObject();
 
 	void Update(){}
@@ -29,6 +29,7 @@ public:
 	void EraseChildrenNull();
 	void UpdateChildrenTransform();
 	bool ToJson(Json::Value& value, int pos);
+	bool FromJson(const Json::Value& value);
 
 #pragma region getters
 	const char* GetName() const { return _name; }

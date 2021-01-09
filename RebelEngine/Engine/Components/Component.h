@@ -19,7 +19,7 @@ public:
 
 	Component();
 	Component(const Component& comp);
-
+	Component(const Json::Value& value);
 
 	virtual ~Component() = default;
 
@@ -31,6 +31,7 @@ public:
 	virtual void SetOwner(GameObject* go) { _owner = go; }
 
 	virtual bool ToJson(Json::Value& value, int pos);
+	virtual bool FromJson(const Json::Value& value);
 
 protected:
 

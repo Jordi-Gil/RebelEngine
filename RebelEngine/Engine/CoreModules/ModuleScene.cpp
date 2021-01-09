@@ -20,6 +20,9 @@
 ModuleScene::ModuleScene() {
 
 }
+ModuleScene::ModuleScene(const Json::Value& value) {
+	this->FromJson(value);
+}
 
 bool ModuleScene::Start() {
 	return true;
@@ -113,6 +116,7 @@ bool ModuleScene::Save()
 
 	return true;
 }
+
 bool ModuleScene::ToJson(Json::Value& value, int pos)
 {
 	Json::Value childrenList;
@@ -120,5 +124,18 @@ bool ModuleScene::ToJson(Json::Value& value, int pos)
 	value[pos][JSON_TAG_NAME] = DEFAULT_SCENE_NAME;
 	value[pos][JSON_TAG_ROOT] = childrenList;
 
+	return true;
+}
+
+bool ModuleScene::FromJson(const Json::Value& value) {
+
+	Json::Value root = value["Root"];
+
+	if (!root.isNull()) {
+		_root = std::make_unique<GameObject>(value);
+	}
+	else {
+		//TODO: JSON ERROR
+	}
 	return true;
 }

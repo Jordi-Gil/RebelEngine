@@ -15,6 +15,7 @@ class ModuleScene : public Module {
 public:
 
 	ModuleScene();
+	ModuleScene(const Json::Value& value);
 	~ModuleScene();
 
 	bool Init() override;
@@ -25,7 +26,7 @@ public:
 	void InsertOrdered(GameObject& go);
 	bool Save();
 	bool ToJson(Json::Value& value, int pos);
-
+	bool FromJson(const Json::Value& value);
 private:
 
 	void DrawRecursive(GameObject &go);
