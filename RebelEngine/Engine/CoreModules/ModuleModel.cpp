@@ -190,9 +190,11 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 
 				Mesh* mesh = new Mesh();
+				mesh->SetName(node->mChildren[i]->mName.C_Str());
 				mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
 				mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
 				mesh->CreateVAO();
+				
 
 				renderer_mesh->SetOwner(go.get());
 				renderer_mesh->SetMesh(mesh);
@@ -211,10 +213,11 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 					renderer_mesh->SetOwner(go_mesh.get());
 
 					Mesh* mesh = new Mesh();
+					mesh->SetName(node->mChildren[i]->mName.C_Str());
 					mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 					mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 					mesh->CreateVAO();
-
+					
 					renderer_mesh->SetMesh(mesh);
 
 					go_mesh->AddComponent(std::move(transform_mesh));

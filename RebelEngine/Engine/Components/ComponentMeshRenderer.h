@@ -22,7 +22,7 @@ public:
 	bool ToJson(Json::Value& value, int pos);
 
 private:
-
+	std::string _meshPath;
 	Mesh* _mesh = nullptr;
 };
 

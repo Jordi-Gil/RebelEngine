@@ -9,6 +9,9 @@
 #include <GL/glew.h>
 #include "Math/float3x3.h"
 
+#include <iostream>
+#include <fstream>
+
 // method to seperate bits from a given integer 3 positions apart
 inline uint32_t splitBy3(unsigned int a) {
 	uint32_t x = a & 0x1fffff; // we only look at the first 21 bits
@@ -44,38 +47,49 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	float* data = (float*)(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 	
 	if (!data) LOG("glMapBuffer error", _ERROR);
+	
 	unsigned int pos = 0;
+
+	_vboValue[0]["VBO"] = "(";
+
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i) {
 		//Position
-		data[pos++] = mesh->mVertices[i].x; 
+		data[pos++] = mesh->mVertices[i].x; AttToJson(data[pos - 1]);
 		if (mesh->mVertices[i].x > max[0]) max[0] = mesh->mVertices[i].x;
 		if (mesh->mVertices[i].x < min[0]) min[0] = mesh->mVertices[i].x;
 
-		data[pos++] = mesh->mVertices[i].y;
+		data[pos++] = mesh->mVertices[i].y; AttToJson(data[pos - 1]);
 		if (mesh->mVertices[i].y > max[1]) max[1] = mesh->mVertices[i].y;
 		if (mesh->mVertices[i].y < min[1]) min[1] = mesh->mVertices[i].y;
 
-		data[pos++] = mesh->mVertices[i].z;
+		data[pos++] = mesh->mVertices[i].z; AttToJson(data[pos - 1]);
 		if (mesh->mVertices[i].z > max[2]) max[2] = mesh->mVertices[i].z;
 		if (mesh->mVertices[i].z < min[2]) min[2] = mesh->mVertices[i].z;
 
 		//Normal
-		data[pos++] = mesh->mNormals[i].x;
-		data[pos++] = mesh->mNormals[i].y;
-		data[pos++] = mesh->mNormals[i].z;
+		data[pos++] = mesh->mNormals[i].x; AttToJson(data[pos - 1]);
+		data[pos++] = mesh->mNormals[i].y; AttToJson(data[pos - 1]);
+		data[pos++] = mesh->mNormals[i].z; AttToJson(data[pos - 1]);
 
 		//UV
 		if (mesh->mTextureCoords[0]) {
-			data[pos++] = mesh->mTextureCoords[0][i].x;
-			data[pos++] = mesh->mTextureCoords[0][i].y;
+			data[pos++] = mesh->mTextureCoords[0][i].x; AttToJson(data[pos - 1]);
+			data[pos++] = mesh->mTextureCoords[0][i].y; AttToJson(data[pos - 1]);
 		}
 		else {
-			data[pos++] = 0;
-			data[pos++] = 0;
+			data[pos++] = 0; AttToJson(data[pos - 1]);
+			data[pos++] = 0; AttToJson(data[pos - 1]);
 		}
 	}
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	numVertices = mesh->mNumVertices;
+
+	std::string aux = _vboValue[0]["VBO"].asCString();
+	if (aux.size() > 1) aux.pop_back();
+	_vboValue[0]["VBO"] = aux + ")";
+	
+	WriteJson();
+
 
 	aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
 	vec centroid = aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
@@ -159,4 +173,38 @@ void Mesh::Clean() {
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteBuffers(1, &VAO);
+}
+
+bool Mesh::GenerateMetaFile(Json::Value& value, int pos)
+{
+		//value[pos][JSON_TAG_MATERIAL_INDEX] =
+		//value[pos][JSON_TAG_NUM_VERTICES] =
+		//value[pos][JSON_TAG_NUM_FACES] =
+		//value[pos][JSON_TAG_NUM_INDICES] =
+
+		return true;
+}
+bool Mesh::AttToJson(float val)
+{
+	_vboValue[0]["VBO"] = _vboValue[0]["VBO"].asCString() + std::to_string(val) + ",";
+
+	return true;
+}
+bool Mesh::WriteJson()
+{
+	_vboValue[0][JSON_TAG_NAME] = _name;
+	_vboValue[0][JSON_TAG_UUID] = _uuid;
+	_vboValue[0][JSON_TAG_MATERIAL_INDEX] = matIndex;
+	_vboValue[0][JSON_TAG_NUM_VERTICES] = numVertices;
+	_vboValue[0][JSON_TAG_NUM_FACES] = numFaces;
+	_vboValue[0][JSON_TAG_NUM_INDICES] = numIndices;
+
+	sprintf(_filePath, "%s%s%s", DEFAULT_MESH_PATH, _name, DEFAULT_MESH_EXT);
+	Json::StyledWriter wr;
+	std::ofstream ofs(_filePath, std::ios_base::binary);
+	std::string st = wr.write(_vboValue);
+	ofs.write(st.c_str(), st.size());
+	ofs.close();
+
+	return true;
 }

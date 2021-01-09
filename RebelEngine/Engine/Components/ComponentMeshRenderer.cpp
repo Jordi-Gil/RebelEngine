@@ -24,6 +24,9 @@ void ComponentMeshRenderer::Draw(){
 
 bool ComponentMeshRenderer::ToJson(Json::Value& value, int pos) 
 {
-	//TODO: Mesh to json
+	value[pos][JSON_TAG_UUID] = _uuid;
+	value[pos][JSON_TAG_MESH_PATH] = _mesh->GetFilePath();
+
 	return true;
 }
+

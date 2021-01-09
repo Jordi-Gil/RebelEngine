@@ -52,12 +52,11 @@ void ComponentCamera::SetZFar(float _zfar) {
 
 bool ComponentCamera::ToJson(Json::Value& value, int pos) 
 {
-	//TODO: SE GUARDA FRUSTRUM?
 	Component::ToJson(value, pos);
 	value[pos][JSON_TAG_BACKGROUND_TYPE] = (int)back_type;
 	value[pos][JSON_TAG_COLOR] = color.ToString();
 	value[pos][JSON_TAG_ZNEAR] = znear;
 	value[pos][JSON_TAG_ZFAR] = zfar;
-
+	//TODO: position, front, up, horitzontalfov, aspect ratio
 	return true;
 }

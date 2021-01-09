@@ -5,7 +5,8 @@
 
 #include "Geometry/AABB.h"
 #include "Geometry/OBB.h"
-
+#include "json/json.h"
+#include "Utils/RUUID.h"
 struct TextureInformation;
 
 class Mesh {
@@ -20,6 +21,7 @@ public:
 	{
 		aabb.SetNegativeInfinity();
 		obb.SetNegativeInfinity();
+		_uuid = RUUID::generate_uuid_v4();
 	}
 
 	Mesh(Mesh&& _mesh) {
@@ -33,6 +35,7 @@ public:
 		numFaces = _mesh.numFaces;
 		aabb = aabb;
 		obb = obb;
+		_uuid = RUUID::generate_uuid_v4();
 	}
 
 	~Mesh() {}
@@ -47,6 +50,11 @@ public:
 
 	uint32_t GetMorton() const { return mortonCode; }
 
+	bool GenerateMetaFile(Json::Value& value, int pos);
+	bool AttToJson(float val);
+	bool WriteJson();
+	void SetName(const char* name) { _name = strdup(name); }
+	const std::string& GetFilePath() { return _filePath; }
 private:
 
 	unsigned int VBO;
@@ -57,8 +65,11 @@ private:
 	unsigned int numIndices;
 	unsigned int numFaces;
 
+	Json::Value _vboValue;
 	uint32_t mortonCode;
-
+	char* _name;
+	char _filePath[1024];
+	std::string _uuid;
 	AABB aabb;
 	OBB obb;
 };

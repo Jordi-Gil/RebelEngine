@@ -107,7 +107,7 @@ bool ModuleScene::Save()
 	Json::Value value;
 	this->ToJson(value,0);
 	Json::StyledWriter wr;
-	std::ofstream ofs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME);
+	std::ofstream ofs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME DEFAULT_SCENE_EXT);
 	std::string st = wr.write(value);
 	ofs.write(st.c_str(), st.size());
 
