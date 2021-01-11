@@ -54,31 +54,31 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i) {
 		//Position
-		data[pos++] = mesh->mVertices[i].x; jValue.append(data[pos - 1]);
+		data[pos++] = mesh->mVertices[i].x; jValue.append(mesh->mVertices[i].x);
 		if (mesh->mVertices[i].x > max[0]) max[0] = mesh->mVertices[i].x;
 		if (mesh->mVertices[i].x < min[0]) min[0] = mesh->mVertices[i].x;
 
-		data[pos++] = mesh->mVertices[i].y; jValue.append(data[pos - 1]);
+		data[pos++] = mesh->mVertices[i].y; jValue.append(mesh->mVertices[i].y);
 		if (mesh->mVertices[i].y > max[1]) max[1] = mesh->mVertices[i].y;
 		if (mesh->mVertices[i].y < min[1]) min[1] = mesh->mVertices[i].y;
 
-		data[pos++] = mesh->mVertices[i].z; jValue.append(data[pos - 1]);
+		data[pos++] = mesh->mVertices[i].z; jValue.append(mesh->mVertices[i].z);
 		if (mesh->mVertices[i].z > max[2]) max[2] = mesh->mVertices[i].z;
 		if (mesh->mVertices[i].z < min[2]) min[2] = mesh->mVertices[i].z;
 
 		//Normal
-		data[pos++] = mesh->mNormals[i].x; jValue.append(data[pos - 1]);
-		data[pos++] = mesh->mNormals[i].y; jValue.append(data[pos - 1]);
-		data[pos++] = mesh->mNormals[i].z; jValue.append(data[pos - 1]);
+		data[pos++] = mesh->mNormals[i].x; jValue.append(mesh->mNormals[i].x);
+		data[pos++] = mesh->mNormals[i].y; jValue.append(mesh->mNormals[i].y);
+		data[pos++] = mesh->mNormals[i].z; jValue.append(mesh->mNormals[i].z);
 
 		//UV
 		if (mesh->mTextureCoords[0]) {
-			data[pos++] = mesh->mTextureCoords[0][i].x; jValue.append(data[pos - 1]);
-			data[pos++] = mesh->mTextureCoords[0][i].y; jValue.append(data[pos - 1]);
+			data[pos++] = mesh->mTextureCoords[0][i].x; jValue.append(mesh->mTextureCoords[0][i].x);
+			data[pos++] = mesh->mTextureCoords[0][i].y; jValue.append(mesh->mTextureCoords[0][i].y);
 		}
 		else {
-			data[pos++] = 0; jValue.append(data[pos - 1]);
-			data[pos++] = 0; jValue.append(data[pos - 1]);
+			data[pos++] = 0; jValue.append(0.0f);
+			data[pos++] = 0; jValue.append(0.0f);
 		}
 	}
 
