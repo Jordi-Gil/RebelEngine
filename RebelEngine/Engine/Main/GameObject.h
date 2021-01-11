@@ -14,7 +14,7 @@ class GameObject {
 
 public:
 
-	GameObject() {}
+	GameObject();
 	GameObject(const char* name);
 	GameObject(GameObject&& go);
 	GameObject(const Json::Value& value);

@@ -1,0 +1,118 @@
+[
+   {
+      "Name" : "Scene_default",
+      "Root" : [
+         {
+            "Components" : [
+               {
+                  "Active" : false,
+                  "Owner" : "aa0a2e67-e4ab-40fb-a25a-300aae4ccb27",
+                  "Position" : [ 0.0, 0.0, 0.0 ],
+                  "Rotation" : [ 0.0, 0.0, 0.0 ],
+                  "Scale" : [ 1.0, 1.0, 1.0 ],
+                  "Type" : 1,
+                  "UUID" : "14784fc6-99ea-424f-aaf9-78b6c4254d41"
+               }
+            ],
+            "GameObjects" : [
+               {
+                  "Components" : [
+                     {
+                        "Active" : false,
+                        "Owner" : "021e454a-53b7-4813-bdac-6df538ee7f2b",
+                        "Position" : [ 0.0, 0.0, 0.0 ],
+                        "Rotation" : [ 0.0, 0.0, 0.0 ],
+                        "Scale" : [ 1.0, 1.0, 1.0 ],
+                        "Type" : 1,
+                        "UUID" : "16bff4e2-c0df-4cda-baf8-4ccf8839387e"
+                     },
+                     {
+                        "Active" : false,
+                        "AspectRatio" : 1.7777777910232544,
+                        "Background_type" : 0,
+                        "Color" : [ 0.10000000149011612, 0.10000000149011612, 0.10000000149011612, 1.0 ],
+                        "FOVHorizontal" : 1.5707963705062866,
+                        "Front" : [ -0.0, -0.0, -1.0 ],
+                        "Owner" : "021e454a-53b7-4813-bdac-6df538ee7f2b",
+                        "Position" : [ 0.0, 4.0, 10.0 ],
+                        "Type" : 3,
+                        "UP" : [ 0.0, 1.0, 0.0 ],
+                        "UUID" : "fec9f64f-5898-4fd3-a238-8dd92f6bea4c",
+                        "ZFar" : 1000.0,
+                        "ZNear" : 0.0099999997764825821
+                     }
+                  ],
+                  "GameObjects" : null,
+                  "Name" : "Camera",
+                  "UUID" : "021e454a-53b7-4813-bdac-6df538ee7f2b"
+               },
+               {
+                  "Components" : [
+                     {
+                        "Active" : false,
+                        "Owner" : "818f7b37-abb0-42b4-af43-823825f23989",
+                        "Position" : [ 0.0, 0.0, 0.0 ],
+                        "Rotation" : [ 0.0, 0.0, 0.0 ],
+                        "Scale" : [ 1.0, 1.0, 1.0 ],
+                        "Type" : 1,
+                        "UUID" : "98474d7d-e4f7-4d61-853e-5b4d02e0bfd7"
+                     }
+                  ],
+                  "GameObjects" : [
+                     {
+                        "Components" : [
+                           {
+                              "Active" : false,
+                              "Owner" : "79adedb7-bdc4-41b8-9376-51052e58f20c",
+                              "Position" : [ 0.0, 0.0, 0.0 ],
+                              "Rotation" : [ 0.0, -1.6292067812173627e-05, 100.0 ],
+                              "Scale" : [ 100.0, 100.0, 100.0 ],
+                              "Type" : 1,
+                              "UUID" : "6173af8d-f624-49bf-83df-036721eadb03"
+                           },
+                           {
+                              "Active" : false,
+                              "MeshPath" : "./Assets/Models/Baker_house.mesh",
+                              "Owner" : "79adedb7-bdc4-41b8-9376-51052e58f20c",
+                              "Type" : 2,
+                              "UUID" : "463193eb-d164-449d-88b9-a928b615c2f6"
+                           }
+                        ],
+                        "GameObjects" : null,
+                        "Name" : "Baker_house",
+                        "UUID" : "79adedb7-bdc4-41b8-9376-51052e58f20c"
+                     },
+                     {
+                        "Components" : [
+                           {
+                              "Active" : false,
+                              "Owner" : "7718088a-962d-4420-9112-293bc194b64d",
+                              "Position" : [ 0.0, 0.0, 0.0 ],
+                              "Rotation" : [ 0.0, -1.6292067812173627e-05, 100.0 ],
+                              "Scale" : [ 100.0, 100.0, 100.0 ],
+                              "Type" : 1,
+                              "UUID" : "40c56462-4b0f-490c-aff9-3e2882821313"
+                           },
+                           {
+                              "Active" : false,
+                              "MeshPath" : "./Assets/Models/Chimney.mesh",
+                              "Owner" : "7718088a-962d-4420-9112-293bc194b64d",
+                              "Type" : 2,
+                              "UUID" : "cbaa7dcd-be61-47a1-8689-e15fd5c24e04"
+                           }
+                        ],
+                        "GameObjects" : null,
+                        "Name" : "Chimney",
+                        "UUID" : "7718088a-962d-4420-9112-293bc194b64d"
+                     }
+                  ],
+                  "Name" : "BakerHouse",
+                  "UUID" : "818f7b37-abb0-42b4-af43-823825f23989"
+               }
+            ],
+            "Name" : "Hierarchy",
+            "UUID" : "aa0a2e67-e4ab-40fb-a25a-300aae4ccb27"
+         }
+      ]
+   }
+]

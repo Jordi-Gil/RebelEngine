@@ -25,6 +25,7 @@ public:
 
 	void InsertOrdered(GameObject& go);
 	bool Save();
+	bool Load();
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);
 private:

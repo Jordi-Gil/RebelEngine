@@ -7,6 +7,7 @@ class ComponentMeshRenderer : public Component {
 public:
 
 	ComponentMeshRenderer();
+	ComponentMeshRenderer(const Json::Value& value);
 	~ComponentMeshRenderer();
 
 	void Enable() override {}
@@ -20,9 +21,9 @@ public:
 	type_component GetType() const override { return _type; }
 	uint32_t GetMorton() const { return _mesh->GetMorton(); }
 	bool ToJson(Json::Value& value, int pos);
+	bool FromJson(const Json::Value& value);
 
 private:
-	std::string _meshPath;
 	Mesh* _mesh = nullptr;
 };
 

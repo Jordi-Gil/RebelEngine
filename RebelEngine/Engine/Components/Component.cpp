@@ -30,7 +30,7 @@ bool Component::FromJson(const Json::Value& value)
 {
 	if (!value.isNull()) {
 		_active = value[JSON_TAG_ACTIVE].asBool();
-		_type = 
+		_type = type_component::NONE;
 	}
 	else {
 	//TODO: JSON ERROR

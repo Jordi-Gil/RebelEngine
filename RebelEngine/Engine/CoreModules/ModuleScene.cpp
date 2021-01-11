@@ -25,6 +25,7 @@ ModuleScene::ModuleScene(const Json::Value& value) {
 }
 
 bool ModuleScene::Start() {
+	Load();
 	return true;
 }
 
@@ -117,6 +118,24 @@ bool ModuleScene::Save()
 	return true;
 }
 
+bool ModuleScene::Load()
+{
+	std::ifstream ifs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME DEFAULT_SCENE_EXT);
+	Json::CharReaderBuilder reader;
+	Json::Value obj;
+	std::string error;
+
+	if (!Json::parseFromStream(reader, ifs, &obj, &error))
+	{
+		LOG(_ERROR, "Error parsing file: %s", error);
+		return false;
+	}
+
+	FromJson(obj[0]);
+
+	return true;
+}
+
 bool ModuleScene::ToJson(Json::Value& value, int pos)
 {
 	Json::Value childrenList;
@@ -129,10 +148,10 @@ bool ModuleScene::ToJson(Json::Value& value, int pos)
 
 bool ModuleScene::FromJson(const Json::Value& value) {
 
-	Json::Value root = value["Root"];
+	Json::Value root = value[JSON_TAG_ROOT];
 
 	if (!root.isNull()) {
-		_root = std::make_unique<GameObject>(value);
+		_root = std::make_unique<GameObject>(root[0]);
 	}
 	else {
 		//TODO: JSON ERROR

@@ -4,8 +4,16 @@
 
 #include "CoreModules/ModuleModel.h"
 
+#include <iostream>
+#include <fstream>
+
 ComponentMeshRenderer::ComponentMeshRenderer() {
 	_type = type_component::MESHRENDERER;
+}
+
+ComponentMeshRenderer::ComponentMeshRenderer(const Json::Value& value) {
+	_type = type_component::MESHRENDERER;
+	this->FromJson(value);
 }
 
 ComponentMeshRenderer::~ComponentMeshRenderer() {
@@ -24,9 +32,36 @@ void ComponentMeshRenderer::Draw(){
 
 bool ComponentMeshRenderer::ToJson(Json::Value& value, int pos) 
 {
+	Component::ToJson(value, pos);
 	value[pos][JSON_TAG_UUID] = _uuid;
 	value[pos][JSON_TAG_MESH_PATH] = _mesh->GetFilePath();
 
+	return true;
+}
+
+bool ComponentMeshRenderer::FromJson(const Json::Value& value) 
+{
+	if(!value.isNull())
+	{
+		std::ifstream ifs(value[JSON_TAG_MESH_PATH].asString());
+		Json::CharReaderBuilder reader;
+		Json::Value obj;
+		std::string error;
+
+		if (!Json::parseFromStream(reader, ifs, &obj, &error)) 
+		{
+			LOG(_ERROR, "Error parsing file: %s", error);
+			return false;
+		}
+
+		_mesh = new Mesh();
+		_mesh->FromJson(obj[0]);
+		//todo: cargar el filepath
+	}
+	else 
+	{
+		return false;
+	}
 	return true;
 }
 

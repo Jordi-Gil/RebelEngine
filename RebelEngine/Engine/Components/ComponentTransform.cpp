@@ -3,8 +3,9 @@
 #include "Main/GameObject.h"
 
 #include "Utils/debugdraw.h"
+#include "Utils/Utils.h"
 
-#include <assimp/cimport.h>
+#include "assimp/cimport.h"
 
 ComponentTransform::ComponentTransform() {
 	_type = type_component::TRANSFORM;
@@ -41,6 +42,12 @@ ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
+}
+
+ComponentTransform::ComponentTransform(const Json::Value& value) 
+{
+	_type = type_component::TRANSFORM;
+	this->FromJson(value);
 }
 
 void ComponentTransform::SetTransform(const float3 position, const float3 rotation, const float3 scale) {
@@ -97,13 +104,37 @@ void ComponentTransform::SetOwner(GameObject* go) {
 bool ComponentTransform::ToJson(Json::Value& value, int pos) {
 
 	Component::ToJson(value, pos);
-	value[pos][JSON_TAG_POSITION] = _position.ToString();
-	value[pos][JSON_TAG_ROTATION] = _rotation.ToString();
-	value[pos][JSON_TAG_SCALE] = _scale.ToString();
-	value[pos][JSON_TAG_LOCAL_MATRIX] = _localMatrix.ToString();
-	value[pos][JSON_TAG_GLOBAL_MATRIX] = _globalMatrix.ToString();
-	value[pos][JSON_TAG_ROTATION_QUAT] = _rotationQuat.ToString();
+	Json::Value jValue(Json::arrayValue);
+
+	jValue.append(_position[0]); jValue.append(_position[1]); jValue.append(_position[2]);
+	value[pos][JSON_TAG_POSITION] = jValue;	jValue.clear();
+
+	jValue.append(_rotation[0]); jValue.append(_rotation[1]); jValue.append(_rotation[2]);
+	value[pos][JSON_TAG_ROTATION] = jValue; jValue.clear();
+
+	jValue.append(_scale[0]); jValue.append(_scale[1]); jValue.append(_scale[2]);
+	value[pos][JSON_TAG_SCALE] = jValue; jValue.clear();
 
 	return true;
 
+}
+
+bool ComponentTransform::FromJson(const Json::Value& value) 
+{
+
+	if(!value.isNull())
+	{
+		_position = float3(value[JSON_TAG_POSITION][0].asFloat(), value[JSON_TAG_POSITION][1].asFloat(), value[JSON_TAG_POSITION][2].asFloat());
+		_rotation = float3(value[JSON_TAG_ROTATION][0].asFloat(), value[JSON_TAG_ROTATION][1].asFloat(), value[JSON_TAG_ROTATION][2].asFloat());
+		_scale = float3(value[JSON_TAG_SCALE][0].asFloat(), value[JSON_TAG_SCALE][1].asFloat(), value[JSON_TAG_SCALE][2].asFloat());
+
+		_rotationQuat = Quat::FromEulerXYZ(DegToRad(_rotation.x), DegToRad(_rotation.y), DegToRad(_rotation.z));
+		_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
+	}
+	else 
+	{
+		//TODO:JSON ERROR
+		return false;
+	}
+	return true;
 }

@@ -50,11 +50,11 @@ public:
 
 	uint32_t GetMorton() const { return mortonCode; }
 
-	bool GenerateMetaFile(Json::Value& value, int pos);
-	bool AttToJson(float val);
-	bool WriteJson();
+	bool FromJson(const Json::Value& value);
+	bool WriteJsonFile();
 	void SetName(const char* name) { _name = strdup(name); }
-	const std::string& GetFilePath() { return _filePath; }
+	const char* GetFilePath() { return _filePath; }
+
 private:
 
 	unsigned int VBO;
@@ -72,5 +72,10 @@ private:
 	std::string _uuid;
 	AABB aabb;
 	OBB obb;
+
+private:
+
+	bool LoadVBOFromJson(const Json::Value& value);
+	bool LoadEBOFromJson(const Json::Value& value);
 };
 

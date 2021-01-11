@@ -8,6 +8,9 @@
 #include "CoreModules/ModuleResourceManagement.h"
 #include "Utils/RUUID.h"
 
+GameObject::GameObject() {
+	_uuid = RUUID::generate_uuid_v4();
+}
 GameObject::GameObject(const char* name) {
 	_name = _strdup(name);
 	_uuid = RUUID::generate_uuid_v4();
@@ -174,32 +177,34 @@ bool GameObject::FromJson(const Json::Value& value)
 	if (!value.isNull()) 
 	{
 		_name = _strdup(value[JSON_TAG_NAME].asCString());
-		_uuid = _strdup(value[JSON_TAG_UUID].asCString());
+		_uuid = value[JSON_TAG_UUID].asCString();
 		_active = value[JSON_TAG_ACTIVE].asBool();
-	}
-	else {
 
-		for(Json::Value go:value[JSON_TAG_GAMEOBJECTS])
+		for (Json::Value jsonGo : value[JSON_TAG_GAMEOBJECTS])
 		{
-			std::unique_ptr<GameObject> go = std::make_unique<GameObject>(value);
+			std::unique_ptr<GameObject> go = std::make_unique<GameObject>(jsonGo);
 			go->SetParent(this);
 			AddChild(std::move(go));
 		}
 
-		for (Json::Value comp : value[JSON_TAG_COMPONENTS])
+		for (Json::Value jsonComp : value[JSON_TAG_COMPONENTS])
 		{
-			type_component type = (type_component) comp[JSON_TAG_TYPE].asInt();
+			type_component type = (type_component)jsonComp[JSON_TAG_TYPE].asInt();
 			std::unique_ptr<Component> comp;
 			switch (type)
 			{
-				case type_component::NONE: comp = std::make_unique<Component>(value);  break;
-				case type_component::CAMERA: comp = std::make_unique<ComponentCamera>(value); break;
-				case type_component::MESHRENDERER:  comp = std::make_unique<ComponentCamera>(value); break;
-				case type_component::TRANSFORM: comp = std::make_unique<ComponentTransform>(value); break;
+				case type_component::NONE: comp = std::make_unique<Component>(jsonComp);  break;
+				case type_component::CAMERA: comp = std::make_unique<ComponentCamera>(jsonComp); break;
+				case type_component::MESHRENDERER:  comp = std::make_unique<ComponentMeshRenderer>(jsonComp); break;
+				case type_component::TRANSFORM: comp = std::make_unique<ComponentTransform>(jsonComp); break;
 			}
 			comp->SetOwner(this);
+			if (comp->GetType() == type_component::TRANSFORM) static_cast<ComponentTransform*>(comp.get())->UpdateGlobalMatrix();
+			
 			AddComponent(std::move(comp));
 		}
+	}
+	else {
 		//TODO: JSON ERROR
 	}
 	return true;

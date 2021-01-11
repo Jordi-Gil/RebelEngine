@@ -16,6 +16,7 @@ class ComponentCamera : public Component {
 public:
 
 	ComponentCamera();
+	ComponentCamera(const Json::Value& value);
 
 	void Translate(vec _offset);
 
@@ -52,6 +53,7 @@ public:
 	}
 	
 	bool ToJson(Json::Value& value, int pos);
+	bool FromJson(const Json::Value& value);
 
 private:
 
