@@ -158,7 +158,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\AccelerationDataStructures\BVH.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
     <ClInclude Include="Engine\Components\ComponentCamera.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
@@ -302,7 +301,6 @@
     <ClInclude Include="Engine\Main\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\AccelerationDataStructures\BVH.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
     <ClCompile Include="Engine\Components\Component.cpp" />
     <ClCompile Include="Engine\Components\ComponentCamera.cpp" />

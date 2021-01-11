@@ -25,7 +25,6 @@
     <ClCompile Include="Engine\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\GUIs\GUIHierarchy.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
-    <ClCompile Include="Engine\AccelerationDataStructures\BVH.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
     <ClCompile Include="Engine\Main\Skybox.cpp" />
     <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
@@ -157,7 +156,6 @@
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\GUIs\GUIHierarchy.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
-    <ClInclude Include="Engine\AccelerationDataStructures\BVH.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
     <ClInclude Include="Engine\Main\Skybox.h" />
     <ClInclude Include="Engine\Components\ComponentCamera.h" />
