@@ -2,14 +2,18 @@
 
 #include "Utils/Timer.h"
 #include "Utils/Globals.h"
+#include "Utils/debugdraw.h"
 
 #include "Components/ComponentMeshRenderer.h"
+
 
 #include <string>
 #include <omp.h>
 
 #include <stack>
 #include <queue>
+
+#include <random>
 
 #include <iomanip>
 
@@ -124,34 +128,117 @@ void computeBoundingBox(BVHNode* root) {
         queue.pop();
         stack.push(root);
 
-        if (root->left) queue.push(root->left);
-        if (root->right) queue.push(root->right);
+        if (root->left) 
+            queue.push(root->left);
+        if (root->right) 
+            queue.push(root->right);
     }
 
     while (!stack.empty()) {
 
         root = stack.top();
 
-        
         if(!root->is_leaf) { //Internal node
 
-            root->box = root->left->box;
-            AABB right_aabb = root->right->box;
-
-            root->box.Enclose(right_aabb);
-
+            root->aab_box = root->left->aab_box;
+            AABB right_aabb = root->right->aab_box;
+            root->aab_box.Enclose(right_aabb);
         }
         stack.pop();
     }
 }
 
-BVH::~BVH() {
-    //if (_root) {
-    //    delete _root;
-    //    _root = nullptr;
-    //}
+BVHNode* BVH::GenerateBVH(std::vector<GameObject*>& orderedGameObjects, unsigned int size) {
+
+    BVHNode* leaf_nodes = new BVHNode[size];
+    BVHNode* internal_nodes = new BVHNode[size - 1];
+
+    MSTimer constructionTime; constructionTime.start();
+
+    for (unsigned int i = 0; i < size; i++) {
+        leaf_nodes[i].is_leaf = true;
+        AABB box; orderedGameObjects[i]->GetAABB(box);
+        //OBB obb = box.Transform(orderedGameObjects[i]->GetGlobalMatrix());
+        leaf_nodes[i].aab_box = box;
+        leaf_nodes[i].name = orderedGameObjects[i]->GetName();
+        leaf_nodes[i].go = new GameObject(*orderedGameObjects[i]);
+    }
+
+    //int maxthreads = omp_get_max_threads();
+    //omp_set_num_threads(maxthreads);
+    //#pragma omp parallel for schedule(static, maxthreads)
+    for (unsigned int idx = 0; idx < size - 1; idx++) {
+
+        //determine range
+        int2 range = determineRange(orderedGameObjects, idx, size - 1);
+
+        unsigned int first = range.x;
+        unsigned int last = range.y;
+
+        //find partition point
+        unsigned int split = findSplit(orderedGameObjects, first, last);
+
+        BVHNode* childA;
+        BVHNode* childB;
+
+        if (split == -1) {
+            split = (first + last) >> 1;
+            ++last;
+        }
+
+        if (split == first) {
+            childA = &leaf_nodes[split];
+        }
+        else {
+            childA = &internal_nodes[split];
+            std::string aux("internal+" + std::to_string(split));
+            childA->name = _strdup(aux.c_str());
+        }
+
+        if (split + 1 == last) {
+            childB = &leaf_nodes[split + 1];
+        }
+        else {
+            childB = &internal_nodes[split + 1];
+            std::string aux("internal+" + std::to_string(split + 1));
+            childB->name = _strdup(aux.c_str());
+        }
+
+        //childA->parent = &internal_nodes[idx];
+        //childB->parent = &internal_nodes[idx];
+
+        internal_nodes[idx].left = childA;
+        internal_nodes[idx].right = childB;
+
+
+    }
+
+    Uint32 time = constructionTime.read(); LOG(_INFO, "Parallel BVH Construction time: %d", time);
+
+    internal_nodes[0].name = "root";
+    computeBoundingBox(&internal_nodes[0]);
+
+    return &internal_nodes[0];
 }
 
+void BVH::DeleteRec(BVHNode* node) {
+    if (node->left) DeleteRec(node->left);
+    if (node->right) DeleteRec(node->right);
+    if (node->is_leaf) {
+        delete node->go;
+        node->go = nullptr;
+    }
+    delete[] node;
+}
+
+BVH::~BVH() {
+    /*if (_root) {
+        DeleteRec(_root);
+        _root = nullptr;
+    }*/
+}
+
+#ifdef _DEBUG
 // Helper function to print branches of the binary tree
 void showTrunks(Trunk* p, std::ostringstream& oss)
 {
@@ -201,75 +288,15 @@ void BVH::Inorder(BVHNode* root, Trunk* prev, bool isLeft)
     delete trunk;
     trunk = nullptr;
 }
+#endif
 
-BVH::BVH(std::vector<GameObject*>& orderedGameObjects){
-    _root = GenerateBVH(orderedGameObjects, orderedGameObjects.size());
-    computeBoundingBox(_root);
-}
+BVH::BVH(){}
 
-BVHNode* BVH::GenerateBVH(std::vector<GameObject *>& orderedGameObjects, unsigned int size) {
+void BVH::DebugBVH(BVHNode *node) {
 
-    BVHNode* leaf_nodes = new BVHNode[size];
-    BVHNode* internal_nodes = new BVHNode[size-1];
+    dd::aabb(node->aab_box.minPoint, node->aab_box.maxPoint, dd::colors::White);
 
-    MSTimer constructionTime; constructionTime.start();
+    if (node->left) DebugBVH(node->left);
+    if (node->right) DebugBVH(node->right);
 
-    for (unsigned int i = 0; i < size; i++) {
-        leaf_nodes[i].is_leaf = true;
-        orderedGameObjects[i]->GetAABB(leaf_nodes[i].box);
-        leaf_nodes[i].name = orderedGameObjects[i]->GetName();
-    }
-
-    //int maxthreads = omp_get_max_threads();
-    //omp_set_num_threads(maxthreads);
-    //#pragma omp parallel for schedule(static, maxthreads)
-    for (unsigned int idx = 0; idx < size - 1; idx++) {
-
-        //determine range
-        int2 range = determineRange(orderedGameObjects, idx, size - 1);
-
-        unsigned int first = range.x;
-        unsigned int last = range.y;
-
-        //find partition point
-        unsigned int split = findSplit(orderedGameObjects, first, last);
-
-        BVHNode* childA;
-        BVHNode* childB;
-
-        if (split == -1) {
-            split = (first + last) >> 1;
-            ++last;
-        }
-
-        if (split == first) {
-            childA = &leaf_nodes[split];
-        }
-        else {
-            childA = &internal_nodes[split];
-            std::string aux("internal+" + std::to_string(split));
-            childA->name = _strdup(aux.c_str());
-        }
-
-        if (split + 1 == last) {
-            childB = &leaf_nodes[split + 1];
-        }
-        else {
-            childB = &internal_nodes[split + 1];
-            std::string aux("internal+" + std::to_string(split+1));
-            childB->name = _strdup(aux.c_str());
-        }
-
-        childA->parent = &internal_nodes[idx];
-        childB->parent = &internal_nodes[idx];
-
-        internal_nodes[idx].left = childA;
-        internal_nodes[idx].right = childB;
-        
-
-    }
-
-    Uint32 time = constructionTime.read(); LOG(_INFO, "Parallel BVH Construction time: %d", time);
-
-    return &internal_nodes[0];
 }

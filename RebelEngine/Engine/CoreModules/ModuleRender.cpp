@@ -81,10 +81,10 @@ bool ModuleRender::Init() {
 	glFrontFace(GL_CCW); // Front faces will be counter clockwise
 
 #ifdef  _DEBUG
-	glEnable(GL_DEBUG_OUTPUT);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	glDebugMessageCallback(&OurOpenGLErrorFunction, nullptr);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
+	//glEnable(GL_DEBUG_OUTPUT);
+	//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	//glDebugMessageCallback(&OurOpenGLErrorFunction, nullptr);
+	//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif //  _DEBUG
 
 	SDL_GL_SetSwapInterval(VSYNC);
@@ -148,12 +148,13 @@ void ModuleRender::Draw(float width, float height) {
 	}
 
 	glViewport(0, 0, width, height);
-	//glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
+	glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
 
-	App->scene->_skybox->Draw();
+	//App->scene->_skybox->Draw();
 
 	App->debugDraw->Draw(view, projection, width, height);
 	App->scene->Draw();

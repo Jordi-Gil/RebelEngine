@@ -4,23 +4,22 @@
 
 #include "Geometry/AABB.h"
 
+#include <memory>
+
+#define random() ((double) rand() / (RAND_MAX))
+
 enum class SplitMethod { SAH, HLBVH, Middle, EqualCounts };
 
 class BVHNode {
 
 public:
 
-	BVHNode* parent = nullptr;
+	bool is_leaf = false;
 	BVHNode* left = nullptr;
 	BVHNode* right = nullptr;
-	//GameObject* go = nullptr;
-
-	AABB box;
-	bool is_leaf = false;
-
-//#ifdef _DEBUG
-	const char* name = "";
-//#endif // _DEBUG
+	GameObject* go = nullptr;
+	AABB aab_box;
+	std::string name;
 
 };
 
@@ -44,14 +43,20 @@ class BVH{
 
 public:
 
-	BVH(std::vector<GameObject*>& orderedGameObjects);
+	BVH();
 	~BVH();
+
+	BVHNode*  GenerateBVH(std::vector<GameObject *>& orderedGameObjects, unsigned int size);
+
+	void DebugBVH(BVHNode* node);
+	
 	void Print() { Inorder(_root, nullptr, false); }
+
+	BVHNode* _root;
 
 private:
 
-	BVHNode* GenerateBVH(std::vector<GameObject *>& orderedGameObjects, unsigned int size);
-	BVHNode* _root = nullptr;
+	void DeleteRec(BVHNode* node);
 
 #pragma region debug_functions
 

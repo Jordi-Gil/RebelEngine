@@ -5,6 +5,7 @@
 #include "Utils/debugdraw.h"
 
 #include <Geometry/Frustum.h>
+#include "Geometry/Plane.h"
 
 enum class background_type {
 	COLOR,
@@ -17,7 +18,7 @@ public:
 
 	ComponentCamera();
 
-	void Translate(vec _offset);
+	void Translate(vec offset);
 
 	void SetHorizontalFov(float hFov, float ar);
 	void SetVerticalFov(float vFov, float aspectRatio);
@@ -26,38 +27,49 @@ public:
 	void SetZFar(float zfar);
 
 	void SetPosition(float x, float y, float z);
-	void SetPosition(vec _pos);
+	void SetPosition(vec pos);
+	void SetFront(vec front);
+	void SetUp(vec up);
 
-	void SetFront(vec _front);
-	void SetUp(vec _up);
+	const float GetHorizontalFov() const { return _frustum.HorizontalFov(); }
+	const float GetVerticalFov() const { return _frustum.VerticalFov(); }
+	const float GetAspectRatio() const { return _frustum.AspectRatio(); }
 
-	const float GetHorizontalFov() const { return frustum.HorizontalFov(); }
-	const float GetVerticalFov() const { return frustum.VerticalFov(); }
-	const float GetAspectRatio() const { return frustum.AspectRatio(); }
+	const float3 GetFront() const { return _frustum.Front(); }
+	const float3 GetUp() const { return _frustum.Up(); }
+	const float3 GetRight() const { return _frustum.WorldRight(); }
 
-	const float3 GetFront() const { return frustum.Front(); }
-	const float3 GetUp() const { return frustum.Up(); }
-	const float3 GetRight() const { return frustum.WorldRight(); }
+	const float GetZNear() const { return _frustum.NearPlaneDistance(); }
+	const float GetZFar() const { return _frustum.FarPlaneDistance(); }
 
-	const float GetZNear() const { return frustum.NearPlaneDistance(); }
-	const float GetZFar() const { return frustum.FarPlaneDistance(); }
+	const float3 GetPosition() const { return _frustum.Pos(); }
 
-	const float3 GetPosition() const { return frustum.Pos(); }
-
-	float4x4 GetProjectionMatrix() const { return frustum.ProjectionMatrix(); }
-	float4x4 GetViewMatrix() const { return frustum.ViewMatrix(); }
+	float4x4 GetProjectionMatrix() const { return _frustum.ProjectionMatrix(); }
+	float4x4 GetViewMatrix() const { return _frustum.ViewMatrix(); }
 
 	float4x4 GetOpenGLProjectionMatrix() const;
 	float4x4 GetOpenGLViewMatrix() const;
+
+	bool Intersects(const AABB& box);
+	float Intersects(AABB& box, Plane& plane);
 
 	void Draw() override;
 	
 private:
 
-	Frustum frustum;
-	background_type back_type = background_type::COLOR;
-	float4 color = float4(0.1f, 0.1f, 0.1f, 1.0f);
+	void GenerateFrustumPlanes();
 
-	float znear = 0.01f;
-	float zfar = 100.0f;
+private:
+
+	Frustum _frustum;
+	background_type _back_type = background_type::COLOR;
+	float4 _color = float4(0.1f, 0.1f, 0.1f, 1.0f);
+
+	float _znear = 10.0f;
+	float _zfar = 100.0f;
+
+	bool _dity_planes = true;
+
+	std::vector<Plane> _planes;
+
 };

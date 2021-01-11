@@ -219,6 +219,8 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 
 					std::unique_ptr<GameObject> go_mesh = App->scene->_poolGameObjects.get();
 					go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
+					go_mesh->SetParent(go.get());
+
 					std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 					std::unique_ptr <ComponentTransform> transform_mesh = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
 
@@ -234,7 +236,6 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 
 					go_mesh->AddComponent(std::move(transform_mesh));
 					go_mesh->AddComponent(std::move(renderer_mesh), GO_MASK_MESH);
-					go_mesh->SetParent(go.get());
 
 					go->AddChild(std::move(go_mesh));
 				}

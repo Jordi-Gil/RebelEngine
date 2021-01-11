@@ -22,6 +22,7 @@ ComponentTransform::ComponentTransform(const float3 position, const float3 rotat
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
+	UpdateGlobalMatrix();
 }
 
 ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
@@ -41,6 +42,8 @@ ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
+	UpdateGlobalMatrix();
+
 }
 
 void ComponentTransform::SetTransform(const float3 position, const float3 rotation, const float3 scale) {
@@ -54,6 +57,7 @@ void ComponentTransform::SetTransform(const float3 position, const float3 rotati
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
 	UpdateGlobalMatrix();
+
 }
 
 void ComponentTransform::SetTransform(const aiMatrix4x4& matrix) {
@@ -87,7 +91,7 @@ void ComponentTransform::UpdateGlobalMatrix() {
 
 void ComponentTransform::Draw() {
 	if (_owner->IsSelected()) { 
-		dd::axisTriad(_localMatrix, 0.1f, 2.0f); 
+		dd::axisTriad(_globalMatrix, 0.1f, 2.0f); 
 	}
 }
 

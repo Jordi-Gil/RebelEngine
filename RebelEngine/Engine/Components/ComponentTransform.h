@@ -23,6 +23,7 @@ public:
 	void UpdateGlobalMatrix();
 
 	float4x4 GetGlobalMatrix() const { return _globalMatrix; }
+	float4x4 GetLocalMatrix() const { return _localMatrix; }
 
 	void Draw() override;
 

@@ -4,12 +4,13 @@
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
 
+#include "AccelerationDataStructures/BVH.h"
+#include "AccelerationDataStructures/Octree.h"
+
 #include "Main/Application.h"
 
 #include "Main/Skybox.h"
 #include "Main/GameObject.h"
-
-#include "AccelerationDataStructures/BVH.h"
 
 #include <algorithm>
 
@@ -19,20 +20,14 @@ ModuleScene::ModuleScene() {
 
 ModuleScene::~ModuleScene() {
 
-	if (_bvh) {
-		delete _bvh;
-		_bvh = nullptr;
-	}
-
 	delete _goSelected;
 	_goSelected = nullptr;
 
 	delete _skybox;
 	_skybox = nullptr;
 
-	//for (uint i = 0; i < _meshObjects.size(); i++) delete _meshObjects[i];
-	_meshObjects.clear();
-	_meshObjects.shrink_to_fit();
+	delete _octree;
+	_octree = nullptr;
 
 }
 
@@ -52,7 +47,7 @@ bool ModuleScene::Init() {
 	std::unique_ptr<GameObject> go = _poolGameObjects.get();
 	go->SetName("Camera");
 	transform = std::make_unique<ComponentTransform>();
-	std::unique_ptr<ComponentCamera> cam = std::make_unique<ComponentCamera>();
+	std::unique_ptr<ComponentCamera> cam = std::make_unique<ComponentCamera>(); cam->SetZNear(0.1f); cam->SetPosition(0, 0, 10); cam->SetZFar(250.0f);
 
 	go->SetParent(_root.get());
 	transform->SetOwner(go.get());
@@ -62,6 +57,8 @@ bool ModuleScene::Init() {
 
 	go->AddComponent(std::move(transform));
 	go->AddComponent(std::move(cam), GO_MASK_CAMERA);
+
+	_mainCamera = static_cast<ComponentCamera *>(go->GetComponent(type_component::CAMERA));
 
 	_root->AddChild(std::move(go));
 
@@ -74,34 +71,58 @@ void ModuleScene::IterateRoot(GameObject& go) {
 		IterateRoot(*children);
 	}
 
-	//Insert in vector to construct BVH/Quadtree/Octree
-	if (go.HasMesh()) InsertOrdered(go);
-	//else if( (go.GetMask() & GO_MASK_ROOT_NODE) == 0 ) _GameObjectsToDraw.push_back(&go);
-
+	if (go.HasMesh()) _objects.push_back(&go);
+	else if (go.GetMask() & GO_MASK_CAMERA) _objectsToDraw.push_back(&go);
 }
 
 bool ModuleScene::Start() {
-
+	
 	IterateRoot(*_root);
-	if(_meshObjects.size() > 0) _bvh = new BVH(_meshObjects);
 
-#ifdef  _DEBUG
-	if (_meshObjects.size() > 0) {
-		LOG(_ERROR, "%s", " ");
-		LOG(_ERROR, "%s", " ");
-		_bvh->Print();
-		LOG(_ERROR, "%s", " ");
-		LOG(_ERROR, "%s", " ");
+	_octree = new Octree();
+
+	for (int i = 0; i < _objects.size(); ++i) {
+		_octree->_root->_gos.push_back(_objects[i]);
 	}
-#endif //  _DEBUG
+
+	_octree->_root->_bounds.SetNegativeInfinity();
+	_octree->_root->_children = 0;
+	_octree->_root->SplitTree(_octree->_root, 5);
 
 	return true;
 }
 
+void ModuleScene::FrustumCulling(OctreeNode* node) {
+
+	if (_mainCamera->Intersects(node->_bounds)) {
+
+		for (const auto& go : node->_gos) {
+			AABB box; go->GetAABB(box);
+			OBB obb = box.Transform(go->GetGlobalMatrix());
+			if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
+				_objectsToDraw.push_back(go);
+			}
+		}
+
+		FrustumCulling(node->_children);
+
+	}
+}
+
+void ModuleScene::FrustumCulling() {
+	for (const auto &go : _objects) {
+		AABB box;  go->GetAABB(box);  OBB obb = box.Transform(go->GetGlobalMatrix());
+		if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
+			_objectsToDraw.push_back(go);
+		}
+	}
+}
+
 update_status ModuleScene::PreUpdate() {
 
-
 	
+	if( (_mask & LINEAR_AABB) != 0 ) { FrustumCulling(); }
+	else if ((_mask & OCTREE) != 0) { FrustumCulling(_octree->_root); }
 
 	return UPDATE_CONTINUE;
 }
@@ -118,17 +139,24 @@ void ModuleScene::DrawRecursive(GameObject &go) {
 
 }
 
-void ModuleScene::Draw() {
-	DrawRecursive(*_root);
+void ModuleScene::DrawFrustumOutput() {
+
+	for (const auto& go : _objectsToDraw) {
+		for (auto const& component : go->GetComponents()) {
+			component->Draw();
+		}
+	}
+
+	_objectsToDraw.clear();
+	_objectsToDraw.shrink_to_fit();
+	_objects.clear();
+	_objects.shrink_to_fit();
+
+	IterateRoot(*_root);
+
 }
 
-void ModuleScene::InsertOrdered(GameObject &go) {
-
-	auto cutoffCompare = [](const GameObject *a, const GameObject *b) {
-		return a->GetMorton() < b->GetMorton();
-	};
-
-	auto it = std::upper_bound(_meshObjects.begin(), _meshObjects.end(), &go, cutoffCompare);
-	_meshObjects.insert(it, &go);
-
+void ModuleScene::Draw() {
+	if((_mask & NO_FRUSTUM) != 0) DrawRecursive(*_root);
+	else DrawFrustumOutput();
 }

@@ -21,9 +21,10 @@ public:
 
 	GameObject() {}
 	GameObject(const char* name);
+	GameObject(const GameObject& go);
 	GameObject(GameObject&& go);
 
-	~GameObject();
+	//~GameObject();
 
 	void Update(){}
 	void AddChild(std::unique_ptr<GameObject>&& go);
@@ -32,16 +33,14 @@ public:
 	void SetParent(GameObject* go);
 	void AddMask(GAME_OBJECT_MASK mask);
 	bool HasComponent(type_component type) const;
-	bool HasMesh() const { 
-		return (_mask & GO_MASK_MESH) != 0; 
-	}
-	void EraseChildrenNull();
+	bool HasMesh() const {  return (_mask & GO_MASK_MESH) != 0; }
+
 	void UpdateChildrenTransform();
 
 	void ToggleSelected();
 
 #pragma region getters
-	const char* GetName() const { return _name; }
+	const char* GetName() const { return _name.c_str(); }
 	int GetNumChildren() const { return _children.size(); };
 	GameObject* GetParent() const { return _parent; }
 	Component* GetComponent(type_component type) const;
@@ -49,7 +48,8 @@ public:
 	std::vector<std::unique_ptr<GameObject>>& GetChildren() { return _children; }
 	const std::vector<std::unique_ptr<Component>>& GetComponents() const { return _components; }
 	std::vector<std::unique_ptr<Component>>& GetComponents() { return _components; }
-	const float4x4 GetGlobalMatrix() const;
+	float4x4 GetGlobalMatrix() const;
+	float4x4 GetLocalMatrix() const;
 	uint32_t GetMorton() const;
 	void GetAABB(AABB& aabb) const;
 	bool IsSelected() const { return _selected; };
@@ -64,7 +64,7 @@ public:
 
 private:
 
-	char* _name = nullptr;
+	std::string _name = "";
 
 	bool _active = false;
 	bool _selected = false;

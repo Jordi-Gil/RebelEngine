@@ -18,7 +18,10 @@ public:
 
 	type_component GetType() const override { return _type; }
 	uint32_t GetMorton() const { return _mesh->GetMorton(); }
-	void GetAABB(AABB& aabb) { _mesh->GetAABB(aabb); };
+	void GetAABB(AABB& aabb) { 
+		//aabb.Enclose(_mesh->_aabb); 
+		aabb = _mesh->_aabb;
+	};
 
 private:
 

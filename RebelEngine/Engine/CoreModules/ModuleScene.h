@@ -6,9 +6,18 @@
 #include <memory>
 #include <vector>
 
-class BVH;
+class Octree;
+class OctreeNode;
+
 class Skybox;
 class GameObject;
+class ComponentCamera;
+
+enum Rebel_FrustumMask {
+	NO_FRUSTUM  = 1,
+	LINEAR_AABB = 1 << 1,
+	OCTREE		= 1 << 2
+};
 
 class ModuleScene : public Module {
 
@@ -24,12 +33,16 @@ public:
 
 	void Draw();
 
-	void InsertOrdered(GameObject& go);
+	void SetMask(Rebel_FrustumMask mask) { _mask = mask; }
 
 private:
 
 	void IterateRoot(GameObject &go);
 	void DrawRecursive(GameObject &go);
+	void DrawFrustumOutput();
+
+	void FrustumCulling(OctreeNode* node);
+	void FrustumCulling();
 
 public:
 
@@ -39,13 +52,17 @@ public:
 
 private:
 
-	GameObject* _goSelected = nullptr;
-	std::vector<GameObject *> _meshObjects;
-	std::vector<GameObject *> _GameObjectsToDraw;
-
 	bool _frustum = false;
 
-	BVH* _bvh = nullptr;
+	int _mask = NO_FRUSTUM;
+
+	GameObject* _goSelected = nullptr;
+	ComponentCamera* _mainCamera = nullptr;
+
+	Octree* _octree = nullptr;
+
+	std::vector<GameObject*> _objects;
+	std::vector<GameObject *> _objectsToDraw;
 
 };
 

@@ -8,7 +8,27 @@
 #include "CoreModules/ModuleScene.h"
 
 GameObject::GameObject(const char* name) {
-	_name = _strdup(name);
+	_name = std::string(name);
+}
+
+GameObject::GameObject(const GameObject& go) {
+
+	this->_active = go._active;
+	this->_name = go._name;
+	this->_parent = go._parent;
+
+	for (const auto& child : go._children) {
+		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
+		*aux = *child;
+		this->_children.push_back(std::move(aux));
+	}
+
+	for (const auto& component : go._components) {
+		this->_components.push_back(std::make_unique<Component>(*component));
+	}
+
+	this->_mask = go._mask;
+
 }
 
 GameObject::GameObject(GameObject&& go) {
@@ -36,24 +56,8 @@ GameObject::GameObject(GameObject&& go) {
 	
 }
 
-GameObject::~GameObject() {
-	free((char*)_name);
-	_name = nullptr;
-}
-
-//TODO: Modify to UUID
-void GameObject::EraseChildrenNull() {
-	bool found = false;
-	auto it_found = _children.begin();
-	for (auto it = _children.begin(); !found && it != _children.end(); ++it) {
-		if (!it->get()->_name) { //null if is destroyed
-			found = true;
-			it_found = it;
-		}
-	}
-	if (found) 
-		_children.erase(it_found);
-}
+//GameObject::~GameObject() {
+//}
 
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
 	_children.push_back(std::move(go));
@@ -66,7 +70,7 @@ void GameObject::AddComponent(std::unique_ptr<Component>&& comp, GAME_OBJECT_MAS
 }
 
 void GameObject::SetName(const char* name) {
-	_name = _strdup(name);
+	_name = std::string(name);
 }
 
 void GameObject::SetParent(GameObject* go) {
@@ -94,18 +98,45 @@ Component* GameObject::GetComponent(type_component type) const
 	return nullptr;
 }
 
-const float4x4 GameObject::GetGlobalMatrix() const
-{
+float4x4 GameObject::GetGlobalMatrix() const {
 	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
 	return transform->GetGlobalMatrix();
+}
+
+float4x4 GameObject::GetLocalMatrix() const {
+	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
+	return transform->GetLocalMatrix();
 }
 
 uint32_t GameObject::GetMorton() const {
 	return _meshRenderer->GetMorton();
 }
 
+float3 ComponentWiseMin(float3 a, float4 b){
+	float3 res = a;
+
+	if (b.x < a.x) res.x = b.x;
+	if (b.y < a.y) res.y = b.y;
+	if (b.z < a.z) res.z = b.z;
+
+	return res;
+
+}
+
+float3 ComponentWiseMax(float3 a, float4 b) {
+	float3 res = a;
+
+	if (b.x > a.x) res.x = b.x;
+	if (b.y > a.y) res.y = b.y;
+	if (b.z > a.z) res.z = b.z;
+
+	return res;
+
+}
+
 void GameObject::GetAABB(AABB& aabb) const {
-	return _meshRenderer->GetAABB(aabb);
+	if (_meshRenderer) _meshRenderer->GetAABB(aabb);
+	else aabb.SetNegativeInfinity();
 }
 
 GameObject& GameObject::operator=(const GameObject& go) {

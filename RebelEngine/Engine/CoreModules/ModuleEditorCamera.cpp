@@ -22,6 +22,8 @@ ModuleEditorCamera::~ModuleEditorCamera() {
 bool ModuleEditorCamera::Init() {
 
 	camera = new ComponentCamera();
+	camera->SetZFar(1000);
+	camera->SetZNear(0.01f);
 
 	return true;
 }

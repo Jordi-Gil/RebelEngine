@@ -50,6 +50,8 @@ public:
 
 private:
 
+	friend class ComponentMeshRenderer;
+
 	unsigned int _VBO;
 	unsigned int _EBO;
 	unsigned int _VAO;
