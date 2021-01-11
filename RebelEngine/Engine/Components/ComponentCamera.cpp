@@ -1,5 +1,4 @@
 #include "ComponentCamera.h"
-#include "Utils/Utils.h"
 
 ComponentCamera::ComponentCamera() {
 
