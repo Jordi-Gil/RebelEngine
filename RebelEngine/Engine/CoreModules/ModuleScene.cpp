@@ -5,6 +5,7 @@
 #include "Components/ComponentMeshRenderer.h"
 
 #include "CoreModules/ModuleResourceManagement.h"
+#include "CoreModules/ModuleEditorCamera.h"
 
 #include "Main/Application.h"
 
@@ -142,6 +143,7 @@ bool ModuleScene::ToJson(Json::Value& value, int pos)
 	_root->ToJson(childrenList, 0);
 	value[pos][JSON_TAG_NAME] = DEFAULT_SCENE_NAME;
 	value[pos][JSON_TAG_ROOT] = childrenList;
+	App->editorCamera->GetCamera()->ToJson(value[pos][JSON_TAG_EDITOR_CAMERA], 0);
 
 	return true;
 }
@@ -152,6 +154,7 @@ bool ModuleScene::FromJson(const Json::Value& value) {
 
 	if (!root.isNull()) {
 		_root = std::make_unique<GameObject>(root[0]);
+		App->editorCamera->SetCamera(new ComponentCamera(value[JSON_TAG_EDITOR_CAMERA][0]));
 	}
 	else {
 		//TODO: JSON ERROR

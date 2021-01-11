@@ -12,6 +12,8 @@ ComponentMeshRenderer::ComponentMeshRenderer() {
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer(const Json::Value& value) {
+	
+	Component::FromJson(value);
 	_type = type_component::MESHRENDERER;
 	this->FromJson(value);
 }
@@ -56,7 +58,7 @@ bool ComponentMeshRenderer::FromJson(const Json::Value& value)
 
 		_mesh = new Mesh();
 		_mesh->FromJson(obj[0]);
-		//todo: cargar el filepath
+		_mesh->SetFilePath(value[JSON_TAG_MESH_PATH].asCString());
 	}
 	else 
 	{

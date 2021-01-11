@@ -45,6 +45,7 @@ ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
 
 ComponentTransform::ComponentTransform(const Json::Value& value) 
 {
+	Component::FromJson(value);
 	_type = type_component::TRANSFORM;
 	this->FromJson(value);
 }

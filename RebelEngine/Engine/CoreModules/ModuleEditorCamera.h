@@ -39,29 +39,33 @@ public:
 	void SetRotSpeed(float _speed);
 	void SetZoomSpeed(float _speed);
 
+	void SetCamera(ComponentCamera* ccamera) { camera = ccamera; }
+
 #pragma endregion setters
+	
 
 #pragma region getters
 
 	void GetMatrix(matrix_type _mType, float4x4& matrix);
 	void GetOpenGLMatrix(matrix_type _mType, float4x4& matrix);
 
-	const float GetHorizontalFov() const { return camera->GetHorizontalFov(); }
-	const float GetVerticalFov() const { return camera->GetVerticalFov(); }
-	const float GetAspectRatio() const { return camera->GetAspectRatio(); }
+	float GetHorizontalFov() const { return camera->GetHorizontalFov(); }
+	float GetVerticalFov() const { return camera->GetVerticalFov(); }
+	float GetAspectRatio() const { return camera->GetAspectRatio(); }
 
 	const float3 GetFront() const { return camera->GetFront(); }
 	const float3 GetUp() const { return camera->GetUp(); }
 	const float3 GetRight() const { return camera->GetRight(); }
 
-	const float GetZNear() const { return camera->GetZNear(); }
-	const float GetZFar() const { return camera->GetZFar(); }
+	float GetZNear() const { return camera->GetZNear(); }
+	float GetZFar() const { return camera->GetZFar(); }
 
 	const float3 GetPosition() const { return camera->GetPosition(); }
 
-	const float GetMovSpeed() const { return movSpeed; }
-	const float GetRotSpeed() const { return rotSpeed; }
-	const float GetZoomSpeed() const { return zoomSpeed; }
+	float GetMovSpeed() const { return movSpeed; }
+	float GetRotSpeed() const { return rotSpeed; }
+	float GetZoomSpeed() const { return zoomSpeed; }
+	ComponentCamera* GetCamera() const { return camera; }
 
 #pragma endregion getters
 

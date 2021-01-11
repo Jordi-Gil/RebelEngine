@@ -86,6 +86,7 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	numVertices = mesh->mNumVertices;
 
 	_vboValue[0][JSON_TAG_VBO] = jValue; jValue.clear();
+	_vboValue[0][JSON_TAG_VBO_SIZE] = pos;
 
 	jValue.append(max[0]); jValue.append(max[1]); jValue.append(max[2]);
 	_vboValue[0][JSON_TAG_VBO_MAX] = jValue; jValue.clear();
@@ -111,12 +112,10 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 	if(!indices) LOG("glMapBuffer error", _ERROR);
 
 	Json::Value jValue(Json::arrayValue);
-	int count = 0;
 	for (unsigned i = 0; i < mesh->mNumFaces; ++i) {
 		for (uint j = 0; j < mesh->mFaces[i].mNumIndices; j++) {
 			*(indices++) = mesh->mFaces[i].mIndices[j];
 			jValue.append(mesh->mFaces[i].mIndices[j]);
-			++count;
 		}
 	}
 	
@@ -244,7 +243,7 @@ bool Mesh::LoadVBOFromJson(const Json::Value& value)
 
 		if (!data) LOG("glMapBuffer error", _ERROR);
 
-		for (unsigned i = 0; i < numVertices; ++i)
+		for (unsigned i = 0; i < value[JSON_TAG_VBO_SIZE].asUInt(); ++i)
 		{ 
 			data[i] = value[JSON_TAG_VBO][i].asFloat();
 		}

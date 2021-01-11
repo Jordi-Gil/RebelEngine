@@ -50,6 +50,7 @@ enum update_status
 #define JSON_TAG_COLOR "Color"
 #define JSON_TAG_COMPONENTS "Components"
 #define JSON_TAG_EBO "EBO"
+#define JSON_TAG_EDITOR_CAMERA "EditorCamera"
 #define JSON_TAG_FOV_HORIZONTAL "FOVHorizontal"
 #define JSON_TAG_FRONT "Front"
 #define JSON_TAG_GAMEOBJECTS "GameObjects"
@@ -75,10 +76,10 @@ enum update_status
 #define JSON_TAG_VBO "VBO"
 #define JSON_TAG_VBO_MAX "VBOMax"
 #define JSON_TAG_VBO_MIN "VBOMin"
+#define JSON_TAG_VBO_SIZE "VBOSize"
 #define JSON_TAG_VERTICES "Vertices"
 #define JSON_TAG_ZFAR "ZFar"
 #define JSON_TAG_ZNEAR "ZNear"
-
 
 
 

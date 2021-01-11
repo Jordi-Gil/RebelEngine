@@ -14,6 +14,7 @@ ComponentCamera::ComponentCamera() {
 
 ComponentCamera::ComponentCamera(const Json::Value& value) 
 {
+	Component::FromJson(value);
 	_type = type_component::CAMERA;
 	this->FromJson(value);
 }
@@ -91,13 +92,15 @@ bool ComponentCamera::FromJson(const Json::Value& value)
 		znear = value[JSON_TAG_ZNEAR].asFloat();
 		back_type = (background_type) value[JSON_TAG_ZNEAR].asInt();
 
+		frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
+		frustum.SetViewPlaneDistances(znear, zfar);
+		frustum.SetHorizontalFovAndAspectRatio(value[JSON_TAG_FOV_HORIZONTAL].asFloat(), value[JSON_TAG_ASPECT_RATIO].asFloat());
 		frustum.SetFront(vec(value[JSON_TAG_FRONT][0].asFloat(), value[JSON_TAG_FRONT][1].asFloat(), value[JSON_TAG_FRONT][2].asFloat()));
 		frustum.SetUp(vec(value[JSON_TAG_UP][0].asFloat(), value[JSON_TAG_UP][1].asFloat(), value[JSON_TAG_UP][2].asFloat()));
 		frustum.SetPos(vec(value[JSON_TAG_POSITION][0].asFloat(), value[JSON_TAG_POSITION][1].asFloat(), value[JSON_TAG_POSITION][2].asFloat()));
-		frustum.SetHorizontalFovAndAspectRatio(value[JSON_TAG_FOV_HORIZONTAL].asFloat(), value[JSON_TAG_ASPECT_RATIO].asFloat());
+		
 	}
 	else {
-
 		return false;
 	}
 

@@ -54,6 +54,7 @@ public:
 	bool WriteJsonFile();
 	void SetName(const char* name) { _name = strdup(name); }
 	const char* GetFilePath() { return _filePath; }
+	void SetFilePath(const char* filePath) { sprintf(_filePath, "%s", filePath); }
 
 private:
 

@@ -31,6 +31,7 @@ bool Component::FromJson(const Json::Value& value)
 	if (!value.isNull()) {
 		_active = value[JSON_TAG_ACTIVE].asBool();
 		_type = type_component::NONE;
+		_uuid = value[JSON_TAG_UUID].asCString();
 	}
 	else {
 	//TODO: JSON ERROR
