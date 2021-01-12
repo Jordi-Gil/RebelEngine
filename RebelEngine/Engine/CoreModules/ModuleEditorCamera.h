@@ -81,7 +81,7 @@ private:
 private:
 
 
-	ComponentCamera* camera;
+	ComponentCamera* camera = nullptr;
 
 	float movSpeed;
 	float zoomSpeed;

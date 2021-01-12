@@ -6,6 +6,7 @@
 #include "CoreModules/ModuleTexture.h"
 
 #include "Components/ComponentTransform.h"
+#include "Components/ComponentCamera.h"
 
 #include "ImGui/IconsFontAwesome5.h"
 
@@ -14,7 +15,10 @@
 #include "ImGui/imgui_utils.h"
 #include "ImGui/imgui_internal.h"
 
+#include "Math/float3x3.h"
+
 #include <string>
+
 const std::vector<const char*> FLOAT3_LABELS = { {"X"},{"Y"},{"Z"} };
 static float3 position;
 static float3 rotation;
@@ -28,6 +32,17 @@ void GUIInspector::UpdateTransform() {
 	ComponentTransform* ct = (ComponentTransform*) _focused_go->GetComponent(type_component::TRANSFORM);
 	ct->SetTransform(position, rotation, scale);
 	_focused_go->UpdateChildrenTransform();
+	if (_focused_go->GetMask() & GO_MASK_CAMERA) {
+	
+		Quat rotationQuat = ct->GetRotationQuat();
+		ComponentCamera* cc = (ComponentCamera*) _focused_go->GetComponent(type_component::CAMERA);
+		cc->SetPosition(position);
+
+		float3x3 rotationMatrix = float3x3::FromQuat(rotationQuat);
+		cc->SetFront(rotationMatrix * -float3::unitZ);
+		cc->SetUp(rotationMatrix * float3::unitY);
+	
+	}
 }
 
 void GUIInspector::DrawDragFloat3(const char* name, float3& vector, float speed) {
@@ -51,12 +66,12 @@ void GUIInspector::DrawDragFloat3(const char* name, float3& vector, float speed)
 	ImGui::EndColumns();
 	
 }
+
 void GUIInspector::Draw() {
 
 	std::string wName(ICON_FA_INFO " "); wName.append(_name);
 	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
 	ImVec4 yellow(1.0000f, 0.8275f, 0.4112f, 1.0000f);
-	//TODO: Take the real transform model of each mesh.
 	if (_focused_go) {
 		if (ImGui::CollapsingHeader("Transform")) {
 
@@ -73,19 +88,6 @@ void GUIInspector::Draw() {
 			DrawDragFloat3("Rotation", rotation);
 			DrawDragFloat3("Scale", scale);
 		
-			ImGui::PopItemFlag();
-		}
-
-		if (ImGui::CollapsingHeader("Geometry")) {
-			int i = 0;
-			//TODO: Get Geometry properly --> GameObject Clicked
-			/*
-			for (auto mesh : App->models->meshes) {
-				ImGui::BulletText("Mesh: %d", i++);
-				ImGui::Text("#Vertices: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%d", mesh.numVertices);
-				ImGui::Text("#Triangles: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%d", mesh.numFaces);
-			}
-			*/
 		}
 
 		if (ImGui::CollapsingHeader("Textures")) {
@@ -105,4 +107,10 @@ void GUIInspector::Draw() {
 
 void GUIInspector::ToggleActive() {
 	_active = !_active;
+}
+
+void GUIInspector::SetFocusedGameObject(GameObject& focused){
+	if (_focused_go) _focused_go->ToggleSelected();
+	_focused_go = &focused;
+	_focused_go->ToggleSelected();
 }

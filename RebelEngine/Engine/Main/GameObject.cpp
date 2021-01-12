@@ -1,19 +1,43 @@
 #include "GameObject.h"
 
-#include "Components/Component.h"
+#include "CoreModules/ModuleScene.h"
+
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentCamera.h"
+#include "Components/Component.h"
 
 #include "Application.h"
-#include "CoreModules/ModuleResourceManagement.h"
+
 #include "Utils/RUUID.h"
 
 GameObject::GameObject() {
 	_uuid = RUUID::generate_uuid_v4();
 }
+
 GameObject::GameObject(const char* name) {
-	_name = _strdup(name);
+	_name = std::string(name);
 	_uuid = RUUID::generate_uuid_v4();
+}
+
+GameObject::GameObject(const GameObject& go) {
+
+	this->_active = go._active;
+	this->_name = go._name;
+	this->_parent = go._parent;
+	this->_uuid = go._uuid;
+
+	for (const auto& child : go._children) {
+		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
+		*aux = *child;
+		this->_children.push_back(std::move(aux));
+	}
+
+	for (const auto& component : go._components) {
+		this->_components.push_back(std::make_unique<Component>(*component));
+	}
+
+	this->_mask = go._mask;
+
 }
 
 GameObject::GameObject(GameObject&& go) {
@@ -47,39 +71,26 @@ GameObject::GameObject(const Json::Value& value)
 	this->FromJson(value);
 }
 
-GameObject::~GameObject() {
-	free((char*)_name);
-	_name = nullptr;
-}
-
-//TODO: Modify to UUID
-void GameObject::EraseChildrenNull() {
-	bool found = false;
-	auto it_found = _children.begin();
-	for (auto it = _children.begin(); !found && it != _children.end(); ++it) {
-		if (!it->get()->_name) { //null if is destroyed
-			found = true;
-			it_found = it;
-		}
-	}
-	if (found) 
-		_children.erase(it_found);
-}
-
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
 	_children.push_back(std::move(go));
 }
 
-void GameObject::AddComponent(std::unique_ptr<Component>&& comp) { 
+void GameObject::AddComponent(std::unique_ptr<Component>&& comp, GAME_OBJECT_MASK mask) {
+	_mask |= mask;
 	_components.push_back(std::move(comp)); 
+	if (_mask & GO_MASK_MESH) _meshRenderer = (ComponentMeshRenderer *) static_cast<ComponentMeshRenderer*>(_components.rbegin()->get());
 }
 
 void GameObject::SetName(const char* name) {
-	_name = _strdup(name);
+	_name = std::string(name);
 }
 
 void GameObject::SetParent(GameObject* go) {
 	_parent = go;
+}
+
+void GameObject::AddMask(GAME_OBJECT_MASK mask){ 
+	_mask |= mask;
 }
 
 bool GameObject::HasComponent(type_component type) const {
@@ -89,26 +100,37 @@ bool GameObject::HasComponent(type_component type) const {
 	}
 
 	return false;
-
 }
 
-Component* GameObject::GetComponent(type_component type) const
-{
+Component* GameObject::GetComponent(type_component type) const {
 	for (auto const& component : _components) {
 		if (component->GetType() == type) return component.get();
 	}
 	return nullptr;
 }
 
-const float4x4 GameObject::GetGlobalMatrix() const
-{
+float4x4 GameObject::GetGlobalMatrix() const {
 	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
 	return transform->GetGlobalMatrix();
 }
 
+float4x4 GameObject::GetLocalMatrix() const {
+	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
+	return transform->GetLocalMatrix();
+}
+
 uint32_t GameObject::GetMorton() const {
-	auto comp = (ComponentMeshRenderer *) GetComponent(type_component::MESHRENDERER);
-	return comp->GetMorton();
+	return _meshRenderer->GetMorton();
+}
+
+void GameObject::GetAABB(AABB& aabb) const {
+	if (_meshRenderer) _meshRenderer->GetAABB(aabb);
+	else aabb.SetNegativeInfinity();
+}
+
+void GameObject::GetOBB(OBB& obb) const {
+	AABB box; GetAABB(box);
+	obb = box.Transform(GetGlobalMatrix());
 }
 
 GameObject& GameObject::operator=(const GameObject& go) {
@@ -118,7 +140,7 @@ GameObject& GameObject::operator=(const GameObject& go) {
 	this->_parent = go._parent;
 
 	for (const auto& child : go._children) {
-		std::unique_ptr<GameObject> aux = App->resourcemanager->_poolGameObjects.get();
+		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
 		*aux = *child;
 		this->_children.push_back(std::move(aux));
 	}
@@ -127,7 +149,7 @@ GameObject& GameObject::operator=(const GameObject& go) {
 		this->_components.push_back(std::make_unique<Component>(*component));
 	}
 
-	this->_hasMesh = go._hasMesh;
+	this->_mask = go._mask;
 
 	return *this;
 }
@@ -145,8 +167,12 @@ void GameObject::UpdateChildrenTransform() {
 	UpdateChildrenTransform_rec(*this);
 }
 
-bool GameObject::ToJson(Json::Value& value, int pos) 
-{
+void GameObject::ToggleSelected(){
+	_selected = !_selected;
+}
+
+bool GameObject::ToJson(Json::Value& value, int pos)  {
+
 	Json::Value childrenList;
 	Json::Value componentList;
 
@@ -172,8 +198,9 @@ bool GameObject::ToJson(Json::Value& value, int pos)
 
 	return true;
 }
-bool GameObject::FromJson(const Json::Value& value) 
-{
+
+bool GameObject::FromJson(const Json::Value& value)  {
+	
 	if (!value.isNull()) 
 	{
 		_name = _strdup(value[JSON_TAG_NAME].asCString());

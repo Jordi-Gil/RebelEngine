@@ -4,6 +4,7 @@
 
 #include "CoreModules/ModuleRender.h"
 #include "CoreModules/ModuleWindow.h"
+#include "CoreModules/ModuleScene.h"
 #include "CoreModules/ModuleEditorCamera.h"
 
 #include "ImGui/IconsFontAwesome5.h"
@@ -28,7 +29,20 @@ void GUIScene::Draw() {
 	App->renderer->Draw(_sceneWindowWidth, _sceneWindowHeight);
 	
 	std::string wName(ICON_FA_BORDER_ALL " "); wName.append(_name);
-	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
+
+	ImGui::BeginMenuBar();
+	static bool frustum_culling = false;
+	static bool frustum_culling_alg[2] = {false, false};
+
+	static int e = 0;
+	if (ImGui::RadioButton("No Frustum Culling", &e, 0)) { App->scene->SetMask(NO_FRUSTUM); }
+	ImGui::SameLine();
+	if(ImGui::RadioButton("Linear AABB Culling", &e, 1)) { App->scene->SetMask(LINEAR_AABB); }
+	ImGui::SameLine();
+	if(ImGui::RadioButton("Octree Frustum Culling", &e, 2)) { App->scene->SetMask(OCTREE); }
+
+	ImGui::EndMenuBar();
 
 	_sceneFocused = ImGui::IsWindowFocused();
 

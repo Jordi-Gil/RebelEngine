@@ -158,7 +158,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\AccelerationDataStructures\BVH.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
     <ClInclude Include="Engine\Components\ComponentCamera.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
@@ -187,6 +186,7 @@
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsFontAwesome5.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsMaterialDesignIcons.h" />
@@ -296,16 +296,13 @@
     <ClInclude Include="Engine\CoreModules\ModuleScene.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
     <ClInclude Include="Engine\Main\Pool.h" />
-    <ClInclude Include="Engine\CoreModules\ModuleResourceManagement.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Quadtree.h" />
     <ClInclude Include="Engine\GUIs\GUIProject.h" />
-    <ClInclude Include="Engine\CoreModules\ModuleSerializer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
     <ClInclude Include="Engine\Main\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\AccelerationDataStructures\BVH.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
     <ClCompile Include="Engine\Components\Component.cpp" />
     <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
@@ -330,6 +327,7 @@
     <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="Engine\GUIs\GUIHierarchy.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui.cpp" />
+    <ClCompile Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_draw.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.cpp" />
@@ -428,10 +426,8 @@
     <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
     <ClCompile Include="Engine\Main\Skybox.cpp" />
-    <ClCompile Include="Engine\CoreModules\ModuleResourceManagement.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Quadtree.cpp" />
     <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
-    <ClCompile Include="Engine\CoreModules\ModuleSerializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="External-Libraries\MathGeoLib-1.5\Include\Geometry\KDTree.inl" />

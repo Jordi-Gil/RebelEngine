@@ -16,10 +16,14 @@ public:
 
 	void SetMesh(Mesh* component_mesh);
 
-	void Draw();
+	void Draw() override;
 
 	type_component GetType() const override { return _type; }
 	uint32_t GetMorton() const { return _mesh->GetMorton(); }
+	void GetAABB(AABB& aabb) { 
+		//aabb.Enclose(_mesh->_aabb); 
+		aabb = _mesh->_aabb;
+	};
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);
 

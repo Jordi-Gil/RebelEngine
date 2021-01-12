@@ -18,20 +18,23 @@ public:
 	
 	~ComponentTransform() {}
 
+	void SetTransform(const float3 position, const Quat rotation, const float3 scale);
 	void SetTransform(const float3 position, const float3 rotation, const float3 scale);
 	void SetTransform(const aiMatrix4x4& matrix);
 
 	void UpdateGlobalMatrix();
 
 	float4x4 GetGlobalMatrix() const { return _globalMatrix; }
+	float4x4 GetLocalMatrix() const { return _localMatrix; }
 
-	void Draw();
+	void Draw() override;
 
 	void SetOwner(GameObject* go) override;
 
 	float3 GetPosition() const { return _position; }
 	float3 GetRotation() const { return _rotation; }
 	float3 GetScale() const { return _scale; }
+	Quat GetRotationQuat() const { return _rotationQuat; }
 
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);

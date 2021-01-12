@@ -1,7 +1,6 @@
 #pragma once
 #include "Application.h"
 
-#include "CoreModules/ModuleResourceManagement.h"
 #include "CoreModules/ModuleEditorCamera.h"
 #include "CoreModules/ModuleDebugDraw.h"
 #include "CoreModules/ModuleProgram.h"
@@ -29,7 +28,6 @@ Application::Application() {
 	deltaTime = (float)applicationTimer.read();
 
 	// Order matters: they will Init/start/update in this order
-	modules.push_back(std::make_unique<ModuleResourceManagement>()); resourcemanager = (ModuleResourceManagement*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleWindow>()); window = (ModuleWindow*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleInput>()); input = (ModuleInput*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleTexture>()); texturer = (ModuleTexture*)modules.rbegin()->get();
@@ -40,7 +38,6 @@ Application::Application() {
 	modules.push_back(std::make_unique<ModuleModel>()); models = (ModuleModel*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleProgram>()); program = (ModuleProgram*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleDebugDraw>()); debugDraw = (ModuleDebugDraw*)modules.rbegin()->get();
-	modules.push_back(std::make_unique<ModuleSerializer>()); serializer = (ModuleSerializer*)modules.rbegin()->get();
 	gui->PreInit();
 
 }

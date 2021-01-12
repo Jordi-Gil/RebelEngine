@@ -2,7 +2,6 @@
 
 #include "Main/Application.h"
 
-#include "ModuleResourceManagement.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
@@ -168,7 +167,7 @@ update_status ModuleInput::Update() {
 				char* dropped_filedir = sdlEvent.drop.file;
 				LOG(_INFO, "Dropped file: %s", dropped_filedir);
 				if (ImageSupported(dropped_filedir)) App->models->LoadTexture(dropped_filedir);
-				else if (MeshSupported(dropped_filedir)) App->resourcemanager->Load3DModel(dropped_filedir);
+				else if (MeshSupported(dropped_filedir)) App->models->LoadModel(dropped_filedir);
 				else LOG(_ERROR, "The file dropped has not a valid extension for mesh/texture loader.");
 				SDL_free(dropped_filedir);
 				break;

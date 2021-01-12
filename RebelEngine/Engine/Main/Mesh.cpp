@@ -3,6 +3,7 @@
 #include "CoreModules/ModuleEditorCamera.h"
 #include "CoreModules/ModuleProgram.h"
 #include "CoreModules/ModuleTexture.h"
+#include "CoreModules/ModuleScene.h"
 
 #include "Application.h"
 
@@ -33,10 +34,10 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 
 	float max[3] = { FLT_MIN, FLT_MIN , FLT_MIN }, min[3] = { FLT_MAX , FLT_MAX , FLT_MAX };
 
-	matIndex = mesh->mMaterialIndex;
+	_matIndex = mesh->mMaterialIndex;
 
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glGenBuffers(1, &_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 
 	unsigned int vertex_size = (sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 2); // Position / Normal / UV
 	unsigned int vertices_size = vertex_size * mesh->mNumVertices; // Total size of Mesh
@@ -83,8 +84,8 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	}
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
-	numVertices = mesh->mNumVertices;
 
+	_numVertices = mesh->mNumVertices;
 	_vboValue[0][JSON_TAG_VBO] = jValue; jValue.clear();
 	_vboValue[0][JSON_TAG_VBO_SIZE] = pos;
 
@@ -94,16 +95,15 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	jValue.append(min[0]); jValue.append(min[1]); jValue.append(min[2]);
 	_vboValue[0][JSON_TAG_VBO_MIN] = jValue; jValue.clear();
 
-	aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
-	vec centroid = aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+	_aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
+	vec centroid = _aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	//obb = OBB::OBB(aabb);
-
 }
 
 void Mesh::LoadEBO(const aiMesh* mesh) {
 
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glGenBuffers(1, &_EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
 	unsigned int index_size = sizeof(unsigned) * mesh->mNumFaces * 3;
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_size, nullptr, GL_STATIC_DRAW);
@@ -123,17 +123,18 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	
-	numFaces = mesh->mNumFaces;
-	numIndices = mesh->mNumFaces * 3;
+	_numFaces = mesh->mNumFaces;
+	_numIndices = mesh->mNumFaces * 3;
+
 }
 
 void Mesh::CreateVAO() {
 
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-	 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glGenVertexArrays(1, &_VAO);
+	glBindVertexArray(_VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
 
 	GLsizei stride = sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 2;
 
@@ -163,13 +164,13 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& 
 	glUniform1i(glGetUniformLocation(program, "textureEnabled"), true);
 	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 
-	glBindVertexArray(VAO);
+	glBindVertexArray(_VAO);
 	glActiveTexture(GL_TEXTURE0);
 	//TODO: TEXTURE HARDCORED
 	//glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
 	glBindTexture(GL_TEXTURE_2D, materials[0].first);
 
-	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, nullptr);
 
 	glBindVertexArray(0);
 
@@ -178,19 +179,19 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& 
 void Mesh::Clean() {
 	LOG(_INFO, "Deleting buffers");
 
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteBuffers(1, &VAO);
+	glDeleteBuffers(1, &_VBO);
+	glDeleteBuffers(1, &_EBO);
+	glDeleteBuffers(1, &_VAO);
 }
 
-bool Mesh::WriteJsonFile()
-{
+bool Mesh::WriteJsonFile(){
+
 	_vboValue[0][JSON_TAG_NAME] = _name;
 	_vboValue[0][JSON_TAG_UUID] = _uuid;
-	_vboValue[0][JSON_TAG_MATERIAL_INDEX] = matIndex;
-	_vboValue[0][JSON_TAG_NUM_VERTICES] = numVertices;
-	_vboValue[0][JSON_TAG_NUM_FACES] = numFaces;
-	_vboValue[0][JSON_TAG_NUM_INDICES] = numIndices;
+	_vboValue[0][JSON_TAG_MATERIAL_INDEX] = _matIndex;
+	_vboValue[0][JSON_TAG_NUM_VERTICES] = _numVertices;
+	_vboValue[0][JSON_TAG_NUM_FACES] = _numFaces;
+	_vboValue[0][JSON_TAG_NUM_INDICES] = _numIndices;
 
 	sprintf(_filePath, "%s%s%s", DEFAULT_MESH_PATH, _name, DEFAULT_MESH_EXT);
 
@@ -203,16 +204,16 @@ bool Mesh::WriteJsonFile()
 	return true;
 }
 
-bool Mesh::FromJson(const Json::Value& value) 
-{
+bool Mesh::FromJson(const Json::Value& value) {
+
 	if (!value.isNull()) 
 	{
 		_name = _strdup(value[JSON_TAG_NAME].asCString());
 		_uuid = value[JSON_TAG_UUID].asString();
-		matIndex = value[JSON_TAG_MATERIAL_INDEX].asInt();
-		numVertices = value[JSON_TAG_NUM_VERTICES].asInt();
-		numFaces = value[JSON_TAG_NUM_FACES].asInt();
-		numIndices = value[JSON_TAG_NUM_INDICES].asInt();
+		_matIndex = value[JSON_TAG_MATERIAL_INDEX].asInt();
+		_numVertices = value[JSON_TAG_NUM_VERTICES].asInt();
+		_numFaces = value[JSON_TAG_NUM_FACES].asInt();
+		_numIndices = value[JSON_TAG_NUM_INDICES].asInt();
 
 		LoadVBOFromJson(value);
 		LoadEBOFromJson(value);
@@ -226,15 +227,15 @@ bool Mesh::FromJson(const Json::Value& value)
 	return true;
 }
 
-bool Mesh::LoadVBOFromJson(const Json::Value& value) 
-{
+bool Mesh::LoadVBOFromJson(const Json::Value& value)  {
+
 	if (!value.isNull()) 
 	{
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glGenBuffers(1, &_VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 
 		unsigned int vertex_size = (sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 2); // Position / Normal / UV
-		unsigned int vertices_size = vertex_size * numVertices; // Total size of Mesh
+		unsigned int vertices_size = vertex_size * _numVertices; // Total size of Mesh
 
 		glBufferData(GL_ARRAY_BUFFER, vertices_size, nullptr, GL_STATIC_DRAW); // 'Allocate' memory for all data set
 
@@ -250,24 +251,24 @@ bool Mesh::LoadVBOFromJson(const Json::Value& value)
 
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 
-		aabb = AABB::AABB(vec(value[JSON_TAG_VBO_MIN][0].asFloat(), value[JSON_TAG_VBO_MIN][1].asFloat(), value[JSON_TAG_VBO_MIN][2].asFloat()), 
+		_aabb = AABB::AABB(vec(value[JSON_TAG_VBO_MIN][0].asFloat(), value[JSON_TAG_VBO_MIN][1].asFloat(), value[JSON_TAG_VBO_MIN][2].asFloat()), 
 						  vec(value[JSON_TAG_VBO_MAX][0].asFloat(), value[JSON_TAG_VBO_MAX][1].asFloat(), value[JSON_TAG_VBO_MAX][2].asFloat()));
-		vec centroid = aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+		vec centroid = _aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	}
-	else 
-	{
+	else  {
 		return false;
 	}
+
 	return true;
 }
 
-bool Mesh::LoadEBOFromJson(const Json::Value& value) 
-{
+bool Mesh::LoadEBOFromJson(const Json::Value& value) {
+	
 	if (!value.isNull())
 	{
-		glGenBuffers(1, &EBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		unsigned int index_size = sizeof(unsigned) * numFaces * 3;
+		glGenBuffers(1, &_EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+		unsigned int index_size = sizeof(unsigned) * _numFaces * 3;
 
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_size, nullptr, GL_STATIC_DRAW);
 		unsigned* indices = (unsigned*)(glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY));
