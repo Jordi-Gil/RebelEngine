@@ -7,17 +7,17 @@ class GUITerminal : public ModuleGUI {
 
 public:
 
-	GUITerminal(const char *_name);
+	GUITerminal(const char *name);
 
 	~GUITerminal();
 
-	void Draw();
+	void Draw() override;
 
-	bool IsActive() { return active; };
+	bool IsActive() const override { return _active; };
 
-	const char* GetName() { return name; }
+	const char* GetName() const override { return _name; }
 
-	void ToggleActive();
+	void ToggleActive() override;
 
 #ifdef  _DEBUG
 	void ClearOpenGLLog();

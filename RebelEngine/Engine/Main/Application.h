@@ -17,6 +17,9 @@ class ModuleProgram;
 class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleModel;
+class ModuleScene;
+class ModuleResourceManagement;
+class ModuleSerializer;
 
 class ModuleGUI;
 
@@ -35,6 +38,7 @@ public:
 
 public:
 
+	ModuleResourceManagement* resourcemanager = nullptr;
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
@@ -43,8 +47,9 @@ public:
 	ModuleDebugDraw* debugDraw = nullptr;
 	ModuleTexture* texturer = nullptr;
 	ModuleModel* models = nullptr;
-
+	ModuleScene* scene = nullptr;
 	ModuleGUI *gui = nullptr;
+	ModuleSerializer* serializer = nullptr;
 
 	float deltaTime;
 

@@ -1,16 +1,20 @@
 #include "ModuleModel.h"
-#include "ModuleTexture.h"
+
+#include "ModuleResourceManagement.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleTexture.h"
+#include "ModuleScene.h"
 
 #include "Main/Application.h"
-
 #include "Utils/Globals.h"
+
+#include "Components/ComponentMeshRenderer.h"
+#include "Components/ComponentTransform.h"
 
 #include <GL/GL.h>
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
-
 
 void LogAssimp(const char* msg, char* userData) {
 	if(msg) LOG(_INFO, "Assimp Message: %s", msg);
@@ -25,26 +29,16 @@ bool ModuleModel::Init() {
 	stream.callback = LogAssimp;
 	aiAttachLogStream(&stream);
 
-	LoadModel("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
-	return true;
-}
-
-void ModuleModel::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes){
-	
-	LOG(_INFO, "Meshes: %d", mNumMeshes);
-
-	numMeshes = mNumMeshes;
-	meshes.reserve(numMeshes);
-
-	for (unsigned int i = 0; i < mNumMeshes; i++) {
-		meshes.push_back(Mesh());
-		meshes[i].LoadVBO(mMeshes[i], max, min);
-		meshes[i].LoadEBO(mMeshes[i]);
-		meshes[i].CreateVAO();
+	TextureInformation info;
+	unsigned int textureId = App->texturer->loadTexture("Assets/Textures/pink.dds", info);
+	if (textureId != 0) {
+		info.name += "pink.dds";
+		textures.push_back(std::make_pair(textureId, info));
 	}
-
-	App->editorCamera->Focus();
-
+	//LoadModel("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
+	//LoadModel("Assets/Models/WithoutDDS/Street_Environment/Street_environment_V01.FBX");
+	
+	return true;
 }
 
 void ModuleModel::LoadTexture(const char* fileName) {
@@ -147,14 +141,27 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 	if (scene) {
 
-		if (!meshes.empty()) {
-			CleanUp();
-			max[0] = max[1] = max[2] = FLT_MIN;
-			min[0] = min[1] = min[2] = FLT_MAX;
-		}
+		char fn[_MAX_FNAME]; _splitpath_s(fileName, NULL, 0, NULL, 0, fn, _MAX_FNAME, NULL, 0);
 
-		LoadMeshes(scene->mMeshes, scene->mNumMeshes);
+		aiNode* father = scene->mRootNode;
+
+		std::unique_ptr<GameObject> go = App->resourcemanager->_poolGameObjects.get();
+		go->SetName(fn);
+		std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
+
+		go->SetParent(App->scene->_root.get());
+
+		transform->SetOwner(go.get());
+		go->AddComponent(std::move(transform));
+
+		LoadNodeHierarchy(father, *go, scene);
+		App->scene->_root->AddChild(std::move(go));
+
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
+		LOG(_INFO, "3D Model %s loaded", fn);
+
+		aiReleaseImport(scene);
+
 	}
 	else {
 		LOG(_ERROR, "Error loading mesh %s: %s", fileName, aiGetErrorString());
@@ -162,23 +169,86 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 }
 
-void ModuleModel::Draw() {
+void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiScene* scene) {
 
-	for (unsigned int i = 0; i < numMeshes ; ++i) {
-		meshes[i].Draw(textures);
+	// assignar nombre edl mesh al name del game object
+	int unsigned num_children = node->mNumChildren;
+	
+	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
+
+		std::string str = node->mChildren[i]->mName.C_Str();
+
+		if (str.find("$AssimpFbx$") != std::string::npos) {
+			LoadNodeHierarchy(node->mChildren[i], father, scene);
+		}
+		else {
+			std::unique_ptr<GameObject> go = App->resourcemanager->_poolGameObjects.get();
+			go->SetName(node->mChildren[i]->mName.C_Str());
+			std::unique_ptr <ComponentTransform> transform = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
+
+			go->SetParent(&father);
+
+			transform->SetOwner(go.get());
+			go->AddComponent(std::move(transform));
+
+			if (node->mChildren[i]->mNumMeshes == 1) {
+
+				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
+
+				Mesh* mesh = new Mesh();
+				mesh->SetName(node->mChildren[i]->mName.C_Str());
+				mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
+				mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
+				mesh->CreateVAO();
+				mesh->WriteJsonFile();
+
+				renderer_mesh->SetOwner(go.get());
+				renderer_mesh->SetMesh(mesh);
+				go->AddComponent(std::move(renderer_mesh));
+
+			}
+			else {
+				for (unsigned int x = 0; x < node->mChildren[i]->mNumMeshes; ++x) {//mesh iteration
+
+					std::unique_ptr<GameObject> go_mesh = App->resourcemanager->_poolGameObjects.get();
+					go_mesh->SetName(scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mName.C_Str());
+					std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
+					std::unique_ptr <ComponentTransform> transform_mesh = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
+
+					transform_mesh->SetOwner(go_mesh.get());
+					renderer_mesh->SetOwner(go_mesh.get());
+
+					Mesh* mesh = new Mesh();
+					mesh->SetName(node->mChildren[i]->mName.C_Str());
+					mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
+					mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
+					mesh->CreateVAO();
+					mesh->WriteJsonFile();
+
+					renderer_mesh->SetMesh(mesh);
+
+					go_mesh->AddComponent(std::move(transform_mesh));
+					go_mesh->AddComponent(std::move(renderer_mesh));
+					go_mesh->SetParent(go.get());
+
+					go->AddChild(std::move(go_mesh));
+				}
+			}
+			go->SetParent(&father);
+			LoadNodeHierarchy(node->mChildren[i], *go, scene);
+			father.AddChild(std::move(go));
+		}
 	}
-
+	
 }
 
 bool ModuleModel::CleanUp() {
 
-	for (unsigned i = 0; i < meshes.size(); i++) meshes[i].Clean();
-	meshes.clear();
-	meshes.shrink_to_fit();
-
 	for (unsigned i = 0; i < textures.size(); i++) glDeleteTextures(1, &textures[i].first);
 	textures.clear();
 	textures.shrink_to_fit();
+
+	aiDetachAllLogStreams();
 
 	return true;
 }

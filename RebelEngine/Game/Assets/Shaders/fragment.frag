@@ -10,7 +10,6 @@ uniform bool textureEnabled;
 
 void main() {
 
-	
-	if(textureEnabled) color = texture2D(mytexture, uv0);
-	else color = vec4(1.0, 0.0, 0.0, 1.0);
+	if(textureEnabled) color = texture(mytexture, uv0);
+	else color = vec4(0.7, 0.7, 0.7, 1.0);
 }

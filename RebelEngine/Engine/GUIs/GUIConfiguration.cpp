@@ -36,18 +36,18 @@ constexpr int MAX_FRAMES = 60;
 
 iware::cpu::quantities_t quantities = iware::cpu::quantities();
 
-GUIConfiguration::GUIConfiguration(const char* _name) {
+GUIConfiguration::GUIConfiguration(const char* name) {
 
-	name = _name;
+	_name = name;
 
-	fpsHist = std::vector<float>(MAX_FRAMES, 0);
-	msHist = std::vector<float>(MAX_FRAMES, 0);
+	_fpsHist = std::vector<float>(MAX_FRAMES, 0);
+	_msHist = std::vector<float>(MAX_FRAMES, 0);
 }
 
 void GUIConfiguration::Draw() {
 
-	std::string wName(ICON_FA_COGS " "); wName.append(name);
-	ImGui::Begin(wName.c_str() , &active, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking);
+	std::string wName(ICON_FA_COGS " "); wName.append(_name);
+	ImGui::Begin(wName.c_str() , &_active, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking);
 
 	static bool vsync = VSYNC;
 #pragma region texture
@@ -92,10 +92,10 @@ void GUIConfiguration::Draw() {
 		if (ImGui::Checkbox("VSYNC", &vsync)) App->renderer->SetVSYNC(vsync);
 
 		ImGui::Separator();
-		char title[32]; sprintf_s(title, 32, "Framerate: %.2f", fpsHist[fpsHist.size()-1]);
-		ImGui::PlotHistogram("##framerate", &fpsHist[0], fpsHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
-		sprintf_s(title, 32, "Milliseconds: %.2f", msHist[msHist.size() - 1]);
-		ImGui::PlotHistogram("##milliseconds", &msHist[0], msHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
+		char title[32]; sprintf_s(title, 32, "Framerate: %.2f", _fpsHist[_fpsHist.size()-1]);
+		ImGui::PlotHistogram("##framerate", &_fpsHist[0], _fpsHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
+		sprintf_s(title, 32, "Milliseconds: %.2f", _msHist[_msHist.size() - 1]);
+		ImGui::PlotHistogram("##milliseconds", &_msHist[0], _msHist.size(), 0, title, 0.0, 100.0f, ImVec2(400, 100));
 
 	}
 	if (ImGui::CollapsingHeader("Window")) {
@@ -110,7 +110,7 @@ void GUIConfiguration::Draw() {
 
 		ImGui::Separator();
 		ImGui::Text("Refresh rate: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.9922f, 0.5490f, 0.0157f, 1.0000f), "%.2f Hz", App->window->GetWindowRefreshRate());
+		ImGui::TextColored(ImVec4(0.9922f, 0.5490f, 0.0157f, 1.0000f), "%d Hz", App->window->GetWindowRefreshRate());
 		ImGui::Text("Frame rate: "); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.9922f, 0.5490f, 0.0157f, 1.0000f), "%2.f FPS", ImGui::GetIO().Framerate);
 
@@ -123,7 +123,6 @@ void GUIConfiguration::Draw() {
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Fullscreen Desktop", &fullScreenDesk)) { App->window->SetWindowFullScreenDesktop(fullScreenDesk); fullScreen = false; }
 	}
-	
 	if (ImGui::CollapsingHeader("Render")) {
 
 		float clear[3] = {
@@ -139,14 +138,13 @@ void GUIConfiguration::Draw() {
 		if (ImGui::Checkbox("Stencil test", &stencilTest)) App->renderer->EnableStencilTest(stencilTest);
 		if (ImGui::Checkbox("Depth test", &depthTest)) App->renderer->EnableDepthTest(depthTest);
 
-		if (ImGui::DragFloat3("Background", clear, 0.01, 0, 1)) {
+		if (ImGui::DragFloat3("Background", clear, 0.01f, 0, 1)) {
 			App->renderer->clearColor[0] = clear[0];
 			App->renderer->clearColor[1] = clear[1];
 			App->renderer->clearColor[2] = clear[2];
 		}
 
 	}
-
 	if (ImGui::CollapsingHeader("Texture")) {
 		
 		ImGui::PushItemWidth(100);
@@ -230,8 +228,8 @@ void GUIConfiguration::Draw() {
 		ImGui::DragFloat3("Right", RightAux);
 		ImGui::PopItemFlag();
 
-		if (ImGui::DragFloat("Near Plane", &znear, 0.1f)) App->editorCamera->SetZNear(znear);
-		if (ImGui::DragFloat("Far Plane", &zfar, 0.1f)) App->editorCamera->SetZFar(zfar);
+		if (ImGui::DragFloat("Near Plane", &znear, 0.01f, 0.01f)) App->editorCamera->SetZNear(znear);
+		if (ImGui::DragFloat("Far Plane", &zfar, 0.01f, 0.01f)) App->editorCamera->SetZFar(zfar);
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		float ar = App->editorCamera->GetAspectRatio();
 		ImGui::DragFloat("Aspect Ratio", &ar);
@@ -318,17 +316,17 @@ void GUIConfiguration::Draw() {
 }
 
 void GUIConfiguration::ToggleActive() {
-	active = !active;
+	_active = !_active;
 }
 
 void GUIConfiguration::AddFPS(float FPS, float ms) {
 
 	for (unsigned i = 0; i < MAX_FRAMES - 1; i++) {
-		fpsHist[i] = fpsHist[i + 1];
-		msHist[i] = msHist[i + 1];
+		_fpsHist[i] = _fpsHist[i + 1];
+		_msHist[i] = _msHist[i + 1];
 	}
 
-	fpsHist[MAX_FRAMES-1] = FPS;
-	msHist[MAX_FRAMES - 1] = ms;
+	_fpsHist[MAX_FRAMES-1] = FPS;
+	_msHist[MAX_FRAMES - 1] = ms;
 
 }

@@ -6,21 +6,23 @@ class GUIScene : public ModuleGUI {
 
 public:
 
-	GUIScene(const char * _name);
+	GUIScene(const char * name);
 
-	void Draw();
+	void Draw() override;
 
-	void ToggleActive();
+	void ToggleActive() override;
 
-	bool IsActive() { return active; };
-	bool IsSceneFocused() { return sceneFocused; }
+	bool IsActive() const override { return _active; };
 
-	const char* GetName() { return name; }
+	bool IsSceneFocused() const { return _sceneFocused; }
+
+	const char* GetName() const override { return _name; }
+
 	static void GUI_GetWindowSize(float& width, float& height);
 
 private:
 
-	bool sceneFocused = true;
+	bool _sceneFocused = true;
 
 };
 

@@ -18,9 +18,9 @@ void log(const char file[], int line, const char* type, const char* format, ...)
 	vsprintf_s(_Tmpbuffer, 1024, format, ap);
 	va_end(ap);
 
-	if (ImGui::GetCurrentContext() != nullptr) sprintf(_finalbuffer, "%s [%05d] %s\n", type, ImGui::GetFrameCount(), _Tmpbuffer);
+	if (ImGui::GetCurrentContext() != nullptr) sprintf_s(_finalbuffer, 4096, "%s [%05d] %s\n", type, ImGui::GetFrameCount(), _Tmpbuffer);
 	else sprintf_s(_finalbuffer, 4096, "%s [%05d] %s \n", type, 0, _Tmpbuffer);
 
-	App->gui->terminal->logBuffer.push_back(_strdup(_finalbuffer));
-	App->gui->terminal->scrollToBottom = true;
+	App->gui->_terminal->logBuffer.push_back(_strdup(_finalbuffer));
+	App->gui->_terminal->scrollToBottom = true;
 }

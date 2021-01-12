@@ -1,8 +1,11 @@
 #include <cstdlib>
 
-#ifdef _DEBUG
-#include <vld.h>
-#endif // DEBUG
+//#if __has_include(<vld.h>)
+//#ifdef _DEBUG
+//#include <vld.h>
+//#endif // DEBUG
+//#endif
+
 
 #include "Application.h"
 
@@ -10,8 +13,10 @@
 #include "Utils/Globals.h"
 
 #include <SDL/SDL.h>
-#pragma comment( lib, "SDL/lib/x86/SDL2.lib" )
-#pragma comment( lib, "SDL/lib/x86/SDL2main.lib" )
+#pragma comment( lib, "External-Libraries/SDL/lib/x86/SDL2.lib" )
+#pragma comment( lib, "External-Libraries/SDL/lib/x86/SDL2main.lib" )
+
+#include <Brofiler.h>
 
 enum main_states
 {
@@ -30,6 +35,8 @@ int main(int argc, char** argv) {
 	main_states state = MAIN_CREATION;
 
 	while (state != MAIN_EXIT) {
+		
+		BROFILER_FRAME("Rebel Engine main thread");
 
 		switch (state) {
 

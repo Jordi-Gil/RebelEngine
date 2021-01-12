@@ -2,7 +2,7 @@
 
 #include "Module.h"
 
-#include <Geometry/Frustum.h>
+#include <Components/ComponentCamera.h>
 
 #define PI 3.14159265358979323846  /* pi */
 
@@ -14,12 +14,12 @@ class ModuleEditorCamera : public Module {
 
 public:
 
-	ModuleEditorCamera::ModuleEditorCamera() : movSpeed(2), rotSpeed(0.5), zoomSpeed(2), currentZNear(0.1f), currentZFar(100.0f) {}
-	ModuleEditorCamera::~ModuleEditorCamera() {}
+	ModuleEditorCamera() : movSpeed(2), rotSpeed(0.5), zoomSpeed(2) {}
+	~ModuleEditorCamera();
 
-	bool Init();
+	bool Init() override;
 
-	update_status Update();
+	update_status Update() override;
 
 	void WindowResized(unsigned width, unsigned height);
 
@@ -29,39 +29,43 @@ public:
 
 	void SetHorizontalFov(float hFov, float ar);
 	void SetVerticalFov(float vFov, float aspectRatio);
-	
+
 	void SetZNear(float znear);
 	void SetZFar(float zfar);
-	
+
 	void SetPosition(float x, float y, float z);
 
 	void SetMovSpeed(float _speed);
 	void SetRotSpeed(float _speed);
 	void SetZoomSpeed(float _speed);
 
+	void SetCamera(ComponentCamera* ccamera) { camera = ccamera; }
+
 #pragma endregion setters
+	
 
 #pragma region getters
 
 	void GetMatrix(matrix_type _mType, float4x4& matrix);
 	void GetOpenGLMatrix(matrix_type _mType, float4x4& matrix);
 
-	float GetHorizontalFov() { return frustum.HorizontalFov(); }
-	float GetVerticalFov() { return frustum.VerticalFov(); }
-	float GetAspectRatio() { return frustum.AspectRatio(); }
+	float GetHorizontalFov() const { return camera->GetHorizontalFov(); }
+	float GetVerticalFov() const { return camera->GetVerticalFov(); }
+	float GetAspectRatio() const { return camera->GetAspectRatio(); }
 
-	float3 GetFront() { return frustum.Front(); }
-	float3 GetUp() { return frustum.Up(); }
-	float3 GetRight() { return frustum.WorldRight(); }
+	const float3 GetFront() const { return camera->GetFront(); }
+	const float3 GetUp() const { return camera->GetUp(); }
+	const float3 GetRight() const { return camera->GetRight(); }
 
-	float GetZNear() { return frustum.NearPlaneDistance(); }
-	float GetZFar() { return frustum.FarPlaneDistance(); }
+	float GetZNear() const { return camera->GetZNear(); }
+	float GetZFar() const { return camera->GetZFar(); }
 
-	float3 GetPosition() { return frustum.Pos(); }
+	const float3 GetPosition() const { return camera->GetPosition(); }
 
-	float GetMovSpeed() { return movSpeed; }
-	float GetRotSpeed() { return rotSpeed; }
-	float GetZoomSpeed() { return zoomSpeed; }
+	float GetMovSpeed() const { return movSpeed; }
+	float GetRotSpeed() const { return rotSpeed; }
+	float GetZoomSpeed() const { return zoomSpeed; }
+	ComponentCamera* GetCamera() const { return camera; }
 
 #pragma endregion getters
 
@@ -76,13 +80,13 @@ private:
 
 private:
 
-	Frustum frustum;
+
+	ComponentCamera* camera;
+
 	float movSpeed;
 	float zoomSpeed;
 	float rotSpeed;
-	float currentZNear;
-	float currentZFar;
 
 	float pitch = 0;
-	
+
 };

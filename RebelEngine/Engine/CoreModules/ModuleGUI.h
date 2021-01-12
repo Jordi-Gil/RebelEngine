@@ -5,10 +5,14 @@
 #include<memory>
 #include <vector>
 
+#include "ImGui/imfilebrowser.h"
+
 class GUIScene;
 class GUITerminal;
 class GUIInspector;
 class GUIConfiguration;
+class GUIHierarchy;
+class GUIProject;
 
 class ModuleGUI :  public Module {
 
@@ -17,14 +21,15 @@ public:
 	ModuleGUI();
 
 	void PreInit();
-	bool Init();
-	bool Start();
-	update_status Update();
-	bool CleanUp();
+	bool Init() override;
+	bool Start() override;
+	update_status Update() override;
+	bool CleanUp() override;
 
-	virtual bool IsActive() { return true; }
-	virtual void Disable() { };
-	virtual void Draw() { }
+	virtual bool IsActive() const { return _active; }
+	virtual const char* GetName() const { return _name; }
+	virtual void ToggleActive() {}
+	virtual void Draw() {}
 
 private:
 
@@ -33,18 +38,23 @@ private:
 
 public:
 
-	GUIScene* scene = nullptr;
-	GUITerminal* terminal = nullptr;
-	GUIInspector* inspector = nullptr;
-	GUIConfiguration* config = nullptr;
+	GUIScene* _scene = nullptr;
+	GUITerminal* _terminal = nullptr;
+	GUIInspector* _inspector = nullptr;
+	GUIConfiguration* _config = nullptr;
+	GUIHierarchy* _hierarchy = nullptr;
+	GUIProject* _project = nullptr;
 
 private:
 
-	std::vector<std::unique_ptr<ModuleGUI>> windows;
+	std::vector<std::unique_ptr<ModuleGUI>> _windows;
+	ImGui::FileBrowser fileDialog;
 
 protected:
 
-	bool active = false;
-	const char* name = "";
+	bool _active = false;
+	const char* _name = "";
+	
+
 };
 

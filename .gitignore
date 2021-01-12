@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#imGui init
+
+RebelEngine/Game/imgui.ini
+
 # User-specific files
 *.rsuser
 *.suo
@@ -346,3 +350,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+#Exceptions
+
+!RebelEngine/External-Libraries/

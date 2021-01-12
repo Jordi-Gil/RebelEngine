@@ -16,8 +16,8 @@
 float sceneWidth = 0;
 float sceneHeight = 0;
 
-GUIScene::GUIScene(const char* _name) { 
-	name = _name;
+GUIScene::GUIScene(const char* name) { 
+	_name = name;
 }
 
 void GUIScene::Draw() {
@@ -27,10 +27,10 @@ void GUIScene::Draw() {
 
 	App->renderer->Draw(_sceneWindowWidth, _sceneWindowHeight);
 	
-	std::string wName(ICON_FA_BORDER_ALL " "); wName.append(name);
-	ImGui::Begin(wName.c_str(), &active, ImGuiWindowFlags_NoCollapse);
+	std::string wName(ICON_FA_BORDER_ALL " "); wName.append(_name);
+	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
 
-	sceneFocused = ImGui::IsWindowFocused();
+	_sceneFocused = ImGui::IsWindowFocused();
 
 	ImGui::GetWindowDrawList()->AddImage(
 		(void*)(intptr_t)App->renderer->GetViewportTexture(),
@@ -76,7 +76,7 @@ void GUIScene::Draw() {
 }
 
 void GUIScene::ToggleActive() {
-	active = !active;
+	_active = !_active;
 }
 
 void GUIScene::GUI_GetWindowSize(float &width, float &height){

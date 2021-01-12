@@ -9,6 +9,9 @@
 
 void log(const char file[], int line, const char* type, const char* format, ...);
 
+
+typedef unsigned int uint;
+
 enum update_status
 {
 	UPDATE_CONTINUE = 1,
@@ -33,3 +36,52 @@ enum update_status
 #define _ERROR "[error]"
 #define _INFO "[info]"
 #define _WARNING "[warning]"
+
+#define DEFAULT_SCENE_PATH "./Assets/Scenes/"
+#define DEFAULT_SCENE_NAME "Scene_default"
+#define DEFAULT_SCENE_EXT ".rebel"
+
+#define DEFAULT_MESH_PATH "./Assets/Models/"
+#define DEFAULT_MESH_EXT ".mesh"
+
+#define JSON_TAG_ACTIVE "Active"
+#define JSON_TAG_ASPECT_RATIO "AspectRatio"
+#define JSON_TAG_BACKGROUND_TYPE "Background_type"
+#define JSON_TAG_COLOR "Color"
+#define JSON_TAG_COMPONENTS "Components"
+#define JSON_TAG_EBO "EBO"
+#define JSON_TAG_EDITOR_CAMERA "EditorCamera"
+#define JSON_TAG_FOV_HORIZONTAL "FOVHorizontal"
+#define JSON_TAG_FRONT "Front"
+#define JSON_TAG_GAMEOBJECTS "GameObjects"
+#define JSON_TAG_GLOBAL_MATRIX "GlobalMatrix"
+#define JSON_TAG_LOCAL_MATRIX "LocalMatrix"
+#define JSON_TAG_MATERIAL_INDEX "MaterialIndex"
+#define JSON_TAG_MESH_PATH "MeshPath"
+#define JSON_TAG_NAME "Name"
+#define JSON_TAG_NORMALS "Normals"
+#define JSON_TAG_NUM_FACES "NumFaces"
+#define JSON_TAG_NUM_INDICES "NumIndices"
+#define JSON_TAG_NUM_VERTICES "NumVertices"
+#define JSON_TAG_OWNER "Owner"
+#define JSON_TAG_POSITION "Position"
+#define JSON_TAG_ROOT "Root"
+#define JSON_TAG_ROTATION "Rotation"
+#define JSON_TAG_ROTATION_QUAT "RotationQuat"
+#define JSON_TAG_SCALE "Scale"
+#define JSON_TAG_TYPE "Type"
+#define JSON_TAG_UP "UP"
+#define JSON_TAG_UUID "UUID"
+#define JSON_TAG_UVCOORDS "UVCoords"
+#define JSON_TAG_VBO "VBO"
+#define JSON_TAG_VBO_MAX "VBOMax"
+#define JSON_TAG_VBO_MIN "VBOMin"
+#define JSON_TAG_VBO_SIZE "VBOSize"
+#define JSON_TAG_VERTICES "Vertices"
+#define JSON_TAG_ZFAR "ZFar"
+#define JSON_TAG_ZNEAR "ZNear"
+
+
+
+
+

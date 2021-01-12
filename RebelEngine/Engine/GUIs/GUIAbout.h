@@ -6,15 +6,15 @@ class GUIAbout : public ModuleGUI {
 
 public:
 
-	GUIAbout(const char* _name);
+	GUIAbout(const char* name);
 
-	void Draw();
+	void Draw() override;
 
-	bool IsActive() { return active; };
+	bool IsActive() const override { return _active; };
 
-	const char* GetName() { return name; }
+	const char* GetName() const  override { return _name; }
 
-	void ToggleActive();
+	void ToggleActive() override;
 
 };
 

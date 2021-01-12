@@ -2,12 +2,13 @@
 
 #include "Main/Application.h"
 
-#include "ModuleInput.h"
-#include "ModuleRender.h"
+#include "ModuleResourceManagement.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleWindow.h"
+#include "ModuleRender.h"
+#include "ModuleInput.h"
 #include "ModuleModel.h"
-
+#include "ModuleScene.h"
 #include "ImGui/imgui_impl_sdl.h"
 
 #include <assimp/Importer.hpp>
@@ -140,6 +141,7 @@ update_status ModuleInput::Update() {
 		switch (sdlEvent.type) {
 
 			case SDL_QUIT:
+				App->scene->Save();
 				return UPDATE_STOP;
 			case SDL_WINDOWEVENT:
 				switch (sdlEvent.window.event) {
@@ -166,7 +168,7 @@ update_status ModuleInput::Update() {
 				char* dropped_filedir = sdlEvent.drop.file;
 				LOG(_INFO, "Dropped file: %s", dropped_filedir);
 				if (ImageSupported(dropped_filedir)) App->models->LoadTexture(dropped_filedir);
-				else if (MeshSupported(dropped_filedir)) App->models->LoadModel(dropped_filedir);
+				else if (MeshSupported(dropped_filedir)) App->resourcemanager->Load3DModel(dropped_filedir);
 				else LOG(_ERROR, "The file dropped has not a valid extension for mesh/texture loader.");
 				SDL_free(dropped_filedir);
 				break;

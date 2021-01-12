@@ -1,15 +1,21 @@
 #include "Main/Application.h"
 
+#include "Main/Skybox.h"
+
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleModel.h"
+#include "ModuleScene.h"
+
 #include "GUIs/GUITerminal.h"
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
+
+#include <Brofiler.h>
 
 #ifdef  _DEBUG
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
@@ -41,7 +47,7 @@ void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLe
 	case GL_DEBUG_SEVERITY_NOTIFICATION: tmp_severity = "notification"; break;
 	};
 	
-	if (!App->gui->terminal->deletingOGLLog && App->logTimer.read() >= 500) {
+	if (!App->gui->_terminal->deletingOGLLog && App->logTimer.read() >= 500) {
 		LOG(type_msg, "[OpenGL Debug] <Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>", tmp_source, tmp_type, tmp_severity, id, message);
 		App->logTimer.start();
 	}
@@ -51,13 +57,6 @@ void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLe
 bool ModuleRender::Init() {
 
 	LOG(_INFO, "Creating Renderer context");
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4); // desired version
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // we want a double buffer
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24); // we want to have a depth buffer with 24 bits
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); // we want to have a stencil buffer with 8 bits
 
 	mainContext = SDL_GL_CreateContext(App->window->window);
 
@@ -127,6 +126,8 @@ void ModuleRender::BindBuffers(float width, float height) {
 
 void ModuleRender::Draw(float width, float height) {
 
+	BROFILER_CATEGORY("ModuleRenderer Draw", Profiler::Color::DarkOliveGreen);
+
 	//Bind the Frame Buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
@@ -147,20 +148,19 @@ void ModuleRender::Draw(float width, float height) {
 	}
 
 	glViewport(0, 0, width, height);
-	glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
 
 	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
 
-	App->models->Draw();
+	App->scene->_skybox->Draw();
+
 	App->debugDraw->Draw(view, projection, width, height);
+	App->scene->Draw();
 
 	glBindVertexArray(0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 update_status ModuleRender::PostUpdate() {

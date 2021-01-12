@@ -16,10 +16,11 @@ public:
 
 	~ModuleTexture() {}
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
 	unsigned int loadTexture(const char *path, TextureInformation &info);
+	unsigned int loadCubeMap(const char *path);
 
 	void SetMinFilter(unsigned i, unsigned texID);
 	void SetMagFilter(unsigned i, unsigned texID);

@@ -10,10 +10,10 @@ public:
 	ModuleRender() {}
 	~ModuleRender() {}
 
-	bool Init();
-	bool Start();
-	update_status PostUpdate();
-	bool CleanUp();
+	bool Init() override;
+	bool Start() override;
+	update_status PostUpdate() override;
+	bool CleanUp() override;
 
 	void Draw(float width, float height);
 	void BindBuffers(float width, float height);
@@ -32,6 +32,7 @@ public:
 public:
 
 	float clearColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	
 
 private:
 

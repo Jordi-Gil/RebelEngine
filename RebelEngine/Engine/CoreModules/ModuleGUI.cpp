@@ -10,13 +10,17 @@
 #include "GUIs/GUIConfiguration.h"
 #include "GUIs/GUITerminal.h"
 #include "GUIs/GUIInspector.h"
+#include "GUIs/GUIHierarchy.h"
+#include "GUIs/GUIProject.h"
 
 #include "ImGui/IconsFontAwesome5.h"
+#include "ImGui/IconsMaterialDesignIcons.h"
 
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_utils.h"
 #include "ImGui/imgui_internal.h"
+#include "ImGui/imfilebrowser.h"
 
 ModuleGUI::ModuleGUI() {
 	
@@ -24,14 +28,17 @@ ModuleGUI::ModuleGUI() {
 
 void ModuleGUI::PreInit() {
 
-	windows.push_back(std::make_unique<GUIAbout>("About Rebel"));
-	windows.push_back(std::make_unique<GUIScene>("Scene")); scene = (GUIScene*) windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUIInspector>("Inspector")); inspector = (GUIInspector*)windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); config = (GUIConfiguration *) windows.rbegin()->get();
-	windows.push_back(std::make_unique<GUITerminal>("Terminal")); terminal = (GUITerminal *) windows.rbegin()->get();
-	
-	scene->ToggleActive();
-	inspector->ToggleActive();
+	_windows.push_back(std::make_unique<GUIAbout>("About Rebel"));
+	_windows.push_back(std::make_unique<GUIScene>("Scene")); _scene = (GUIScene*) _windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUIInspector>("Inspector")); _inspector = (GUIInspector*)_windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUIConfiguration>("Configuration")); _config = (GUIConfiguration *)_windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUITerminal>("Terminal")); _terminal = (GUITerminal *)_windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUIHierarchy>("Hierarchy")); _hierarchy = (GUIHierarchy*)_windows.rbegin()->get();
+	_windows.push_back(std::make_unique<GUIProject>("Project")); _project = (GUIProject*)_windows.rbegin()->get();
+
+	_scene->ToggleActive();
+	_inspector->ToggleActive();
+	_hierarchy->ToggleActive();
 }
 
 bool ModuleGUI::Init() {
@@ -67,7 +74,10 @@ bool ModuleGUI::Init() {
 	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 	ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
 	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/" FONT_ICON_FILE_NAME_FAS, 12.0f, &icons_config, icons_ranges);
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/" FONT_ICON_FILE_NAME_MDI, 12.0f, &icons_config, icons_ranges);
 	
+	fileDialog.SetTitle("title");
+
 	return true;
 }
 
@@ -108,7 +118,7 @@ update_status ModuleGUI::Update() {
 	
 	DrawMainMenu();
 
-	for (auto it = windows.begin(); it != windows.end(); ++it) {
+	for (auto it = _windows.begin(); it != _windows.end(); ++it) {
 		if ((*it)->IsActive()) (*it)->Draw();
 	}
 	
@@ -127,13 +137,15 @@ update_status ModuleGUI::Update() {
 	}
 
 	return ret;
-
 }
 
 void ModuleGUI::DrawMainMenu() {
 
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Open", "Ctrl+O")) {
+				fileDialog.Open();
+			}
 			ImGui::Separator();
 			if (ImGui::MenuItem("Exit", "ALT+F4")) {
 				SDL_Event event;
@@ -143,10 +155,12 @@ void ModuleGUI::DrawMainMenu() {
 			ImGui::EndMenu();
 		}
 
+		fileDialog.Display();
+
 		if (ImGui::BeginMenu("Windows")) {
-			for (auto it = windows.begin(); it != windows.end(); ++it) {
+			for (auto it = _windows.begin(); it != _windows.end(); ++it) {
 				auto ptr = it->get();
-				if(ptr->name != "About Rebel") ImGui::MenuItem(ptr->name, NULL, &ptr->active, &ptr->active);
+				if(std::strcmp(ptr->_name, "About Rebel")) ImGui::MenuItem(ptr->_name, NULL, &ptr->_active, &ptr->_active);
 			}
 			ImGui::EndMenu();
 		}
@@ -156,7 +170,7 @@ void ModuleGUI::DrawMainMenu() {
 			if (ImGui::MenuItem("Download latest")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/releases");
 			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/Jordi-Gil/RebelEngine/issues");
 			ImGui::Separator();
-			ImGui::MenuItem("About Rebel", NULL, &(windows[0]->active));
+			ImGui::MenuItem("About Rebel", NULL, &(_windows[0]->_active));
 			ImGui::EndMenu();
 		}
 
