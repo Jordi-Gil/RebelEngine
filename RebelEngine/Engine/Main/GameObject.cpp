@@ -71,25 +71,6 @@ GameObject::GameObject(const Json::Value& value)
 	this->FromJson(value);
 }
 
-GameObject::~GameObject() {
-	free((char*)_name);
-	_name = nullptr;
-}
-
-//TODO: Modify to UUID
-void GameObject::EraseChildrenNull() {
-	bool found = false;
-	auto it_found = _children.begin();
-	for (auto it = _children.begin(); !found && it != _children.end(); ++it) {
-		if (!it->get()->_name) { //null if is destroyed
-			found = true;
-			it_found = it;
-		}
-	}
-	if (found) 
-		_children.erase(it_found);
-}
-
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
 	_children.push_back(std::move(go));
 }

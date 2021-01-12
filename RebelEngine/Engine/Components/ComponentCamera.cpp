@@ -150,25 +150,25 @@ void ComponentCamera::Draw() {
 
 bool ComponentCamera::ToJson(Json::Value& value, int pos) {
 	Component::ToJson(value, pos);
-	value[pos][JSON_TAG_BACKGROUND_TYPE] = (int)back_type;
+	value[pos][JSON_TAG_BACKGROUND_TYPE] = (int) _back_type;
 	Json::Value jValue(Json::arrayValue);
 
-	jValue.append(color[0]); jValue.append(color[1]); jValue.append(color[2]); jValue.append(color[3]);
+	jValue.append(_color[0]); jValue.append(_color[1]); jValue.append(_color[2]); jValue.append(_color[3]);
 	value[pos][JSON_TAG_COLOR] = jValue; jValue.clear();
-	value[pos][JSON_TAG_ZNEAR] = znear;
-	value[pos][JSON_TAG_ZFAR] = zfar;
+	value[pos][JSON_TAG_ZNEAR] = _znear;
+	value[pos][JSON_TAG_ZFAR] = _zfar;
 
-	jValue.append(frustum.Pos()[0]); jValue.append(frustum.Pos()[1]); jValue.append(frustum.Pos()[2]);
+	jValue.append(_frustum.Pos()[0]); jValue.append(_frustum.Pos()[1]); jValue.append(_frustum.Pos()[2]);
 	value[pos][JSON_TAG_POSITION] = jValue; jValue.clear();
 
-	jValue.append(frustum.Front()[0]); jValue.append(frustum.Front()[1]); jValue.append(frustum.Front()[2]);
+	jValue.append(_frustum.Front()[0]); jValue.append(_frustum.Front()[1]); jValue.append(_frustum.Front()[2]);
 	value[pos][JSON_TAG_FRONT] = jValue; jValue.clear();
 
-	jValue.append(frustum.Up()[0]); jValue.append(frustum.Up()[1]); jValue.append(frustum.Up()[2]);
+	jValue.append(_frustum.Up()[0]); jValue.append(_frustum.Up()[1]); jValue.append(_frustum.Up()[2]);
 	value[pos][JSON_TAG_UP] = jValue; jValue.clear();
 
-	value[pos][JSON_TAG_FOV_HORIZONTAL] = frustum.HorizontalFov();
-	value[pos][JSON_TAG_ASPECT_RATIO] = frustum.AspectRatio();
+	value[pos][JSON_TAG_FOV_HORIZONTAL] = _frustum.HorizontalFov();
+	value[pos][JSON_TAG_ASPECT_RATIO] = _frustum.AspectRatio();
 
 	return true;
 }
@@ -176,17 +176,17 @@ bool ComponentCamera::ToJson(Json::Value& value, int pos) {
 bool ComponentCamera::FromJson(const Json::Value& value) {
 	if (!value.isNull()) 
 	{
-		color = float4(value[JSON_TAG_COLOR][0].asFloat(), value[JSON_TAG_COLOR][1].asFloat(), value[JSON_TAG_COLOR][2].asFloat(), value[JSON_TAG_COLOR][3].asFloat());
-		zfar = value[JSON_TAG_ZFAR].asFloat();
-		znear = value[JSON_TAG_ZNEAR].asFloat();
-		back_type = (background_type) value[JSON_TAG_ZNEAR].asInt();
+		_color = float4(value[JSON_TAG_COLOR][0].asFloat(), value[JSON_TAG_COLOR][1].asFloat(), value[JSON_TAG_COLOR][2].asFloat(), value[JSON_TAG_COLOR][3].asFloat());
+		_zfar = value[JSON_TAG_ZFAR].asFloat();
+		_znear = value[JSON_TAG_ZNEAR].asFloat();
+		_back_type = (background_type) value[JSON_TAG_ZNEAR].asInt();
 
-		frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-		frustum.SetViewPlaneDistances(znear, zfar);
-		frustum.SetHorizontalFovAndAspectRatio(value[JSON_TAG_FOV_HORIZONTAL].asFloat(), value[JSON_TAG_ASPECT_RATIO].asFloat());
-		frustum.SetFront(vec(value[JSON_TAG_FRONT][0].asFloat(), value[JSON_TAG_FRONT][1].asFloat(), value[JSON_TAG_FRONT][2].asFloat()));
-		frustum.SetUp(vec(value[JSON_TAG_UP][0].asFloat(), value[JSON_TAG_UP][1].asFloat(), value[JSON_TAG_UP][2].asFloat()));
-		frustum.SetPos(vec(value[JSON_TAG_POSITION][0].asFloat(), value[JSON_TAG_POSITION][1].asFloat(), value[JSON_TAG_POSITION][2].asFloat()));
+		_frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
+		_frustum.SetViewPlaneDistances(_znear, _zfar);
+		_frustum.SetHorizontalFovAndAspectRatio(value[JSON_TAG_FOV_HORIZONTAL].asFloat(), value[JSON_TAG_ASPECT_RATIO].asFloat());
+		_frustum.SetFront(vec(value[JSON_TAG_FRONT][0].asFloat(), value[JSON_TAG_FRONT][1].asFloat(), value[JSON_TAG_FRONT][2].asFloat()));
+		_frustum.SetUp(vec(value[JSON_TAG_UP][0].asFloat(), value[JSON_TAG_UP][1].asFloat(), value[JSON_TAG_UP][2].asFloat()));
+		_frustum.SetPos(vec(value[JSON_TAG_POSITION][0].asFloat(), value[JSON_TAG_POSITION][1].asFloat(), value[JSON_TAG_POSITION][2].asFloat()));
 		
 	}
 	else {

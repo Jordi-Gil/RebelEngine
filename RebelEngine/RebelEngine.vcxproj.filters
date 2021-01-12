@@ -124,11 +124,8 @@
     <ClCompile Include="External-Libraries\infoware-0.5.5\include\infoware\version.cpp" />
     <ClCompile Include="Engine\Components\Component.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.cpp" />
-=======
-    <ClCompile Include="Engine\CoreModules\ModuleSerializer.cpp" />
->>>>>>> main
+    <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -271,12 +268,9 @@
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsMaterialDesignIcons.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
-<<<<<<< HEAD
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.h" />
-=======
-    <ClInclude Include="Engine\CoreModules\ModuleSerializer.h" />
     <ClInclude Include="Engine\Utils\RUUID.h" />
->>>>>>> main
+    <ClInclude Include="Engine\GUIs\GUIProject.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

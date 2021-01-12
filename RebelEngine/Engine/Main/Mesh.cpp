@@ -95,8 +95,8 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	jValue.append(min[0]); jValue.append(min[1]); jValue.append(min[2]);
 	_vboValue[0][JSON_TAG_VBO_MIN] = jValue; jValue.clear();
 
-	aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
-	vec centroid = aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+	_aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
+	vec centroid = _aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	//obb = OBB::OBB(aabb);
 }
 
@@ -188,10 +188,10 @@ bool Mesh::WriteJsonFile(){
 
 	_vboValue[0][JSON_TAG_NAME] = _name;
 	_vboValue[0][JSON_TAG_UUID] = _uuid;
-	_vboValue[0][JSON_TAG_MATERIAL_INDEX] = matIndex;
-	_vboValue[0][JSON_TAG_NUM_VERTICES] = numVertices;
-	_vboValue[0][JSON_TAG_NUM_FACES] = numFaces;
-	_vboValue[0][JSON_TAG_NUM_INDICES] = numIndices;
+	_vboValue[0][JSON_TAG_MATERIAL_INDEX] = _matIndex;
+	_vboValue[0][JSON_TAG_NUM_VERTICES] = _numVertices;
+	_vboValue[0][JSON_TAG_NUM_FACES] = _numFaces;
+	_vboValue[0][JSON_TAG_NUM_INDICES] = _numIndices;
 
 	sprintf(_filePath, "%s%s%s", DEFAULT_MESH_PATH, _name, DEFAULT_MESH_EXT);
 
@@ -210,10 +210,10 @@ bool Mesh::FromJson(const Json::Value& value) {
 	{
 		_name = _strdup(value[JSON_TAG_NAME].asCString());
 		_uuid = value[JSON_TAG_UUID].asString();
-		matIndex = value[JSON_TAG_MATERIAL_INDEX].asInt();
-		numVertices = value[JSON_TAG_NUM_VERTICES].asInt();
-		numFaces = value[JSON_TAG_NUM_FACES].asInt();
-		numIndices = value[JSON_TAG_NUM_INDICES].asInt();
+		_matIndex = value[JSON_TAG_MATERIAL_INDEX].asInt();
+		_numVertices = value[JSON_TAG_NUM_VERTICES].asInt();
+		_numFaces = value[JSON_TAG_NUM_FACES].asInt();
+		_numIndices = value[JSON_TAG_NUM_INDICES].asInt();
 
 		LoadVBOFromJson(value);
 		LoadEBOFromJson(value);
@@ -231,11 +231,11 @@ bool Mesh::LoadVBOFromJson(const Json::Value& value)  {
 
 	if (!value.isNull()) 
 	{
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glGenBuffers(1, &_VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 
 		unsigned int vertex_size = (sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 2); // Position / Normal / UV
-		unsigned int vertices_size = vertex_size * numVertices; // Total size of Mesh
+		unsigned int vertices_size = vertex_size * _numVertices; // Total size of Mesh
 
 		glBufferData(GL_ARRAY_BUFFER, vertices_size, nullptr, GL_STATIC_DRAW); // 'Allocate' memory for all data set
 
@@ -251,9 +251,9 @@ bool Mesh::LoadVBOFromJson(const Json::Value& value)  {
 
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 
-		aabb = AABB::AABB(vec(value[JSON_TAG_VBO_MIN][0].asFloat(), value[JSON_TAG_VBO_MIN][1].asFloat(), value[JSON_TAG_VBO_MIN][2].asFloat()), 
+		_aabb = AABB::AABB(vec(value[JSON_TAG_VBO_MIN][0].asFloat(), value[JSON_TAG_VBO_MIN][1].asFloat(), value[JSON_TAG_VBO_MIN][2].asFloat()), 
 						  vec(value[JSON_TAG_VBO_MAX][0].asFloat(), value[JSON_TAG_VBO_MAX][1].asFloat(), value[JSON_TAG_VBO_MAX][2].asFloat()));
-		vec centroid = aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+		vec centroid = _aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	}
 	else  {
 		return false;
@@ -266,9 +266,9 @@ bool Mesh::LoadEBOFromJson(const Json::Value& value) {
 	
 	if (!value.isNull())
 	{
-		glGenBuffers(1, &EBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		unsigned int index_size = sizeof(unsigned) * numFaces * 3;
+		glGenBuffers(1, &_EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+		unsigned int index_size = sizeof(unsigned) * _numFaces * 3;
 
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_size, nullptr, GL_STATIC_DRAW);
 		unsigned* indices = (unsigned*)(glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY));

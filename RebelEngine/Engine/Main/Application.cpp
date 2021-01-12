@@ -38,7 +38,6 @@ Application::Application() {
 	modules.push_back(std::make_unique<ModuleModel>()); models = (ModuleModel*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleProgram>()); program = (ModuleProgram*)modules.rbegin()->get();
 	modules.push_back(std::make_unique<ModuleDebugDraw>()); debugDraw = (ModuleDebugDraw*)modules.rbegin()->get();
-	modules.push_back(std::make_unique<ModuleSerializer>()); serializer = (ModuleSerializer*)modules.rbegin()->get();
 	gui->PreInit();
 
 }

@@ -20,13 +20,9 @@
 ModuleScene::ModuleScene() {
 
 }
+
 ModuleScene::ModuleScene(const Json::Value& value) {
 	this->FromJson(value);
-}
-
-bool ModuleScene::Start() {
-	Load();
-	return true;
 }
 
 ModuleScene::~ModuleScene() {
@@ -92,6 +88,8 @@ void ModuleScene::IterateRoot(GameObject& go) {
 
 bool ModuleScene::Start() {
 	
+	Load();
+
 	IterateRoot(*_root);
 
 	_octree = new Octree();
@@ -204,8 +202,8 @@ bool ModuleScene::Save()
 	return true;
 }
 
-bool ModuleScene::Load()
-{
+bool ModuleScene::Load() {
+
 	std::ifstream ifs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME DEFAULT_SCENE_EXT);
 	Json::CharReaderBuilder reader;
 	Json::Value obj;

@@ -297,11 +297,7 @@
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
     <ClInclude Include="Engine\Main\Pool.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Quadtree.h" />
-<<<<<<< HEAD
-=======
     <ClInclude Include="Engine\GUIs\GUIProject.h" />
-    <ClInclude Include="Engine\CoreModules\ModuleSerializer.h" />
->>>>>>> main
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
     <ClInclude Include="Engine\Main\Skybox.h" />
@@ -431,11 +427,7 @@
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
     <ClCompile Include="Engine\Main\Skybox.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Quadtree.cpp" />
-<<<<<<< HEAD
-=======
     <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
-    <ClCompile Include="Engine\CoreModules\ModuleSerializer.cpp" />
->>>>>>> main
   </ItemGroup>
   <ItemGroup>
     <None Include="External-Libraries\MathGeoLib-1.5\Include\Geometry\KDTree.inl" />

@@ -4,8 +4,9 @@
 #include <memory>
 
 #include "Utils/Globals.h"
-#include "CoreModules/Module.h"
 #include "Utils/Timer.h"
+
+#include "CoreModules/Module.h"
 
 class ModuleRender;
 class ModuleWindow;
@@ -45,7 +46,6 @@ public:
 	ModuleModel* models = nullptr;
 	ModuleScene* scene = nullptr;
 	ModuleGUI *gui = nullptr;
-	ModuleSerializer* serializer = nullptr;
 
 	float deltaTime;
 

@@ -50,8 +50,6 @@ public:
 	std::vector<std::unique_ptr<Component>>& GetComponents() { return _components; }
 	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return _children; }
 	std::vector<std::unique_ptr<GameObject>>& GetChildren() { return _children; }
-	const std::vector<std::unique_ptr<Component>>& GetComponents() const { return _components; }
-	std::vector<std::unique_ptr<Component>>& GetComponents() { return _components; }
 	float4x4 GetGlobalMatrix() const;
 	float4x4 GetLocalMatrix() const;
 	uint32_t GetMorton() const;
@@ -59,7 +57,6 @@ public:
 	void GetOBB(OBB& obb) const;
 	bool IsSelected() const { return _selected; };
 	int GetMask() const { return _mask; }
-	bool HasMesh() const { return (_mask & GO_MASK_MESH) != 0; }
 	std::string GetUUID() { return _uuid; }
 
 #pragma endregion getters
