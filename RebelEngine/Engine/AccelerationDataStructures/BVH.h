@@ -49,8 +49,10 @@ public:
 	BVHNode*  GenerateBVH(std::vector<GameObject *>& orderedGameObjects, unsigned int size);
 
 	void DebugBVH(BVHNode* node);
-	
+
+#ifdef _DEBUG
 	void Print() { Inorder(_root, nullptr, false); }
+#endif
 
 	BVHNode* _root;
 

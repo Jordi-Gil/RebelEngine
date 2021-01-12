@@ -130,7 +130,9 @@ void ModuleModel::LoadTextures(aiMaterial** const materials, unsigned int mNumMa
 
 void ModuleModel::LoadModel(const char* fileName) {
 	
-	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(fileName, 
+		aiProcessPreset_TargetRealtime_MaxQuality
+	);
 
 	if (scene) {
 
@@ -154,8 +156,11 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 		aiNode* father = scene->mRootNode;
 
-		std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get();
-		go->SetName(fn);
+		//Decompose Root Matrix
+		aiVector3D aiScaling; aiQuaternion aiQuat; aiVector3D aiPos;
+		aiDecomposeMatrix(&aiMatrix4x4(), &aiScaling, &aiQuat, &aiPos);
+
+		std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get(); go->SetName(fn);
 		std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
 
 		go->SetParent(App->scene->_root.get());
@@ -163,7 +168,7 @@ void ModuleModel::LoadModel(const char* fileName) {
 		transform->SetOwner(go.get());
 		go->AddComponent(std::move(transform));
 
-		LoadNodeHierarchy(father, *go, scene, lights, cameras);
+		LoadNodeHierarchy(father, *go, scene, lights, cameras, aiPos, aiQuat, aiScaling);
 		App->scene->_root->AddChild(std::move(go));
 
 		LoadTextures(scene->mMaterials, scene->mNumMaterials, fileName);
@@ -178,7 +183,9 @@ void ModuleModel::LoadModel(const char* fileName) {
 
 }
 
-void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiScene* scene, const std::vector<std::string> &lights, const std::vector<std::string>& cameras) {
+void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiScene* scene, 
+	const std::vector<std::string> &lights, const std::vector<std::string>& cameras, 
+	const aiVector3D& aiTrans, const aiQuaternion& aiQuat, const aiVector3D& aiScaling) {
 
 	// assignar nombre edl mesh al name del game object
 	int unsigned num_children = node->mNumChildren;
@@ -186,20 +193,37 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 	for (unsigned int i = 0; i < num_children; ++i) {//node iteration
 
 		std::string str = node->mChildren[i]->mName.C_Str();
-		
+
+		aiVector3D aiScaling_aux; aiQuaternion aiQuat_aux; aiVector3D aiTrans_aux;
+
 		if (str.find("$AssimpFbx$") != std::string::npos) {
-			LoadNodeHierarchy(node->mChildren[i], father, scene, lights, cameras);
+
+			aiDecomposeMatrix(&node->mChildren[i]->mTransformation, &aiScaling_aux, &aiQuat_aux, &aiTrans_aux);
+			aiScaling_aux.SymMul(aiScaling);
+			aiTrans_aux = aiTrans_aux + aiTrans;
+			aiQuaternion aiQuat_aux2 = aiQuat_aux * aiQuat;
+
+			LoadNodeHierarchy(node->mChildren[i], father, scene, lights, cameras, 
+				aiTrans_aux, aiQuat_aux2, aiScaling_aux);
 		}
 		else {
+
+			aiDecomposeMatrix(&node->mChildren[i]->mTransformation, &aiScaling_aux, &aiQuat_aux, &aiTrans_aux);
+			aiScaling_aux.SymMul(aiScaling);
+			aiTrans_aux = aiTrans_aux + aiTrans;
+			aiQuat_aux = aiQuat_aux * aiQuat;
+
 			std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get();
 			go->SetName(node->mChildren[i]->mName.C_Str());
-			std::unique_ptr <ComponentTransform> transform = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
+			std::unique_ptr <ComponentTransform> transform = 
+				std::make_unique <ComponentTransform>(aiMatrix4x4(aiScaling_aux, aiQuat_aux, aiTrans_aux));
 
 			go->SetParent(&father);
 
 			transform->SetOwner(go.get());
 			go->AddComponent(std::move(transform));
 
+			//To avoid create an empty GameObject between parent and the game object wiht mesh itself.
 			if (node->mChildren[i]->mNumMeshes == 1) {
 
 				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
@@ -222,7 +246,7 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 					go_mesh->SetParent(go.get());
 
 					std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
-					std::unique_ptr <ComponentTransform> transform_mesh = std::make_unique <ComponentTransform>(node->mChildren[i]->mTransformation);
+					std::unique_ptr <ComponentTransform> transform_mesh =  std::make_unique <ComponentTransform>(aiMatrix4x4(aiScaling_aux, aiQuat_aux, aiTrans_aux));
 
 					transform_mesh->SetOwner(go_mesh.get());
 					renderer_mesh->SetOwner(go_mesh.get());
@@ -240,12 +264,13 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 					go->AddChild(std::move(go_mesh));
 				}
 			}
+
 			go->SetParent(&father);
-			LoadNodeHierarchy(node->mChildren[i], *go, scene, lights, cameras);
+			LoadNodeHierarchy(node->mChildren[i], *go, scene, lights, cameras, aiVector3D(0,0,0), aiQuaternion(), aiVector3D(1,1,1));
 			father.AddChild(std::move(go));
+
 		}
 	}
-	
 }
 
 bool ModuleModel::CleanUp() {

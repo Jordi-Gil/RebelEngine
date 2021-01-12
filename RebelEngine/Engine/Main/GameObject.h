@@ -52,6 +52,7 @@ public:
 	float4x4 GetLocalMatrix() const;
 	uint32_t GetMorton() const;
 	void GetAABB(AABB& aabb) const;
+	void GetOBB(OBB& obb) const;
 	bool IsSelected() const { return _selected; };
 	int GetMask() const { return _mask; }
 #pragma endregion getters

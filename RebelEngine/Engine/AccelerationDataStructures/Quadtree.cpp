@@ -1,7 +1,7 @@
 #include "Quadtree.h"
 
 #include <queue>
-
+/*
 int QuadTreeNode::_maxDepth = 100;
 int QuadTreeNode::_maxObjectsPerNode = 15;
 
@@ -146,8 +146,4 @@ void QuadTreeNode::Reset() {
 		}
 	}
 }
-
-std::vector<QuadTreeData*> QuadTreeNode::Query(AABB& _box)
-{
-	return std::vector<QuadTreeData*>();
-}
+*/

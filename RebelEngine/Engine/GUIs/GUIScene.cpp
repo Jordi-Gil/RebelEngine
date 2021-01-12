@@ -40,7 +40,7 @@ void GUIScene::Draw() {
 	ImGui::SameLine();
 	if(ImGui::RadioButton("Linear AABB Culling", &e, 1)) { App->scene->SetMask(LINEAR_AABB); }
 	ImGui::SameLine();
-	if(ImGui::RadioButton("Octree Frustum Culling", &e, 2)) { App->scene->SetMask(LINEAR_AABB); }
+	if(ImGui::RadioButton("Octree Frustum Culling", &e, 2)) { App->scene->SetMask(OCTREE); }
 
 	ImGui::EndMenuBar();
 

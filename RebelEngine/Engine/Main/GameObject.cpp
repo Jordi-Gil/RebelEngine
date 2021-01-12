@@ -56,9 +56,6 @@ GameObject::GameObject(GameObject&& go) {
 	
 }
 
-//GameObject::~GameObject() {
-//}
-
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
 	_children.push_back(std::move(go));
 }
@@ -112,31 +109,14 @@ uint32_t GameObject::GetMorton() const {
 	return _meshRenderer->GetMorton();
 }
 
-float3 ComponentWiseMin(float3 a, float4 b){
-	float3 res = a;
-
-	if (b.x < a.x) res.x = b.x;
-	if (b.y < a.y) res.y = b.y;
-	if (b.z < a.z) res.z = b.z;
-
-	return res;
-
-}
-
-float3 ComponentWiseMax(float3 a, float4 b) {
-	float3 res = a;
-
-	if (b.x > a.x) res.x = b.x;
-	if (b.y > a.y) res.y = b.y;
-	if (b.z > a.z) res.z = b.z;
-
-	return res;
-
-}
-
 void GameObject::GetAABB(AABB& aabb) const {
 	if (_meshRenderer) _meshRenderer->GetAABB(aabb);
 	else aabb.SetNegativeInfinity();
+}
+
+void GameObject::GetOBB(OBB& obb) const {
+	AABB box; GetAABB(box);
+	obb = box.Transform(GetGlobalMatrix());
 }
 
 GameObject& GameObject::operator=(const GameObject& go) {

@@ -6,6 +6,8 @@
 #include <memory>
 #include <vector>
 
+#include "Math/float3.h"
+
 class Octree;
 class OctreeNode;
 
@@ -35,6 +37,8 @@ public:
 
 	void SetMask(Rebel_FrustumMask mask) { _mask = mask; }
 
+	void UpdateMinMax(float3 min, float3 max);
+
 private:
 
 	void IterateRoot(GameObject &go);
@@ -49,6 +53,7 @@ public:
 	Pool<GameObject> _poolGameObjects;
 	std::unique_ptr<GameObject> _root;
 	Skybox* _skybox;
+	Octree* _octree = nullptr;
 
 private:
 
@@ -59,7 +64,8 @@ private:
 	GameObject* _goSelected = nullptr;
 	ComponentCamera* _mainCamera = nullptr;
 
-	Octree* _octree = nullptr;
+	float3 _max = float3(FLT_MIN, FLT_MIN, FLT_MIN);
+	float3 _min = float3(FLT_MAX, FLT_MAX, FLT_MAX);
 
 	std::vector<GameObject*> _objects;
 	std::vector<GameObject *> _objectsToDraw;

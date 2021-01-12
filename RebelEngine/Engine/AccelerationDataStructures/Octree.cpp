@@ -1,94 +1,138 @@
 #include "Octree.h"
 
-void OctreeNode::SplitTree(OctreeNode* node, int depth) {
+#include "Utils/debugdraw.h"
 
-	if (depth-- <= 0) {
-		return;
-	}
+int Octree::_maxObjPerNode = 5;
 
-	//If the current node has no childre, split into 8 child nodes
-	if (node->_children == 0) {
-		node->_children = new OctreeNode[8];
+void OctreeNode::Shake() {
 
-		float3 c = node->_bounds.CenterPoint();
-		float3 e = node->_bounds.Size() * 0.5f;
+	for (auto it = _gos.begin(); it != _gos.end();) {
 
-		node->_children[0]._bounds =
-			AABB(c + float3(-e.x, +e.y, -e.z), e);
-		node->_children[1]._bounds =
-			AABB(c + float3(+e.x, +e.y, -e.z), e);
-		node->_children[2]._bounds =
-			AABB(c + float3(-e.x, +e.y, +e.z), e);
-		node->_children[3]._bounds =
-			AABB(c + float3(+e.x, +e.y, +e.z), e);
-		node->_children[4]._bounds =
-			AABB(c + float3(-e.x, -e.y, -e.z), e);
-		node->_children[5]._bounds =
-			AABB(c + float3(+e.x, -e.y, -e.z), e);
-		node->_children[6]._bounds =
-			AABB(c + float3(-e.x, -e.y, +e.z), e);
-		node->_children[7]._bounds =
-			AABB(c + float3(+e.x, -e.y, +e.z), e);
-	}
+		GameObject* go = *it;
+		AABB aabb; go->GetAABB(aabb);
+		OBB obb = aabb.Transform(go->GetGlobalMatrix());
 
-	if (node->_children != 0 && node->_gos.size() > 0) {
-		for (int i = 0; i < 8; ++i) {
-			for (int j = 0, size = node->_gos.size(); j < size; ++j) {
-				AABB box;  node->_gos[j]->GetAABB(box);
-				OBB obb = box.Transform(node->_gos[i]->GetGlobalMatrix());
-				if (node->_children[i]._bounds.Intersects(obb)) {
-					node->_children[i]._gos.push_back(node->_gos[j]);
-				}
+		bool intersects[8];
+		bool keep_node = true;
+
+		for (int i = 0; i < 8; i++) {
+			intersects[i] = _children[i]._bounds.Intersects(obb.MinimalEnclosingAABB());
+			keep_node = keep_node && intersects[i];
+		}
+
+		if (keep_node) ++it;
+		else {
+			it = _gos.erase(it);
+			//Always 8 children
+			for (int i = 0; i < 8; i++) {
+				if (intersects[i]) _children[i].Insert(go);
 			}
 		}
 
-		node->_gos.clear();
-
-		for (int i = 0; i < 8; ++i) {
-			SplitTree(&(node->_children[i]), depth);
-		}
 	}
+
 }
 
-void OctreeNode::Insert(OctreeNode* node, GameObject* go) {
+void OctreeNode::Split() {
+	
+	_children = std::vector<OctreeNode>(8);
+
+	float3 center = _bounds.CenterPoint();
+	float3 size = _bounds.Size();
+		
+	float3 new_center(center);
+	float3 new_size(size * 0.5f);
+	AABB new_box;
+
+	new_box.SetFromCenterAndSize(center + float3(+size.x, -size.y, +size.z) * 0.25f, new_size);
+	_children[0]._bounds = new_box;
+
+	new_box.SetFromCenterAndSize(center + float3(+size.x, +size.y, +size.z) * 0.25f, new_size);
+	_children[1]._bounds = new_box;
+
+	new_box.SetFromCenterAndSize(center + float3(+size.x, -size.y, -size.z) * 0.25f, new_size);
+	_children[2]._bounds = new_box;
+
+	new_box.SetFromCenterAndSize(center + float3(+size.x, +size.y, -size.z) * 0.25f, new_size);
+	_children[3]._bounds = new_box;
+
+	new_box.SetFromCenterAndSize(center + float3(-size.x, -size.y, -size.z) * 0.25f, new_size);
+	_children[4]._bounds = new_box;
+
+	new_box.SetFromCenterAndSize(center + float3(-size.x, +size.y, -size.z) * 0.25f, new_size);
+	_children[5]._bounds = new_box;
+
+	new_box.SetFromCenterAndSize(center + float3(-size.x, -size.y, +size.z) * 0.25f, new_size);
+	_children[6]._bounds = new_box;
+
+	new_box.SetFromCenterAndSize(center + float3(-size.x, +size.y, +size.z) * 0.25f, new_size);
+	_children[7]._bounds = new_box;
+	
+}
+
+void OctreeNode::Insert(GameObject* go) {
 	
 	AABB aabb; go->GetAABB(aabb);
 	OBB obb = aabb.Transform(go->GetGlobalMatrix());
 
-	if (node->_bounds.Intersects(obb)) {
-		if(node->_children == 0){
-			node->_gos.push_back(go);
+	if (IsLeaf() && _gos.size() < Octree::_maxObjPerNode) {
+		_gos.push_back(go);
+	}
+	else {
+
+		if (IsLeaf()) {
+			Split();
 		}
-		else {
-			for (int i = 0; i < 8; ++i) {
-				Insert(&(node->_children[i]), go);
-			}
-		}
+
+		_gos.push_back(go);
+		Shake();
 	}
 }
 
-void OctreeNode::Remove(OctreeNode* node, GameObject* go) {
+void OctreeNode::Remove(GameObject* go) {
 
-	if (node->_children == 0) {
-		auto it = std::find(
-				node->_gos.begin(), 
-				node->_gos.end(),
-				go
-		);
+	if (IsLeaf()) {
+		auto it = std::find( _gos.begin(), _gos.end(), go );
 
-		if (it != node->_gos.end()) {
-			node->_gos.erase(it);
-		}
+		if (it != _gos.end()) { _gos.erase(it);	}
 
 	}
 	else {
 		for (int i = 0; i < 8; ++i) {
-			Remove(&(node->_children[i]), go);
+			_children[i].Remove(go);
 		}
 	}
 }
 
-void OctreeNode::Update(OctreeNode* node, GameObject* go) {
-	Remove(node, go);
-	Insert(node, go);
+void OctreeNode::Update(GameObject* go) {
+	Remove(go);
+	Insert(go);
+}
+
+void Octree::Insert(OctreeNode* node, GameObject* go) { node->Insert(go); }
+void Octree::Remove(OctreeNode* node, GameObject* go) { node->Remove(go); }
+void Octree::Update(OctreeNode* node, GameObject* go) { node->Update(go); }
+
+void Octree::DebugDraw(OctreeNode* node) {
+
+
+	dd::aabb(node->_bounds.minPoint, node->_bounds.maxPoint, dd::colors::LightGreen);
+
+	if (node->_children.size() != 0) {
+		for (int i = 0; i < 8; i++) {
+			DebugDraw(&(node->_children[i]));
+		}
+	}
+	else {
+		for (int i = 0; i < node->_gos.size(); i++) {
+			AABB box; node->_gos[i]->GetAABB(box);
+			OBB obb = box.Transform(node->_gos[i]->GetGlobalMatrix());
+			dd::aabb(
+				obb.MinimalEnclosingAABB().minPoint,
+				obb.MinimalEnclosingAABB().maxPoint,
+				dd::colors::Aquamarine
+				);
+		}
+	}
+
 }

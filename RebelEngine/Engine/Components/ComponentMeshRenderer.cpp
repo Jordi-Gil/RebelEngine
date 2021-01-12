@@ -26,11 +26,11 @@ void ComponentMeshRenderer::Draw(){
 	
 	assert(_owner != nullptr && "Component without and owner");
 	
-	//if (_owner->IsSelected()) {
+	if (_owner->IsSelected()) {
 		AABB box;  _owner->GetAABB(box);
 		OBB obb = box.Transform(_owner->GetGlobalMatrix());
 		AABB res = obb.MinimalEnclosingAABB();
-		//dd::aabb(res.minPoint, res.maxPoint, dd::colors::Orange);
-	//}
+		dd::aabb(res.minPoint, res.maxPoint, dd::colors::Orange);
+	}
 	_mesh->Draw(App->models->textures, _owner->GetGlobalMatrix());
 }

@@ -3,6 +3,7 @@
 #include "CoreModules/ModuleEditorCamera.h"
 #include "CoreModules/ModuleProgram.h"
 #include "CoreModules/ModuleTexture.h"
+#include "CoreModules/ModuleScene.h"
 
 #include "Application.h"
 
@@ -75,12 +76,12 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 		}
 	}
 	glUnmapBuffer(GL_ARRAY_BUFFER);
+
 	_numVertices = mesh->mNumVertices;
 
 	_aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
 	vec centroid = _aabb.Centroid(); _mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	//obb = OBB::OBB(aabb);
-
 }
 
 void Mesh::LoadEBO(const aiMesh* mesh) {

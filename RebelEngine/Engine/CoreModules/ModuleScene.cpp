@@ -71,7 +71,11 @@ void ModuleScene::IterateRoot(GameObject& go) {
 		IterateRoot(*children);
 	}
 
-	if (go.HasMesh()) _objects.push_back(&go);
+	if (go.HasMesh()) { 
+		_objects.push_back(&go);
+		OBB obb; go.GetOBB(obb);
+		UpdateMinMax(obb.MinimalEnclosingAABB().minPoint, obb.MinimalEnclosingAABB().maxPoint);
+	}
 	else if (go.GetMask() & GO_MASK_CAMERA) _objectsToDraw.push_back(&go);
 }
 
@@ -80,14 +84,11 @@ bool ModuleScene::Start() {
 	IterateRoot(*_root);
 
 	_octree = new Octree();
+	_octree->_root->_bounds = AABB(_min, _max);
 
 	for (int i = 0; i < _objects.size(); ++i) {
-		_octree->_root->_gos.push_back(_objects[i]);
+		_octree->Insert(_octree->_root, _objects[i]);
 	}
-
-	_octree->_root->_bounds.SetNegativeInfinity();
-	_octree->_root->_children = 0;
-	_octree->_root->SplitTree(_octree->_root, 5);
 
 	return true;
 }
@@ -104,7 +105,11 @@ void ModuleScene::FrustumCulling(OctreeNode* node) {
 			}
 		}
 
-		FrustumCulling(node->_children);
+		if (node->_children.size() != 0) { 
+			for (int i = 0; i < 8; i++) {
+				FrustumCulling(&(node->_children[i]));
+			}
+		}
 
 	}
 }
@@ -122,7 +127,10 @@ update_status ModuleScene::PreUpdate() {
 
 	
 	if( (_mask & LINEAR_AABB) != 0 ) { FrustumCulling(); }
-	else if ((_mask & OCTREE) != 0) { FrustumCulling(_octree->_root); }
+	else if ((_mask & OCTREE) != 0) { 
+		FrustumCulling(_octree->_root);
+		_octree->DebugDraw(_octree->_root);
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -159,4 +167,16 @@ void ModuleScene::DrawFrustumOutput() {
 void ModuleScene::Draw() {
 	if((_mask & NO_FRUSTUM) != 0) DrawRecursive(*_root);
 	else DrawFrustumOutput();
+}
+
+void ModuleScene::UpdateMinMax(float3 min, float3 max) {
+
+	if (min.x < _min.x) _min.x = min.x;
+	if (min.y < _min.y) _min.y = min.y;
+	if (min.z < _min.z) _min.z = min.z;
+
+	if (max.x > _max.x) _max.x = max.x;
+	if (max.y > _max.y) _max.y = max.y;
+	if (max.z > _max.z) _max.z = max.z;
+
 }

@@ -7,24 +7,23 @@ class OctreeNode
 
 public:
 
-	OctreeNode() : _children(0) {}
-	~OctreeNode() {
-		if (_children != 0) {
-			delete[] _children;
-		}
-	}
+	OctreeNode() {}
+	~OctreeNode() {}
 
 public:
 
-	void SplitTree(OctreeNode* node, int depth);
+	bool IsLeaf() { return _children.size() == 0; }
 
-	void Insert(OctreeNode* node, GameObject* go);
-	void Remove(OctreeNode* node, GameObject* go);
-	void Update(OctreeNode* node, GameObject* go);
+	void Shake();
+	void Split();
+
+	void Insert(GameObject *go);
+	void Remove(GameObject *go);
+	void Update(GameObject *go);
 
 	AABB _bounds;
-	OctreeNode* _children;
 
+	std::vector<OctreeNode> _children;
 	std::vector<GameObject*> _gos;
 
 };
@@ -36,8 +35,16 @@ public:
 	Octree() { _root = new OctreeNode(); }
 	~Octree() { delete _root; _root = nullptr; }
 
+	void DebugDraw(OctreeNode* node);
+
+	void Insert(OctreeNode* node, GameObject* go);
+	void Remove(OctreeNode* node, GameObject* go);
+	void Update(OctreeNode* node, GameObject* go);
+
 public:
 
-	OctreeNode* _root = _root = nullptr;;
+	OctreeNode* _root = _root = nullptr;
+
+	static int _maxObjPerNode;
 
 };
