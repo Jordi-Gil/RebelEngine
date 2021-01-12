@@ -1,11 +1,13 @@
 #pragma once
 #include "Main/Mesh.h"
 #include "Components/Component.h"
+
 class ComponentMeshRenderer : public Component {
 
 public:
 
 	ComponentMeshRenderer();
+	ComponentMeshRenderer(const Json::Value& value);
 	~ComponentMeshRenderer();
 
 	void Enable() override {}
@@ -22,9 +24,10 @@ public:
 		//aabb.Enclose(_mesh->_aabb); 
 		aabb = _mesh->_aabb;
 	};
+	bool ToJson(Json::Value& value, int pos);
+	bool FromJson(const Json::Value& value);
 
 private:
-
 	Mesh* _mesh = nullptr;
 };
 

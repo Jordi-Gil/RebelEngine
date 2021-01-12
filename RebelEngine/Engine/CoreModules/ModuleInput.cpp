@@ -7,7 +7,7 @@
 #include "ModuleRender.h"
 #include "ModuleInput.h"
 #include "ModuleModel.h"
-
+#include "ModuleScene.h"
 #include "ImGui/imgui_impl_sdl.h"
 
 #include <assimp/Importer.hpp>
@@ -140,6 +140,7 @@ update_status ModuleInput::Update() {
 		switch (sdlEvent.type) {
 
 			case SDL_QUIT:
+				App->scene->Save();
 				return UPDATE_STOP;
 			case SDL_WINDOWEVENT:
 				switch (sdlEvent.window.event) {

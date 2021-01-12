@@ -10,6 +10,9 @@
 #include <GL/glew.h>
 #include "Math/float3x3.h"
 
+#include <iostream>
+#include <fstream>
+
 // method to seperate bits from a given integer 3 positions apart
 inline uint32_t splitBy3(unsigned int a) {
 	uint32_t x = a & 0x1fffff; // we only look at the first 21 bits
@@ -45,42 +48,55 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	float* data = (float*)(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 	
 	if (!data) LOG("glMapBuffer error", _ERROR);
+	
 	unsigned int pos = 0;
+
+	Json::Value jValue(Json::arrayValue);
+
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i) {
 		//Position
-		data[pos++] = mesh->mVertices[i].x; 
+		data[pos++] = mesh->mVertices[i].x; jValue.append(mesh->mVertices[i].x);
 		if (mesh->mVertices[i].x > max[0]) max[0] = mesh->mVertices[i].x;
 		if (mesh->mVertices[i].x < min[0]) min[0] = mesh->mVertices[i].x;
 
-		data[pos++] = mesh->mVertices[i].y;
+		data[pos++] = mesh->mVertices[i].y; jValue.append(mesh->mVertices[i].y);
 		if (mesh->mVertices[i].y > max[1]) max[1] = mesh->mVertices[i].y;
 		if (mesh->mVertices[i].y < min[1]) min[1] = mesh->mVertices[i].y;
 
-		data[pos++] = mesh->mVertices[i].z;
+		data[pos++] = mesh->mVertices[i].z; jValue.append(mesh->mVertices[i].z);
 		if (mesh->mVertices[i].z > max[2]) max[2] = mesh->mVertices[i].z;
 		if (mesh->mVertices[i].z < min[2]) min[2] = mesh->mVertices[i].z;
 
 		//Normal
-		data[pos++] = mesh->mNormals[i].x;
-		data[pos++] = mesh->mNormals[i].y;
-		data[pos++] = mesh->mNormals[i].z;
+		data[pos++] = mesh->mNormals[i].x; jValue.append(mesh->mNormals[i].x);
+		data[pos++] = mesh->mNormals[i].y; jValue.append(mesh->mNormals[i].y);
+		data[pos++] = mesh->mNormals[i].z; jValue.append(mesh->mNormals[i].z);
 
 		//UV
 		if (mesh->mTextureCoords[0]) {
-			data[pos++] = mesh->mTextureCoords[0][i].x;
-			data[pos++] = mesh->mTextureCoords[0][i].y;
+			data[pos++] = mesh->mTextureCoords[0][i].x; jValue.append(mesh->mTextureCoords[0][i].x);
+			data[pos++] = mesh->mTextureCoords[0][i].y; jValue.append(mesh->mTextureCoords[0][i].y);
 		}
 		else {
-			data[pos++] = 0;
-			data[pos++] = 0;
+			data[pos++] = 0; jValue.append(0.0f);
+			data[pos++] = 0; jValue.append(0.0f);
 		}
 	}
+
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	_numVertices = mesh->mNumVertices;
+	_vboValue[0][JSON_TAG_VBO] = jValue; jValue.clear();
+	_vboValue[0][JSON_TAG_VBO_SIZE] = pos;
 
-	_aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
-	vec centroid = _aabb.Centroid(); _mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+	jValue.append(max[0]); jValue.append(max[1]); jValue.append(max[2]);
+	_vboValue[0][JSON_TAG_VBO_MAX] = jValue; jValue.clear();
+
+	jValue.append(min[0]); jValue.append(min[1]); jValue.append(min[2]);
+	_vboValue[0][JSON_TAG_VBO_MIN] = jValue; jValue.clear();
+
+	aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
+	vec centroid = aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	//obb = OBB::OBB(aabb);
 }
 
@@ -95,11 +111,16 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 	
 	if(!indices) LOG("glMapBuffer error", _ERROR);
 
+	Json::Value jValue(Json::arrayValue);
 	for (unsigned i = 0; i < mesh->mNumFaces; ++i) {
 		for (uint j = 0; j < mesh->mFaces[i].mNumIndices; j++) {
 			*(indices++) = mesh->mFaces[i].mIndices[j];
+			jValue.append(mesh->mFaces[i].mIndices[j]);
 		}
 	}
+	
+	_vboValue[0][JSON_TAG_EBO] = jValue;
+
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	
 	_numFaces = mesh->mNumFaces;
@@ -145,8 +166,9 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& 
 
 	glBindVertexArray(_VAO);
 	glActiveTexture(GL_TEXTURE0);
-
-	glBindTexture(GL_TEXTURE_2D, materials[_matIndex].first);
+	//TODO: TEXTURE HARDCORED
+	//glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
+	glBindTexture(GL_TEXTURE_2D, materials[0].first);
 
 	glDrawElements(GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, nullptr);
 
@@ -160,4 +182,109 @@ void Mesh::Clean() {
 	glDeleteBuffers(1, &_VBO);
 	glDeleteBuffers(1, &_EBO);
 	glDeleteBuffers(1, &_VAO);
+}
+
+bool Mesh::WriteJsonFile(){
+
+	_vboValue[0][JSON_TAG_NAME] = _name;
+	_vboValue[0][JSON_TAG_UUID] = _uuid;
+	_vboValue[0][JSON_TAG_MATERIAL_INDEX] = matIndex;
+	_vboValue[0][JSON_TAG_NUM_VERTICES] = numVertices;
+	_vboValue[0][JSON_TAG_NUM_FACES] = numFaces;
+	_vboValue[0][JSON_TAG_NUM_INDICES] = numIndices;
+
+	sprintf(_filePath, "%s%s%s", DEFAULT_MESH_PATH, _name, DEFAULT_MESH_EXT);
+
+	Json::StyledWriter wr;
+	std::ofstream ofs(_filePath, std::ios_base::binary);
+	std::string st = wr.write(_vboValue);
+	ofs.write(st.c_str(), st.size());
+	ofs.close();
+
+	return true;
+}
+
+bool Mesh::FromJson(const Json::Value& value) {
+
+	if (!value.isNull()) 
+	{
+		_name = _strdup(value[JSON_TAG_NAME].asCString());
+		_uuid = value[JSON_TAG_UUID].asString();
+		matIndex = value[JSON_TAG_MATERIAL_INDEX].asInt();
+		numVertices = value[JSON_TAG_NUM_VERTICES].asInt();
+		numFaces = value[JSON_TAG_NUM_FACES].asInt();
+		numIndices = value[JSON_TAG_NUM_INDICES].asInt();
+
+		LoadVBOFromJson(value);
+		LoadEBOFromJson(value);
+		CreateVAO();
+
+	}
+	else 
+	{
+		return false;
+	}
+	return true;
+}
+
+bool Mesh::LoadVBOFromJson(const Json::Value& value)  {
+
+	if (!value.isNull()) 
+	{
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+		unsigned int vertex_size = (sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 2); // Position / Normal / UV
+		unsigned int vertices_size = vertex_size * numVertices; // Total size of Mesh
+
+		glBufferData(GL_ARRAY_BUFFER, vertices_size, nullptr, GL_STATIC_DRAW); // 'Allocate' memory for all data set
+
+		//Como assimp en mTextureCoords tiene varias dimensiones, para coger las coordenadas UV en 2D debemos acceder unicamente a la posicion 0
+		float* data = (float*)(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+
+		if (!data) LOG("glMapBuffer error", _ERROR);
+
+		for (unsigned i = 0; i < value[JSON_TAG_VBO_SIZE].asUInt(); ++i)
+		{ 
+			data[i] = value[JSON_TAG_VBO][i].asFloat();
+		}
+
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+
+		aabb = AABB::AABB(vec(value[JSON_TAG_VBO_MIN][0].asFloat(), value[JSON_TAG_VBO_MIN][1].asFloat(), value[JSON_TAG_VBO_MIN][2].asFloat()), 
+						  vec(value[JSON_TAG_VBO_MAX][0].asFloat(), value[JSON_TAG_VBO_MAX][1].asFloat(), value[JSON_TAG_VBO_MAX][2].asFloat()));
+		vec centroid = aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+	}
+	else  {
+		return false;
+	}
+
+	return true;
+}
+
+bool Mesh::LoadEBOFromJson(const Json::Value& value) {
+	
+	if (!value.isNull())
+	{
+		glGenBuffers(1, &EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		unsigned int index_size = sizeof(unsigned) * numFaces * 3;
+
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_size, nullptr, GL_STATIC_DRAW);
+		unsigned* indices = (unsigned*)(glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY));
+
+		if (!indices) LOG(_ERROR, "glMapBuffer error");
+		int aux = value[JSON_TAG_EBO].size();
+		for (unsigned i = 0; i < value[JSON_TAG_EBO].size(); ++i) {
+			indices[i] = value[JSON_TAG_EBO][i].asUInt();
+		}
+		
+		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+
+	}
+	else
+	{
+		return false;
+	}
+	return true;
 }

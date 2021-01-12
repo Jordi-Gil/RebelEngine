@@ -6,6 +6,7 @@
 
 #include "AccelerationDataStructures/BVH.h"
 #include "AccelerationDataStructures/Octree.h"
+#include "CoreModules/ModuleEditorCamera.h"
 
 #include "Main/Application.h"
 
@@ -13,9 +14,19 @@
 #include "Main/GameObject.h"
 
 #include <algorithm>
+#include <iostream>
+#include <fstream>
 
 ModuleScene::ModuleScene() {
 
+}
+ModuleScene::ModuleScene(const Json::Value& value) {
+	this->FromJson(value);
+}
+
+bool ModuleScene::Start() {
+	Load();
+	return true;
 }
 
 ModuleScene::~ModuleScene() {
@@ -179,4 +190,59 @@ void ModuleScene::UpdateMinMax(float3 min, float3 max) {
 	if (max.y > _max.y) _max.y = max.y;
 	if (max.z > _max.z) _max.z = max.z;
 
+}
+
+bool ModuleScene::Save() 
+{
+	Json::Value value;
+	this->ToJson(value,0);
+	Json::StyledWriter wr;
+	std::ofstream ofs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME DEFAULT_SCENE_EXT);
+	std::string st = wr.write(value);
+	ofs.write(st.c_str(), st.size());
+
+	return true;
+}
+
+bool ModuleScene::Load()
+{
+	std::ifstream ifs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME DEFAULT_SCENE_EXT);
+	Json::CharReaderBuilder reader;
+	Json::Value obj;
+	std::string error;
+
+	if (!Json::parseFromStream(reader, ifs, &obj, &error))
+	{
+		LOG(_ERROR, "Error parsing file: %s", error);
+		return false;
+	}
+
+	FromJson(obj[0]);
+
+	return true;
+}
+
+bool ModuleScene::ToJson(Json::Value& value, int pos)
+{
+	Json::Value childrenList;
+	_root->ToJson(childrenList, 0);
+	value[pos][JSON_TAG_NAME] = DEFAULT_SCENE_NAME;
+	value[pos][JSON_TAG_ROOT] = childrenList;
+	App->editorCamera->GetCamera()->ToJson(value[pos][JSON_TAG_EDITOR_CAMERA], 0);
+
+	return true;
+}
+
+bool ModuleScene::FromJson(const Json::Value& value) {
+
+	Json::Value root = value[JSON_TAG_ROOT];
+
+	if (!root.isNull()) {
+		_root = std::make_unique<GameObject>(root[0]);
+		App->editorCamera->SetCamera(new ComponentCamera(value[JSON_TAG_EDITOR_CAMERA][0]));
+	}
+	else {
+		//TODO: JSON ERROR
+	}
+	return true;
 }

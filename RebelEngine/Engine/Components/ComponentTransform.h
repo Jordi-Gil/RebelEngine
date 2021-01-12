@@ -14,6 +14,7 @@ public:
 	ComponentTransform();
 	ComponentTransform(const float3 position, const float3 rotation, const float3 scale);
 	ComponentTransform(const aiMatrix4x4& matrix);
+	ComponentTransform(const Json::Value& value);
 	
 	~ComponentTransform() {}
 
@@ -34,6 +35,9 @@ public:
 	float3 GetRotation() const { return _rotation; }
 	float3 GetScale() const { return _scale; }
 	Quat GetRotationQuat() const { return _rotationQuat; }
+
+	bool ToJson(Json::Value& value, int pos);
+	bool FromJson(const Json::Value& value);
 
 public:
 

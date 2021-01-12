@@ -45,6 +45,7 @@ public:
 	ModuleModel* models = nullptr;
 	ModuleScene* scene = nullptr;
 	ModuleGUI *gui = nullptr;
+	ModuleSerializer* serializer = nullptr;
 
 	float deltaTime;
 

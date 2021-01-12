@@ -74,7 +74,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Engine;./External-Libraries/Brofiler-1.1.2/include;./External-Libraries/infoware-0.5.5/include;./External-Libraries/SDL2_image/include;./External-Libraries/SDL/include;./External-Libraries/glew-2.1.0/include;./External-Libraries/MathGeoLib-1.5/include;./External-Libraries/ImGui/Include;./External-Libraries/DevIL-1.8.0/include;./External-Libraries/assimp-5.0.1/include;./External-Libraries/Visual Leak Detector/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./External-Libraries/jsoncpp-1.9.4/include;./Engine;./External-Libraries/Brofiler-1.1.2/include;./External-Libraries/infoware-0.5.5/include;./External-Libraries/SDL2_image/include;./External-Libraries/SDL/include;./External-Libraries/glew-2.1.0/include;./External-Libraries/MathGeoLib-1.5/include;./External-Libraries/ImGui/Include;./External-Libraries/DevIL-1.8.0/include;./External-Libraries/assimp-5.0.1/include;./External-Libraries/Visual Leak Detector/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>INFOWARE_USE_D3D;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -82,8 +82,8 @@
     <Link>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./External-Libraries/SDL/lib/x86;./External-Libraries/Brofiler-1.1.2/lib;./External-Libraries/infoware-0.5.5/lib/Debug;./External-Libraries/assimp-5.0.1/lib/;./External-Libraries/DevIL-1.8.0/lib/x86/Release;./External-Libraries/SDL2_image/libx86/;./External-Libraries/glew-2.1.0/lib/Release/Win32;./External-Libraries/Visual Leak Detector/lib/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ProfilerCore32.lib;infowared.lib;vld.lib;assimp-vc141-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;SDL2.lib;SDL2_image.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;wbemuuid.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./External-Libraries/SDL/lib/x86;./External-Libraries/Brofiler-1.1.2/lib;./External-Libraries/infoware-0.5.5/lib/Debug;./External-Libraries/assimp-5.0.1/lib/;./External-Libraries/DevIL-1.8.0/lib/x86/Release;./External-Libraries/SDL2_image/libx86/;./External-Libraries/glew-2.1.0/lib/Release/Win32;./External-Libraries/Visual Leak Detector/lib/Win32;./External-Libraries/jsoncpp-1.9.4/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jsoncpp.lib;ProfilerCore32.lib;infowared.lib;vld.lib;assimp-vc141-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;SDL2.lib;SDL2_image.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;wbemuuid.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -117,7 +117,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Engine;./External-Libraries/Brofiler-1.1.2/include;./External-Libraries/infoware-0.5.5/include;./External-Libraries/SDL2_image/include;./External-Libraries/SDL/include;./External-Libraries/glew-2.1.0/include;./External-Libraries/MathGeoLib-1.5/include;./External-Libraries/ImGui/Include;./External-Libraries/DevIL-1.8.0/include;./External-Libraries/assimp-5.0.1/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Engine;./External-Libraries/Brofiler-1.1.2/include;./External-Libraries/infoware-0.5.5/include;./External-Libraries/SDL2_image/include;./External-Libraries/SDL/include;./External-Libraries/glew-2.1.0/include;./External-Libraries/MathGeoLib-1.5/include;./External-Libraries/ImGui/Include;./External-Libraries/DevIL-1.8.0/include;./External-Libraries/assimp-5.0.1/include;./External-Libraries/jsoncpp-1.9.4/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>INFOWARE_USE_D3D;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -126,8 +126,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./External-Libraries/SDL/lib/x86;./External-Libraries/Brofiler-1.1.2/lib;./External-Libraries/infoware-0.5.5/lib/Release;./External-Libraries/assimp-5.0.1/lib/;./External-Libraries/DevIL-1.8.0/lib/x86/Release;./External-Libraries/SDL2_image/libx86/;./External-Libraries/glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ProfilerCore32.lib;infoware.lib;assimp-vc141-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;SDL2.lib;SDL2_image.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;wbemuuid.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./External-Libraries/jsoncpp-1.9.4/lib/Release;./External-Libraries/SDL/lib/x86;./External-Libraries/Brofiler-1.1.2/lib;./External-Libraries/infoware-0.5.5/lib/Release;./External-Libraries/assimp-5.0.1/lib/;./External-Libraries/DevIL-1.8.0/lib/x86/Release;./External-Libraries/SDL2_image/libx86/;./External-Libraries/glew-2.1.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jsoncpp.lib;ProfilerCore32.lib;infoware.lib;assimp-vc141-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;SDL2.lib;SDL2_image.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;wbemuuid.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -177,6 +177,7 @@
     <ClInclude Include="Engine\Utils\debugdraw.h" />
     <ClInclude Include="Engine\Utils\debug_draw.hpp" />
     <ClInclude Include="Engine\Utils\Globals.h" />
+    <ClInclude Include="Engine\Utils\RUUID.h" />
     <ClInclude Include="Engine\Utils\Timer.h" />
     <ClInclude Include="Engine\GUIs\GUIConfiguration.h" />
     <ClInclude Include="Engine\GUIs\GUIScene.h" />
@@ -296,6 +297,11 @@
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
     <ClInclude Include="Engine\Main\Pool.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Quadtree.h" />
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Engine\GUIs\GUIProject.h" />
+    <ClInclude Include="Engine\CoreModules\ModuleSerializer.h" />
+>>>>>>> main
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
     <ClInclude Include="Engine\Main\Skybox.h" />
@@ -425,6 +431,11 @@
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
     <ClCompile Include="Engine\Main\Skybox.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Quadtree.cpp" />
+<<<<<<< HEAD
+=======
+    <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
+    <ClCompile Include="Engine\CoreModules\ModuleSerializer.cpp" />
+>>>>>>> main
   </ItemGroup>
   <ItemGroup>
     <None Include="External-Libraries\MathGeoLib-1.5\Include\Geometry\KDTree.inl" />

@@ -8,9 +8,10 @@
 
 #include "Math/float3.h"
 
+#include "json/json.h"
+
 class Octree;
 class OctreeNode;
-
 class Skybox;
 class GameObject;
 class ComponentCamera;
@@ -26,6 +27,7 @@ class ModuleScene : public Module {
 public:
 
 	ModuleScene();
+	ModuleScene(const Json::Value& value);
 	~ModuleScene();
 
 	bool Init() override;
@@ -39,6 +41,12 @@ public:
 
 	void UpdateMinMax(float3 min, float3 max);
 
+	void InsertOrdered(GameObject& go);
+	bool Save();
+	bool Load();
+	bool ToJson(Json::Value& value, int pos);
+	bool FromJson(const Json::Value& value);
+	
 private:
 
 	void IterateRoot(GameObject &go);

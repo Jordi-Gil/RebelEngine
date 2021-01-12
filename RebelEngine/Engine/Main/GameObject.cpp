@@ -1,14 +1,22 @@
 #include "GameObject.h"
 
-#include "Components/Component.h"
+#include "CoreModules/ModuleScene.h"
+
 #include "Components/ComponentTransform.h"
+#include "Components/ComponentCamera.h"
+#include "Components/Component.h"
 
 #include "Application.h"
 
-#include "CoreModules/ModuleScene.h"
+#include "Utils/RUUID.h"
+
+GameObject::GameObject() {
+	_uuid = RUUID::generate_uuid_v4();
+}
 
 GameObject::GameObject(const char* name) {
 	_name = std::string(name);
+	_uuid = RUUID::generate_uuid_v4();
 }
 
 GameObject::GameObject(const GameObject& go) {
@@ -16,6 +24,7 @@ GameObject::GameObject(const GameObject& go) {
 	this->_active = go._active;
 	this->_name = go._name;
 	this->_parent = go._parent;
+	this->_uuid = go._uuid;
 
 	for (const auto& child : go._children) {
 		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
@@ -36,6 +45,7 @@ GameObject::GameObject(GameObject&& go) {
 	this->_active = go._active;
 	this->_name = go._name;
 	this->_parent = go._parent;
+	this->_uuid = go._uuid;
 
 	go._parent = nullptr;
 	go._name = nullptr;
@@ -54,6 +64,30 @@ GameObject::GameObject(GameObject&& go) {
 	go._components.clear();
 	go._components.shrink_to_fit();
 	
+}
+
+GameObject::GameObject(const Json::Value& value) 
+{
+	this->FromJson(value);
+}
+
+GameObject::~GameObject() {
+	free((char*)_name);
+	_name = nullptr;
+}
+
+//TODO: Modify to UUID
+void GameObject::EraseChildrenNull() {
+	bool found = false;
+	auto it_found = _children.begin();
+	for (auto it = _children.begin(); !found && it != _children.end(); ++it) {
+		if (!it->get()->_name) { //null if is destroyed
+			found = true;
+			it_found = it;
+		}
+	}
+	if (found) 
+		_children.erase(it_found);
 }
 
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
@@ -87,8 +121,7 @@ bool GameObject::HasComponent(type_component type) const {
 	return false;
 }
 
-Component* GameObject::GetComponent(type_component type) const
-{
+Component* GameObject::GetComponent(type_component type) const {
 	for (auto const& component : _components) {
 		if (component->GetType() == type) return component.get();
 	}
@@ -155,4 +188,70 @@ void GameObject::UpdateChildrenTransform() {
 
 void GameObject::ToggleSelected(){
 	_selected = !_selected;
+}
+
+bool GameObject::ToJson(Json::Value& value, int pos)  {
+
+	Json::Value childrenList;
+	Json::Value componentList;
+
+	value[pos][JSON_TAG_NAME] = _name;
+	value[pos][JSON_TAG_UUID] = _uuid;
+
+	int go_cont = 0;
+	for (const auto& child : _children)
+	{
+		child->ToJson(childrenList, go_cont);
+		++go_cont;
+	}
+
+	int comp_cont = 0;
+	for (const auto& comp : _components)
+	{
+		comp->ToJson(componentList, comp_cont);
+		++comp_cont;
+	}
+
+	value[pos][JSON_TAG_GAMEOBJECTS] = childrenList;
+	value[pos][JSON_TAG_COMPONENTS] = componentList;
+
+	return true;
+}
+
+bool GameObject::FromJson(const Json::Value& value)  {
+	
+	if (!value.isNull()) 
+	{
+		_name = _strdup(value[JSON_TAG_NAME].asCString());
+		_uuid = value[JSON_TAG_UUID].asCString();
+		_active = value[JSON_TAG_ACTIVE].asBool();
+
+		for (Json::Value jsonGo : value[JSON_TAG_GAMEOBJECTS])
+		{
+			std::unique_ptr<GameObject> go = std::make_unique<GameObject>(jsonGo);
+			go->SetParent(this);
+			AddChild(std::move(go));
+		}
+
+		for (Json::Value jsonComp : value[JSON_TAG_COMPONENTS])
+		{
+			type_component type = (type_component)jsonComp[JSON_TAG_TYPE].asInt();
+			std::unique_ptr<Component> comp;
+			switch (type)
+			{
+				case type_component::NONE: comp = std::make_unique<Component>(jsonComp);  break;
+				case type_component::CAMERA: comp = std::make_unique<ComponentCamera>(jsonComp); break;
+				case type_component::MESHRENDERER:  comp = std::make_unique<ComponentMeshRenderer>(jsonComp); break;
+				case type_component::TRANSFORM: comp = std::make_unique<ComponentTransform>(jsonComp); break;
+			}
+			comp->SetOwner(this);
+			if (comp->GetType() == type_component::TRANSFORM) static_cast<ComponentTransform*>(comp.get())->UpdateGlobalMatrix();
+			
+			AddComponent(std::move(comp));
+		}
+	}
+	else {
+		//TODO: JSON ERROR
+	}
+	return true;
 }

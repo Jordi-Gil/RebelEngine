@@ -17,6 +17,7 @@ class ComponentCamera : public Component {
 public:
 
 	ComponentCamera();
+	ComponentCamera(const Json::Value& value);
 
 	void Translate(vec offset);
 
@@ -55,6 +56,9 @@ public:
 
 	void Draw() override;
 	
+	bool ToJson(Json::Value& value, int pos);
+	bool FromJson(const Json::Value& value);
+
 private:
 
 	void GenerateFrustumPlanes();

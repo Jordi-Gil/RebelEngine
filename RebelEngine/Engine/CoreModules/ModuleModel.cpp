@@ -28,9 +28,15 @@ bool ModuleModel::Init() {
 	stream.callback = LogAssimp;
 	aiAttachLogStream(&stream);
 
+	TextureInformation info;
+	unsigned int textureId = App->texturer->loadTexture("Assets/Textures/pink.dds", info);
+	if (textureId != 0) {
+		info.name += "pink.dds";
+		textures.push_back(std::make_pair(textureId, info));
+	}
 	//LoadModel("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
-	LoadModel("Assets/Models/WithoutDDS/Street_Environment/Street_environment_V01.FBX");
-
+	//LoadModel("Assets/Models/WithoutDDS/Street_Environment/Street_environment_V01.FBX");
+	
 	return true;
 }
 
@@ -229,9 +235,11 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 
 				Mesh* mesh = new Mesh();
+				mesh->SetName(node->mChildren[i]->mName.C_Str());
 				mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
 				mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
 				mesh->CreateVAO();
+				mesh->WriteJsonFile();
 
 				renderer_mesh->SetOwner(go.get());
 				renderer_mesh->SetMesh(mesh);
@@ -252,9 +260,11 @@ void ModuleModel::LoadNodeHierarchy(aiNode *node, GameObject &father, const aiSc
 					renderer_mesh->SetOwner(go_mesh.get());
 
 					Mesh* mesh = new Mesh();
+					mesh->SetName(node->mChildren[i]->mName.C_Str());
 					mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 					mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 					mesh->CreateVAO();
+					mesh->WriteJsonFile();
 
 					renderer_mesh->SetMesh(mesh);
 

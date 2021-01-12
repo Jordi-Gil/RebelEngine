@@ -5,7 +5,8 @@
 
 #include "Geometry/AABB.h"
 #include "Geometry/OBB.h"
-
+#include "json/json.h"
+#include "Utils/RUUID.h"
 struct TextureInformation;
 
 class Mesh {
@@ -14,12 +15,10 @@ friend class GUIInspector;
 
 public: 
 		
-	Mesh() : 
-		_VBO(0), _EBO(0), _VAO(0), _matIndex(0), 
-		_numVertices(0), _numIndices(0), _numFaces(0)
-	{
+	Mesh() : _VBO(0), _EBO(0), _VAO(0), _matIndex(0), _numVertices(0), _numIndices(0), _numFaces(0) {
 		_aabb.SetNegativeInfinity();
 		_obb.SetNegativeInfinity();
+		_uuid = RUUID::generate_uuid_v4();
 	}
 
 	Mesh(Mesh&& _mesh) {
@@ -33,6 +32,7 @@ public:
 		_numFaces = _mesh._numFaces;
 		_aabb = _mesh._aabb;
 		_obb = _mesh._obb;
+		_uuid = RUUID::generate_uuid_v4();
 	}
 
 	~Mesh() {}
@@ -47,6 +47,17 @@ public:
 
 	uint32_t GetMorton() const { return _mortonCode; }
 	void GetAABB(AABB& aabb) const { aabb = _aabb; }
+
+	bool FromJson(const Json::Value& value);
+	bool WriteJsonFile();
+	void SetName(const char* name) { _name = strdup(name); }
+	const char* GetFilePath() { return _filePath; }
+	void SetFilePath(const char* filePath) { sprintf(_filePath, "%s", filePath); }
+
+private:
+
+	bool LoadVBOFromJson(const Json::Value& value);
+	bool LoadEBOFromJson(const Json::Value& value);
 
 private:
 
@@ -64,5 +75,11 @@ private:
 
 	AABB _aabb;
 	OBB _obb;
+	Json::Value _vboValue;
+	uint32_t mortonCode;
+	char* _name;
+	char _filePath[1024];
+	std::string _uuid;
+
 };
 

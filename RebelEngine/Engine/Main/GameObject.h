@@ -8,6 +8,8 @@
 
 #include "Math/float4x4.h"
 
+#include "json/json.h"
+
 enum GAME_OBJECT_MASK {
 	GO_MASK_NONE		= 1 << 1,
 	GO_MASK_ROOT_NODE	= 1 << 2,
@@ -19,12 +21,11 @@ class GameObject {
 
 public:
 
-	GameObject() {}
+	GameObject();
 	GameObject(const char* name);
-	GameObject(const GameObject& go);
 	GameObject(GameObject&& go);
-
-	//~GameObject();
+	GameObject(const GameObject& go);
+	GameObject(const Json::Value& value);
 
 	void Update(){}
 	void AddChild(std::unique_ptr<GameObject>&& go);
@@ -36,6 +37,8 @@ public:
 	bool HasMesh() const {  return (_mask & GO_MASK_MESH) != 0; }
 
 	void UpdateChildrenTransform();
+	bool ToJson(Json::Value& value, int pos);
+	bool FromJson(const Json::Value& value);
 
 	void ToggleSelected();
 
@@ -44,6 +47,7 @@ public:
 	int GetNumChildren() const { return _children.size(); };
 	GameObject* GetParent() const { return _parent; }
 	Component* GetComponent(type_component type) const;
+	std::vector<std::unique_ptr<Component>>& GetComponents() { return _components; }
 	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return _children; }
 	std::vector<std::unique_ptr<GameObject>>& GetChildren() { return _children; }
 	const std::vector<std::unique_ptr<Component>>& GetComponents() const { return _components; }
@@ -55,6 +59,9 @@ public:
 	void GetOBB(OBB& obb) const;
 	bool IsSelected() const { return _selected; };
 	int GetMask() const { return _mask; }
+	bool HasMesh() const { return (_mask & GO_MASK_MESH) != 0; }
+	std::string GetUUID() { return _uuid; }
+
 #pragma endregion getters
 
 #pragma region operators
@@ -77,6 +84,8 @@ private:
 
 	std::vector<std::unique_ptr<GameObject>> _children;
 	std::vector<std::unique_ptr<Component>> _components;
+
+	std::string _uuid;
 
 public: 
 
