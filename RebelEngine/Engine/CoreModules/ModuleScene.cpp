@@ -88,7 +88,7 @@ void ModuleScene::IterateRoot(GameObject& go) {
 
 bool ModuleScene::Start() {
 	
-	Load();
+	//Load();
 
 	IterateRoot(*_root);
 
@@ -151,7 +151,10 @@ void ModuleScene::DrawRecursive(GameObject &go) {
 	}
 
 	for (auto const& component : go.GetComponents()) {
-		component->Draw();
+		if (component->GetType() == type_component::MESHRENDERER) {
+			static_cast<ComponentMeshRenderer*>(component.get())->Render();
+		}
+		component->DebugDraw();
 	}
 
 }
@@ -160,7 +163,10 @@ void ModuleScene::DrawFrustumOutput() {
 
 	for (const auto& go : _objectsToDraw) {
 		for (auto const& component : go->GetComponents()) {
-			component->Draw();
+			if (component->GetType() == type_component::MESHRENDERER) {
+				static_cast<ComponentMeshRenderer*>(component.get())->Render();
+			}
+			component->DebugDraw();
 		}
 	}
 

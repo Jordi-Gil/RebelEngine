@@ -57,7 +57,7 @@ Skybox::Skybox() {
          1.0f, -1.0f,  1.0f
     };
 
-    skyTexture = App->texturer->loadCubeMap("Assets/Textures/Cubemaps/abandoned/");
+    skyTexture = App->texturer->LoadCubeMap("Assets/Textures/Cubemaps/abandoned/");
 
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);

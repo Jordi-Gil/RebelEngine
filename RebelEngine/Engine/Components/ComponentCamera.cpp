@@ -142,7 +142,7 @@ bool ComponentCamera::Intersects(const AABB& box) {
 
 }
 
-void ComponentCamera::Draw() {
+void ComponentCamera::DebugDraw() {
 	float4x4 matrix = this->GetProjectionMatrix() * this->GetViewMatrix();
 	matrix.Inverse();
 	dd::frustum(matrix, dd::colors::Tomato);

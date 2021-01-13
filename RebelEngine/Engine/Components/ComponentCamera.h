@@ -54,7 +54,8 @@ public:
 	bool Intersects(const AABB& box);
 	float Intersects(AABB& box, Plane& plane);
 
-	void Draw() override;
+	void DebugDraw() override;
+	void OnEditor() override {}
 	
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);

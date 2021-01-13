@@ -185,6 +185,7 @@
     <ClInclude Include="Engine\GUIs\GUITerminal.h" />
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsForkAwesome.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.h" />
@@ -301,6 +302,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
     <ClInclude Include="Engine\Main\Skybox.h" />
+    <ClInclude Include="Engine\Materials\MAtStandard.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
@@ -428,6 +430,7 @@
     <ClCompile Include="Engine\Main\Skybox.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Quadtree.cpp" />
     <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
+    <ClCompile Include="Engine\Materials\MatStandard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="External-Libraries\MathGeoLib-1.5\Include\Geometry\KDTree.inl" />

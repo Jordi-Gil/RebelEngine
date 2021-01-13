@@ -1,33 +1,38 @@
 #include "imgui_file_explorer.h"
 
-#include "IconsFontAwesome5.h"
-
-#include "imgui_internal.h"
-
 #include <map>
 #include <string>
 
-#define BIT(x) (1 << x)
+#include "imgui_internal.h"
+
+#include "IconsForkAwesome.h"
+#include "IconsFontAwesome5.h"
+
+#include "Utils/Globals.h"
 
 static std::map<std::string, bool> lookupFolders;
+
+static std::string selected_node = "Assets";
+static std::string selected_entry = "";
 
 namespace ImGui {
 
 	FileExplorer::FileExplorer() {
 		std::filesystem::_Current_path(_pwd);
+		_pwd += "\\Assets";
+		lookupFolders["Assets"] = true;
 	}
 
-	std::pair<bool, uint32_t> FileExplorer::DirectoryTreeViewRecursive(const std::filesystem::path& path, uint32_t count, int selection_mask) {
+	void FileExplorer::DirectoryTreeViewRecursive(const std::filesystem::path& path, int &count) {
 
 		ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth;
 
-		bool any_node_clicked = false;
-		uint32_t node_clicked = 0;
 		for (const auto& entry : std::filesystem::directory_iterator(path)) {
+
+			bool entryIsDir = std::filesystem::is_directory(entry.path());
+			if (!entryIsDir) continue;
+
 			ImGuiTreeNodeFlags node_flags = base_flags;
-			const bool is_selected = (selection_mask & BIT(count)) != 0;
-			if (is_selected)
-				node_flags |= ImGuiTreeNodeFlags_Selected;
 
 			std::string name = entry.path().string();
 
@@ -35,53 +40,57 @@ namespace ImGui {
 			lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
 			name = name.substr(lastSlash, name.size() - lastSlash);
 
-			bool entryIsFile = !std::filesystem::is_directory(entry.path());
+			bool is_selected = selected_node == name;
+			if (is_selected)
+				node_flags |= ImGuiTreeNodeFlags_Selected;
+
 			bool node_open = false;
 
-			if (!entryIsFile) {
-				int aCount = 0;
-				for (const auto& e : std::filesystem::directory_iterator(entry.path())) if (e.is_directory()) ++aCount;
-				if (aCount > 0) {
-					std::string wName(((lookupFolders[name]) ? ICON_FA_FOLDER_OPEN " " :
-						(std::filesystem::is_empty(entry.path()) ? ICON_FA_FOLDER_MINUS " " : ICON_FA_FOLDER " ")));
-					wName.append(name); wName.append(std::to_string(count));
-					node_open = ImGui::TreeNodeEx((void*)(intptr_t)(count), node_flags, wName.c_str());
-				}
-				else {
-					std::string wName(std::filesystem::is_empty(entry.path()) ? ICON_FA_FOLDER_MINUS " " : ICON_FA_FOLDER " ");
-					wName.append(name); wName.append(std::to_string(count));
-					ImGui::TreeNodeEx((void*)(intptr_t)(count), node_flags | ImGuiTreeNodeFlags_Leaf, wName.c_str());
-					ImGui::TreePop();
-				}
+			using fp = bool (*)(const std::filesystem::path&);
+			int fileCount = std::count_if(
+								std::filesystem::directory_iterator(entry.path()),
+								std::filesystem::directory_iterator{},
+								fp(std::filesystem::is_directory)
+				);
+
+			if (fileCount > 0) {
+				std::string wName;
+
+				if (lookupFolders[name]) wName = ICON_FK_FOLDER_OPEN " ";
+				else if (std::filesystem::is_empty(entry.path())) wName =  ICON_FK_FOLDER_O " "; //Find folder border or similar
+				else wName = ICON_FK_FOLDER " ";
+
+				wName.append(name);
+				
+				ImGui::SetNextItemOpen(lookupFolders[name]);
+
+				node_open = ImGui::TreeNodeEx((void*)(intptr_t)(count), node_flags, wName.c_str());
+			}
+			else {
+
+				std::string wName(std::filesystem::is_empty(entry.path()) ? ICON_FK_FOLDER_O " " : ICON_FK_FOLDER " ");
+				wName.append(name);
+					
+				ImGui::TreeNodeEx((void*)(intptr_t)(count), node_flags | ImGuiTreeNodeFlags_Leaf, wName.c_str());
+				ImGui::TreePop();
 			}
 
 			if (ImGui::IsItemClicked(0)) {
-				node_clicked = count;
-				any_node_clicked = true;
+				selected_node = name;
+				_pwd = entry.path();
 			}
-			
-			++count;
 
-			if (!entryIsFile) {
+			count++;
 
-				if (node_open) {
+			if (node_open) {
 
-					lookupFolders[name] = true;
-					auto clickState = DirectoryTreeViewRecursive(entry.path(), count, selection_mask);
-
-					if (!any_node_clicked) {
-						any_node_clicked = clickState.first;
-						node_clicked = clickState.second;
-					}
-
+				lookupFolders[name] = true;
+				DirectoryTreeViewRecursive(entry.path(), count);
 					ImGui::TreePop();
-				}
-				else { 
-					lookupFolders[name] = false; }
-			}
-		}
 
-		return { any_node_clicked, node_clicked };
+			}
+			else { lookupFolders[name] = false; }
+		}
 	}
 
 	void FileExplorer::DrawFileTree(std::string directoryPath) {
@@ -92,27 +101,69 @@ namespace ImGui {
 
 		static bool open = false;
 		
-		static int selection_mask = 1;
-		const bool is_selected = (selection_mask & 1) != 0;
-		if (is_selected)
+		if (selected_node == directoryPath)
 			base_flags |= ImGuiTreeNodeFlags_Selected;
 
 		std::string wName((open ? ICON_FA_FOLDER_OPEN " " : ICON_FA_FOLDER " "));
 		wName.append(directoryPath);
 		
-		open = ImGui::TreeNodeEx( directoryPath.c_str(), base_flags, "%s", wName.c_str());
-		
+		open = ImGui::TreeNodeEx( directoryPath.c_str(), base_flags, wName.c_str());
+
+		int count = 0;
+
+		if (ImGui::IsItemClicked(0)) {
+			selected_node = directoryPath;
+			_pwd = directoryPath;
+		}
+
+		count++;
+
 		if (open) {
-
-			auto clickState = DirectoryTreeViewRecursive(directoryPath, 2, selection_mask);
-
-			if (clickState.first) {
-				selection_mask = BIT(clickState.second);
-			}
-
+			DirectoryTreeViewRecursive(directoryPath, count);
 			ImGui::TreePop();
 		}
 
 		ImGui::PopStyleVar();
 	}
+
+	bool IsImage(const std::string& extension) {
+
+		for (int i = 0; i < MARRAYSIZE(imageFormat); i++) {
+			if (_strcmpi(imageFormat[i], extension.c_str())) return true;
+		}
+		return false;
+	}
+
+	void FileExplorer::ShowContent() {
+
+		for (const auto& entry : std::filesystem::directory_iterator(_pwd)) {
+
+			std::string name = entry.path().string();
+			std::string label;
+
+			auto lastSlash = name.find_last_of("/\\");
+			lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+			name = name.substr(lastSlash, name.size() - lastSlash);
+
+			bool selected = selected_entry == name;
+
+			if (entry.is_directory()) {
+				label = std::string(ICON_FK_FOLDER " ").append(name);
+			}
+			else if (IsImage(entry.path().extension().string())) {
+				label = std::string(ICON_FK_FILE_IMAGE_O " ").append(name);
+			}
+
+			if (ImGui::Selectable(label.c_str(), selected)){//, ImGuiSelectableFlags_AllowDoubleClick)) {
+				selected_entry = name;
+			}
+		
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+			{
+				selected_node = name;
+				lookupFolders[name] = true;
+			}
+		}
+	}
+
 }

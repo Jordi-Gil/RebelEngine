@@ -126,6 +126,7 @@
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
+    <ClCompile Include="Engine\Materials\MatStandard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -271,6 +272,8 @@
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.h" />
     <ClInclude Include="Engine\Utils\RUUID.h" />
     <ClInclude Include="Engine\GUIs\GUIProject.h" />
+    <ClInclude Include="Engine\Materials\MAtStandard.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsForkAwesome.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

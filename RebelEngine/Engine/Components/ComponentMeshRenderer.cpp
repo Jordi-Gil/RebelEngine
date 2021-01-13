@@ -1,15 +1,17 @@
 #include "ComponentMeshRenderer.h"
-#include "ComponentTransform.h"
+
+#include <iostream>
+#include <fstream>
+
+#include "Math/float3x3.h"
 
 #include "Main/Application.h"
 
 #include "CoreModules/ModuleModel.h"
 
-#include "Utils/debugdraw.h"
+#include "ComponentTransform.h"
 
-#include "Math/float3x3.h"
-#include <iostream>
-#include <fstream>
+#include "Utils/debugdraw.h"
 
 ComponentMeshRenderer::ComponentMeshRenderer() {
 	_type = type_component::MESHRENDERER;
@@ -25,13 +27,20 @@ ComponentMeshRenderer::ComponentMeshRenderer(const Json::Value& value) {
 ComponentMeshRenderer::~ComponentMeshRenderer() {
 	delete _mesh;
 	_mesh = nullptr;
+
+	delete _material;
+	_material = nullptr;
 }
 
 void ComponentMeshRenderer::SetMesh(Mesh* component_mesh) {
 	_mesh = component_mesh;
 }
 
-void ComponentMeshRenderer::Draw(){
+void ComponentMeshRenderer::SetMaterial(Material* component_material) {
+	_material = component_material;
+}
+
+void ComponentMeshRenderer::DebugDraw(){
 	
 	assert(_owner != nullptr && "Component without and owner");
 	
@@ -41,7 +50,12 @@ void ComponentMeshRenderer::Draw(){
 		AABB res = obb.MinimalEnclosingAABB();
 		dd::aabb(res.minPoint, res.maxPoint, dd::colors::Orange);
 	}
-	_mesh->Draw(App->models->textures, _owner->GetGlobalMatrix());
+}
+
+void ComponentMeshRenderer::Render() {
+	
+	//TODO: check if active & change texture to Material
+	_mesh->Draw(_material, _owner->GetGlobalMatrix());
 }
 
 bool ComponentMeshRenderer::ToJson(Json::Value& value, int pos) 

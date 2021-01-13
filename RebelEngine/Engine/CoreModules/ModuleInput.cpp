@@ -1,3 +1,5 @@
+#include "ModuleInput.h"
+
 #include "Utils/Globals.h"
 
 #include "Main/Application.h"
@@ -5,7 +7,6 @@
 #include "ModuleEditorCamera.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
-#include "ModuleInput.h"
 #include "ModuleModel.h"
 #include "ModuleScene.h"
 #include "ImGui/imgui_impl_sdl.h"
@@ -13,63 +14,27 @@
 #include <assimp/Importer.hpp>
 
 #include <SDL/SDL.h>
+#include <string>
 
 #define MAX_KEYS 300
-
-constexpr char* imageFormat[] = { 
-	".blp", ".bmp", ".bw", ".cur", ".cut", ".dcm", ".dcx", ".dds", ".dicom", ".dpx", ".exr", ".fit", 
-	".fits", ".ftx", ".gif", ".h", ".hdp", ".hdr", ".icns", ".ico", ".iff", ".im", ".iwi", ".jng", ".jp2", 
-	".jpe", ".jpeg", ".jpg", ".lbm", ".lif", ".lmp", ".mdl", ".mng", ".mp3", ".pbm", ".pcd", ".pcx", ".pgm", 
-	".pic", ".pix", ".png", ".pnm", ".ppm", ".psd", ".psp", ".pxr", ".ras", ".rgb", ".rgba", ".rot", ".rs", ".sgi", 
-	".sun", ".texture", ".tga", ".tif", ".tiff", ".tpl", ".utx", ".vtf", ".wal", ".wdp", ".xpm" };
-
-constexpr char* meshFormat[] = { ".3d", ".3ds", ".ac", ".ase", ".b3d", ".blend", ".bvh", ".cob", ".csm",
-".dae", ".dxf", ".fbx", ".glb", ".gltf", ".hmp", ".ifc", ".irr", ".irrmesh",
-".lwo", ".lws", ".lxo", ".md2", ".md3", ".md5", ".mdc", ".mdl", ".mdl", ".ms3d",
-".ndo", ".nff", ".nff", ".obj", ".off", ".ogex", ".pk3", ".ply", ".q3d", ".q3s",
-".raw", ".scn", ".smd", ".stl", ".ter", ".vta", ".x", ".xgl", ".xml", ".zgl" };
-
-char asciitolower(char in) {
-	if (in <= 'Z' && in >= 'A')
-		return in - ('Z' - 'z');
-	return in;
-}
 
 bool ImageSupported(const char *path) {
 
 	char extension[_MAX_EXT];
-	errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
-	if (error != 0) { 
-		char errmsg[256];
-		strerror_s(errmsg, 256, error);
-		LOG(_ERROR, "Couldn't split the given path %s. Error: %s", path, errmsg);
-		return false; 
-	}
-
-	std::string ext(extension);
-	std::transform(ext.begin(), ext.end(), ext.begin(), asciitolower);
+	_splitpath_s(path, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
 
 	for (int i = 0; i < MARRAYSIZE(imageFormat); i++)
-		if (std::strcmp(imageFormat[i], ext.c_str()) == 0) return true;
+		if (_strcmpi(imageFormat[i], extension) == 0) return true;
 	return false;
 }
 
 bool MeshSupported(const char* path) {
 
 	char extension[_MAX_EXT];
-	errno_t error = _splitpath_s(path, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
-	if (error != 0) {
-		char errmsg[256];
-		strerror_s(errmsg, 256, error);
-		LOG(_ERROR, "Couldn't split the given path %s. Error: %s", path, errmsg);
-		return false;
-	}
-
-	std::string ext(extension);
-	std::transform(ext.begin(), ext.end(), ext.begin(), asciitolower);
-
+	_splitpath_s(path, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
+	
 	for (int i = 0; i < MARRAYSIZE(meshFormat); i++)
-		if (std::strcmp(meshFormat[i], ext.c_str()) == 0) return true;
+		if (_strcmpi(meshFormat[i], extension) == 0) return true;
 	return false;
 }
 
@@ -166,8 +131,8 @@ update_status ModuleInput::Update() {
 			case SDL_DROPFILE:
 				char* dropped_filedir = sdlEvent.drop.file;
 				LOG(_INFO, "Dropped file: %s", dropped_filedir);
-				if (ImageSupported(dropped_filedir)) App->models->LoadTexture(dropped_filedir);
-				else if (MeshSupported(dropped_filedir)) App->models->LoadModel(dropped_filedir);
+				if (ImageSupported(dropped_filedir)) break;//App->models->LoadTexture(dropped_filedir);
+				else if (MeshSupported(dropped_filedir)) App->models->LoadModelFromFBX(dropped_filedir);
 				else LOG(_ERROR, "The file dropped has not a valid extension for mesh/texture loader.");
 				SDL_free(dropped_filedir);
 				break;

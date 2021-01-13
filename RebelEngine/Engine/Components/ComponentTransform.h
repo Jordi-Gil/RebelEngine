@@ -23,11 +23,13 @@ public:
 	void SetTransform(const aiMatrix4x4& matrix);
 
 	void UpdateGlobalMatrix();
+	void UpdateLocalMatrix();
 
 	float4x4 GetGlobalMatrix() const { return _globalMatrix; }
 	float4x4 GetLocalMatrix() const { return _localMatrix; }
 
-	void Draw() override;
+	void DebugDraw() override;
+	void OnEditor() override;
 
 	void SetOwner(GameObject* go) override;
 
@@ -38,6 +40,10 @@ public:
 
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);
+
+private:
+
+	void DrawDragFloat3(const char* tag, float3& vector, float speed = 0.01f);
 
 public:
 

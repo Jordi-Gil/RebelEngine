@@ -4,6 +4,7 @@
 #include <string>
 
 struct TextureInformation {
+	unsigned int gl_id;
 	std::string name;
 	unsigned int w, h;
 };
@@ -19,8 +20,10 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	unsigned int loadTexture(const char *path, TextureInformation &info);
-	unsigned int loadCubeMap(const char *path);
+	bool LoadFromFBX(const char* path, const char* fbxPath, TextureInformation &info);
+
+	bool LoadTexture(const char *path, TextureInformation &info);
+	unsigned int LoadCubeMap(const char *path);
 
 	void SetMinFilter(unsigned i, unsigned texID);
 	void SetMagFilter(unsigned i, unsigned texID);

@@ -5,8 +5,13 @@
 
 #include "Geometry/AABB.h"
 #include "Geometry/OBB.h"
+
 #include "json/json.h"
+
+#include "Main/Material.h"
+
 #include "Utils/RUUID.h"
+
 struct TextureInformation;
 
 class Mesh {
@@ -41,7 +46,7 @@ public:
 	void LoadEBO(const aiMesh* mesh);
 	void CreateVAO();
 
-	void Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& materials, const float4x4& model);
+	void Draw(Material* material, const float4x4& model);
 
 	void Clean();
 
@@ -50,9 +55,9 @@ public:
 
 	bool FromJson(const Json::Value& value);
 	bool WriteJsonFile();
-	void SetName(const char* name) { _name = strdup(name); }
+	void SetName(const char* name) { _name = _strdup(name); }
 	const char* GetFilePath() { return _filePath; }
-	void SetFilePath(const char* filePath) { sprintf(_filePath, "%s", filePath); }
+	void SetFilePath(const char* filePath) { sprintf_s(_filePath, "%s", filePath); }
 
 private:
 

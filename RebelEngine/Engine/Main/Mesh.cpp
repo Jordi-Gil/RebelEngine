@@ -1,17 +1,19 @@
 #include "Mesh.h"
 
+#include <iostream>
+#include <fstream>
+
+#include <GL/glew.h>
+#include "Math/float3x3.h"
+
+#include "Application.h"
+
 #include "CoreModules/ModuleEditorCamera.h"
 #include "CoreModules/ModuleProgram.h"
 #include "CoreModules/ModuleTexture.h"
 #include "CoreModules/ModuleScene.h"
 
-#include "Application.h"
-
-#include <GL/glew.h>
-#include "Math/float3x3.h"
-
-#include <iostream>
-#include <fstream>
+#include "Materials/MatStandard.h"
 
 // method to seperate bits from a given integer 3 positions apart
 inline uint32_t splitBy3(unsigned int a) {
@@ -149,7 +151,9 @@ void Mesh::CreateVAO() {
 
 }
 
-void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& materials, const float4x4& model) {
+void Mesh::Draw(Material* material, const float4x4& model) {
+
+	MatStandard* mat = static_cast<MatStandard*>(material);
 
 	unsigned int program = App->program->GetMainProgram();
 
@@ -166,9 +170,7 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& 
 
 	glBindVertexArray(_VAO);
 	glActiveTexture(GL_TEXTURE0);
-	//TODO: TEXTURE HARDCORED
-	//glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
-	glBindTexture(GL_TEXTURE_2D, materials[0].first);
+	glBindTexture(GL_TEXTURE_2D, mat->GetAlbedoMap());
 
 	glDrawElements(GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, nullptr);
 
@@ -274,8 +276,8 @@ bool Mesh::LoadEBOFromJson(const Json::Value& value) {
 		unsigned* indices = (unsigned*)(glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY));
 
 		if (!indices) LOG(_ERROR, "glMapBuffer error");
-		int aux = value[JSON_TAG_EBO].size();
-		for (unsigned i = 0; i < value[JSON_TAG_EBO].size(); ++i) {
+		int size = value[JSON_TAG_EBO].size();
+		for (unsigned i = 0; i < size; ++i) {
 			indices[i] = value[JSON_TAG_EBO][i].asUInt();
 		}
 		
