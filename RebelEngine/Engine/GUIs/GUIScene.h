@@ -20,9 +20,12 @@ public:
 
 	static void GUI_GetWindowSize(float& width, float& height);
 
+	ImVec2& GetViewportPos() { return _viewportPos; }
+	ImVec2& GetViewportSize() { return _viewportSize; }
 private:
 
 	bool _sceneFocused = true;
-
+	ImVec2 _viewportPos;
+	ImVec2 _viewportSize;
 };
 

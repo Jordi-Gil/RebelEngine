@@ -21,6 +21,20 @@ ComponentCamera::ComponentCamera() {
 
 }
 
+ComponentCamera::ComponentCamera(const ComponentCamera& comp) {
+	this->_owner = comp._owner;
+	this->_active = comp._active;
+	this->_type = comp._type;
+	this->_uuid = comp._uuid;
+	this->_frustum = comp._frustum;
+	this->_back_type = comp._back_type;
+	this->_color = comp._color;
+	this->_znear = comp._znear;
+	this->_zfar = comp._zfar;
+	this->_dirty_planes = comp._dirty_planes;
+	this->_planes = comp._planes;
+}
+
 Plane GetPlane(const float4& vec) {
 
 	float3 normal = vec.xyz();
@@ -42,7 +56,7 @@ void ComponentCamera::GenerateFrustumPlanes() {
 	_planes.push_back(GetPlane(matrix.Col(3) - matrix.Col(2)));
 	_planes.push_back(GetPlane(matrix.Col(3) + matrix.Col(2)));
 
-	_dity_planes = false;
+	_dirty_planes = false;
 }
 
 void ComponentCamera::Translate(vec offset) {
@@ -67,34 +81,34 @@ void ComponentCamera::SetHorizontalFov(float hFov, float aspectRatio) {
 
 void ComponentCamera::SetPosition(float x, float y, float z) {
 	_frustum.SetPos(vec(x, y, z));
-	_dity_planes = true;
+	_dirty_planes = true;
 }
 
 void ComponentCamera::SetPosition(vec pos) {
 	_frustum.SetPos(pos);
-	_dity_planes = true;
+	_dirty_planes = true;
 }
 
 void ComponentCamera::SetFront(vec front){
 	_frustum.SetFront(front);
-	_dity_planes = true;
+	_dirty_planes = true;
 }
 
 void ComponentCamera::SetUp(vec up) {
 	_frustum.SetUp(up);
-	_dity_planes = true;
+	_dirty_planes = true;
 }
 
 void ComponentCamera::SetZNear(float znear) {
 	_znear = znear;
 	_frustum.SetViewPlaneDistances(_znear, _zfar);
-	_dity_planes = true;
+	_dirty_planes = true;
 }
 
 void ComponentCamera::SetZFar(float zfar) {
 	_zfar = zfar;
 	_frustum.SetViewPlaneDistances(_znear, _zfar);
-	_dity_planes = true;
+	_dirty_planes = true;
 }
 
 float4x4 ComponentCamera::GetOpenGLProjectionMatrix() const {
@@ -130,7 +144,7 @@ bool ComponentCamera::Intersects(const AABB& box) {
 
 	//assert(_planes.size() == 6 && "More/Less than 6 frustum planes");
 
-	//if(_dity_planes) GenerateFrustumPlanes();
+	//if(_dirty_planes) GenerateFrustumPlanes();
 	
 	//for (int i = 0; i < _planes.size(); i++) {
 	//	if (!box.Intersects(_planes[i])) return false;
@@ -194,4 +208,8 @@ bool ComponentCamera::FromJson(const Json::Value& value) {
 	}
 
 	return true;
+}
+
+LineSegment ComponentCamera::GetRay(float normalized_x, float normalized_y) {
+	return _frustum.UnProjectLineSegment(normalized_x, normalized_y);
 }

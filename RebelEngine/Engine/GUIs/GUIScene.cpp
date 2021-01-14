@@ -46,6 +46,8 @@ void GUIScene::Draw() {
 
 	_sceneFocused = ImGui::IsWindowFocused();
 
+	_viewportPos =  ImGui::GetCursorScreenPos();
+	_viewportSize = ImVec2(_sceneWindowWidth, _sceneWindowHeight);
 	ImGui::GetWindowDrawList()->AddImage(
 		(void*)(intptr_t)App->renderer->GetViewportTexture(),
 		ImVec2(ImGui::GetCursorScreenPos()),

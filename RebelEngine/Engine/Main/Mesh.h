@@ -53,7 +53,6 @@ public:
 	void SetName(const char* name) { _name = strdup(name); }
 	const char* GetFilePath() { return _filePath; }
 	void SetFilePath(const char* filePath) { sprintf(_filePath, "%s", filePath); }
-
 private:
 
 	bool LoadVBOFromJson(const Json::Value& value);
@@ -80,6 +79,5 @@ private:
 	char* _name;
 	char _filePath[1024];
 	std::string _uuid;
-
 };
 

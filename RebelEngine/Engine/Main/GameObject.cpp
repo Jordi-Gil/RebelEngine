@@ -146,7 +146,28 @@ GameObject& GameObject::operator=(const GameObject& go) {
 	}
 
 	for (const auto& component : go._components) {
-		this->_components.push_back(std::make_unique<Component>(*component));
+		switch (component->GetType())
+		{
+		case type_component::CAMERA:{
+			ComponentCamera* compAux = (ComponentCamera*)(component.get());
+			this->_components.push_back(std::make_unique<ComponentCamera>(*compAux));
+			break;
+			}
+		case type_component::MESHRENDERER: {
+			ComponentMeshRenderer* compAux = (ComponentMeshRenderer*)(component.get());
+			this->_components.push_back(std::make_unique<ComponentMeshRenderer>(*compAux));
+			break;
+		}
+		case type_component::TRANSFORM: {
+			ComponentTransform* compAux = (ComponentTransform*)(component.get());
+			this->_components.push_back(std::make_unique<ComponentTransform>(*compAux));
+			break;
+		}
+		default:
+			this->_components.push_back(std::make_unique<Component>(*component));
+			break;
+		}
+		
 	}
 
 	this->_mask = go._mask;
@@ -220,9 +241,13 @@ bool GameObject::FromJson(const Json::Value& value)  {
 			std::unique_ptr<Component> comp;
 			switch (type)
 			{
-				case type_component::NONE: comp = std::make_unique<Component>(jsonComp);  break;
-				case type_component::CAMERA: comp = std::make_unique<ComponentCamera>(jsonComp); break;
-				case type_component::MESHRENDERER:  comp = std::make_unique<ComponentMeshRenderer>(jsonComp); break;
+			case type_component::NONE: comp = std::make_unique<Component>(jsonComp); AddMask(GAME_OBJECT_MASK::GO_MASK_NONE);   break;
+				case type_component::CAMERA: comp = std::make_unique<ComponentCamera>(jsonComp); AddMask(GAME_OBJECT_MASK::GO_MASK_CAMERA); break;
+				case type_component::MESHRENDERER:  
+					comp = std::make_unique<ComponentMeshRenderer>(jsonComp); 
+					AddMask(GAME_OBJECT_MASK::GO_MASK_MESH); 
+					_meshRenderer = (ComponentMeshRenderer *) static_cast<ComponentMeshRenderer*>(_components.rbegin()->get());
+					break;
 				case type_component::TRANSFORM: comp = std::make_unique<ComponentTransform>(jsonComp); break;
 			}
 			comp->SetOwner(this);

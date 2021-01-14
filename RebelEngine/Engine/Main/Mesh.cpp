@@ -50,7 +50,7 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	if (!data) LOG("glMapBuffer error", _ERROR);
 	
 	unsigned int pos = 0;
-
+	unsigned int vertPos = 0;
 	Json::Value jValue(Json::arrayValue);
 
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i) {

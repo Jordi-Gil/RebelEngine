@@ -1,13 +1,17 @@
 #include "ModuleEditorCamera.h"
 #include "ModuleInput.h"
 #include "ModuleModel.h"
+#include "ModuleScene.h"
+
+#include "Components/ComponentMeshRenderer.h"
 
 #include "Main/Application.h"
-
 #include "GUIs/GUIScene.h"
+#include "GUIs/GUIInspector.h"
 
 #include "Math/float3x3.h"
 #include "Math/Quat.h"
+#include "MathGeoLib.h"
 
 #include <SDL/SDL.h>
 #include <cmath>
@@ -192,6 +196,7 @@ update_status ModuleEditorCamera::Update() {
 		RotateKeyboard();
 		RotateMouse(x, y);
 		OrbitCenterScene(x, y);
+		GetObjectPicked();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN) {
@@ -249,6 +254,54 @@ void ModuleEditorCamera::GetOpenGLMatrix(matrix_type _mType, float4x4& matrix) {
 
 }
 
+GameObject* hittedGo;
+
+bool ModuleEditorCamera::GetObjectPicked() {
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN) {
+		
+		ImVec2 mouse = ImGui::GetMousePos();
+		ImVec2 viewportPos = App->gui->_scene->GetViewportPos();
+		ImVec2 viewportSize = App->gui->_scene->GetViewportSize();
+
+		float viewPortNormalized_x = -( 1 - ((mouse.x - viewportPos.x)*2) / viewportSize.x);
+		float viewPortNormalized_y =  ( 1 - ((mouse.y - viewportPos.y)*2) / viewportSize.y);
+
+		LineSegment ray = camera->GetRay(viewPortNormalized_x, viewPortNormalized_y);
+		bool hit = false;
+		float minDistance = FLT_MAX;
+
+		GetObjectPickedRec(ray, hit, minDistance, *hittedGo, *App->scene->_root);
+		if (!hit) App->gui->_inspector->UnSetFocusedGameObject();
+
+		return hit;
+	}
+
+	return false;
+}
+
+void ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit,float& minDistance, GameObject& hittedGo, GameObject& father) {
+
+	std::vector<std::unique_ptr<GameObject>>& children = father.GetChildren();
+	for (uint i = 0; i < children.size(); i++) {
+		if(children[i]->HasMesh()){
+			math::AABB aabb;
+			children[i]->GetAABB(aabb);
+			OBB _obb = aabb.Transform(children[i]->GetGlobalMatrix());
+			float distanceIn, distanceOut;
+			bool hitted = ray.Intersects(_obb.MinimalEnclosingAABB(), distanceIn, distanceOut);// ray vs. aabb
+				
+			if (hitted && distanceIn < minDistance) {
+				minDistance = distanceIn;
+				hit = true;
+				App->gui->_inspector->SetFocusedGameObject(*children[i]);
+				//hittedGo = *children[i];
+			}
+		}
+		GetObjectPickedRec(ray, hit, minDistance, hittedGo, *children[i]);
+	}
+
+}
 #pragma region setters
 
 void ModuleEditorCamera::SetVerticalFov(float vFov, float aspectRatio) {

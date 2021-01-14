@@ -4,7 +4,8 @@
 
 #include "Utils/debugdraw.h"
 
-#include <Geometry/Frustum.h>
+#include "Geometry/LineSegment.h"
+#include "Geometry/Frustum.h"
 #include "Geometry/Plane.h"
 
 enum class background_type {
@@ -18,6 +19,8 @@ public:
 
 	ComponentCamera();
 	ComponentCamera(const Json::Value& value);
+	ComponentCamera(const ComponentCamera& comp);
+
 
 	void Translate(vec offset);
 
@@ -59,6 +62,8 @@ public:
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);
 
+	LineSegment GetRay(float normalized_x, float normalized_y);
+
 private:
 
 	void GenerateFrustumPlanes();
@@ -72,7 +77,7 @@ private:
 	float _znear = 10.0f;
 	float _zfar = 100.0f;
 
-	bool _dity_planes = true;
+	bool _dirty_planes = true;
 
 	std::vector<Plane> _planes;
 
