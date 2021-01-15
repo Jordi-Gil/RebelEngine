@@ -150,6 +150,7 @@ update_status ModuleInput::Update() {
 							App->window->ResizeWindow(sdlEvent.window.data1, sdlEvent.window.data2);
 						break;
 					case SDL_WINDOWEVENT_CLOSE:
+						App->scene->Save();
 						return UPDATE_STOP;
 				}
 				break;

@@ -254,7 +254,7 @@ void ModuleEditorCamera::GetOpenGLMatrix(matrix_type _mType, float4x4& matrix) {
 
 }
 
-GameObject* hittedGo;
+//GameObject& hittedGo = GameObject();
 
 bool ModuleEditorCamera::GetObjectPicked() {
 
@@ -271,7 +271,7 @@ bool ModuleEditorCamera::GetObjectPicked() {
 		bool hit = false;
 		float minDistance = FLT_MAX;
 
-		GetObjectPickedRec(ray, hit, minDistance, *hittedGo, *App->scene->_root);
+		GetObjectPickedRec(ray, hit, minDistance, *App->scene->_root);
 		if (!hit) App->gui->_inspector->UnSetFocusedGameObject();
 
 		return hit;
@@ -280,7 +280,7 @@ bool ModuleEditorCamera::GetObjectPicked() {
 	return false;
 }
 
-void ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit,float& minDistance, GameObject& hittedGo, GameObject& father) {
+void ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit,float& minDistance, GameObject& father) {
 
 	std::vector<std::unique_ptr<GameObject>>& children = father.GetChildren();
 	for (uint i = 0; i < children.size(); i++) {
@@ -289,16 +289,29 @@ void ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit,float& m
 			children[i]->GetAABB(aabb);
 			OBB _obb = aabb.Transform(children[i]->GetGlobalMatrix());
 			float distanceIn, distanceOut;
-			bool hitted = ray.Intersects(_obb.MinimalEnclosingAABB(), distanceIn, distanceOut);// ray vs. aabb
-				
-			if (hitted && distanceIn < minDistance) {
-				minDistance = distanceIn;
-				hit = true;
-				App->gui->_inspector->SetFocusedGameObject(*children[i]);
-				//hittedGo = *children[i];
+			bool hitted = false;
+			if (ray.Intersects(_obb.MinimalEnclosingAABB())) {
+				Mesh* mesh = ((ComponentMeshRenderer*) children[i]->GetComponent(type_component::MESHRENDERER))->_mesh;
+				LineSegment triangleRay(ray);
+				triangleRay.Transform(children[i]->GetGlobalMatrix().Inverted());
+				for (int j = 0; j < mesh->_indices.size(); j += 3) {
+					Triangle tri = Triangle(mesh->_vertices[mesh->_indices[j]],
+						mesh->_vertices[mesh->_indices[j + 1]],
+						mesh->_vertices[mesh->_indices[j + 2]]);
+
+					hitted = triangleRay.Intersects(tri, &distanceIn, NULL);
+					if (hitted && distanceIn < minDistance) {
+						minDistance = distanceIn;
+						hit = true;
+						App->gui->_inspector->SetFocusedGameObject(*children[i]);
+						//hittedGo = *children[i];
+					}
+				}
 			}
+				
+			
 		}
-		GetObjectPickedRec(ray, hit, minDistance, hittedGo, *children[i]);
+		GetObjectPickedRec(ray, hit, minDistance, *children[i]);
 	}
 
 }

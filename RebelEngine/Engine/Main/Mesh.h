@@ -7,6 +7,7 @@
 #include "Geometry/OBB.h"
 #include "json/json.h"
 #include "Utils/RUUID.h"
+
 struct TextureInformation;
 
 class Mesh {
@@ -53,6 +54,10 @@ public:
 	void SetName(const char* name) { _name = strdup(name); }
 	const char* GetFilePath() { return _filePath; }
 	void SetFilePath(const char* filePath) { sprintf(_filePath, "%s", filePath); }
+
+public:
+	std::vector<float3> _vertices;
+	std::vector<unsigned> _indices;
 private:
 
 	bool LoadVBOFromJson(const Json::Value& value);
@@ -79,5 +84,6 @@ private:
 	char* _name;
 	char _filePath[1024];
 	std::string _uuid;
+	
 };
 

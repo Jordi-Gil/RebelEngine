@@ -241,12 +241,12 @@ bool GameObject::FromJson(const Json::Value& value)  {
 			std::unique_ptr<Component> comp;
 			switch (type)
 			{
-			case type_component::NONE: comp = std::make_unique<Component>(jsonComp); AddMask(GAME_OBJECT_MASK::GO_MASK_NONE);   break;
+				case type_component::NONE: comp = std::make_unique<Component>(jsonComp); AddMask(GAME_OBJECT_MASK::GO_MASK_NONE);   break;
 				case type_component::CAMERA: comp = std::make_unique<ComponentCamera>(jsonComp); AddMask(GAME_OBJECT_MASK::GO_MASK_CAMERA); break;
 				case type_component::MESHRENDERER:  
 					comp = std::make_unique<ComponentMeshRenderer>(jsonComp); 
 					AddMask(GAME_OBJECT_MASK::GO_MASK_MESH); 
-					_meshRenderer = (ComponentMeshRenderer *) static_cast<ComponentMeshRenderer*>(_components.rbegin()->get());
+					_meshRenderer = static_cast<ComponentMeshRenderer*>(_components.rbegin()->get());
 					break;
 				case type_component::TRANSFORM: comp = std::make_unique<ComponentTransform>(jsonComp); break;
 			}

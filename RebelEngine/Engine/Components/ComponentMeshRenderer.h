@@ -27,8 +27,8 @@ public:
 	};
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);
-
-private:
 	Mesh* _mesh = nullptr;
+private:
+	
 };
 
