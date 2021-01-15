@@ -21,8 +21,8 @@ public:
 	ComponentCamera(const Json::Value& value);
 	ComponentCamera(const ComponentCamera& comp);
 
-
 	void Translate(vec offset);
+	void ToggleMainCamera();
 
 	void SetHorizontalFov(float hFov, float ar);
 	void SetVerticalFov(float vFov, float aspectRatio);
@@ -56,14 +56,16 @@ public:
 	float4x4 GetOpenGLProjectionMatrix() const;
 	float4x4 GetOpenGLViewMatrix() const;
 
+	bool IsMainCamera() const { return _is_main_camera; }
+
 	bool Intersects(const AABB& box);
 	float Intersects(AABB& box, Plane& plane);
 
 	void DebugDraw() override;
 	void OnEditor() override {}
 	
-	bool ToJson(Json::Value& value, int pos);
-	bool FromJson(const Json::Value& value);
+	bool ToJson(Json::Value& value, int pos) override;
+	bool FromJson(const Json::Value& value) override;
 
 	LineSegment GetRay(float normalized_x, float normalized_y);
 
@@ -81,6 +83,7 @@ private:
 	float _zfar = 100.0f;
 
 	bool _dirty_planes = true;
+	bool _is_main_camera = false;
 
 	std::vector<Plane> _planes;
 

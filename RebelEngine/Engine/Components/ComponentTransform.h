@@ -39,8 +39,8 @@ public:
 	float3 GetScale() const { return _scale; }
 	Quat GetRotationQuat() const { return _rotationQuat; }
 
-	bool ToJson(Json::Value& value, int pos);
-	bool FromJson(const Json::Value& value);
+	bool ToJson(Json::Value& value, int pos) override;
+	bool FromJson(const Json::Value& value) override;
 
 private:
 

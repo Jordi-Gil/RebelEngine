@@ -78,7 +78,7 @@ private:
 	void RotateMouse(int x, int y);
 	void OrbitCenterScene(int x, int y);
 	bool GetObjectPicked();
-	void GetObjectPickedRec(LineSegment& ray, bool& hit, float& minDistance, GameObject& father);
+	GameObject* GetObjectPickedRec(LineSegment& ray, bool& hit, float& minDistance, GameObject& father);
 
 private:
 

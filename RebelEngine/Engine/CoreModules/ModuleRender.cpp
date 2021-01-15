@@ -152,6 +152,9 @@ void ModuleRender::Draw(float width, float height) {
 	glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//if(inGame) projection = App->Scene->mainCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
+	//else projection = App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
+
 	float4x4 projection; App->editorCamera->GetMatrix(matrix_type::PROJECTION_MATRIX, projection);
 	float4x4 view; App->editorCamera->GetMatrix(matrix_type::VIEW_MATRIX, view);
 

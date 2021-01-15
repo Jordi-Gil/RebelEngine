@@ -116,6 +116,7 @@ bool ModuleTexture::LoadTexture(const char* path, TextureInformation& info) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		info.gl_id = texId;
+		info.path = path;
 
 	}
 

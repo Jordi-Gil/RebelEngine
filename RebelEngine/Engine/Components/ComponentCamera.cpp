@@ -25,17 +25,17 @@ ComponentCamera::ComponentCamera() {
 }
 
 ComponentCamera::ComponentCamera(const ComponentCamera& comp) {
-	this->_owner = comp._owner;
-	this->_active = comp._active;
-	this->_type = comp._type;
-	this->_uuid = comp._uuid;
-	this->_frustum = comp._frustum;
-	this->_back_type = comp._back_type;
-	this->_color = comp._color;
-	this->_znear = comp._znear;
-	this->_zfar = comp._zfar;
-	this->_dirty_planes = comp._dirty_planes;
-	this->_planes = comp._planes;
+	_owner = comp._owner;
+	_active = comp._active;
+	_type = comp._type;
+	_uuid = comp._uuid;
+	_frustum = comp._frustum;
+	_back_type = comp._back_type;
+	_color = comp._color;
+	_znear = comp._znear;
+	_zfar = comp._zfar;
+	_dirty_planes = comp._dirty_planes;
+	_planes = comp._planes;
 }
 
 Plane GetPlane(const float4& vec) {
@@ -68,10 +68,14 @@ void ComponentCamera::Translate(vec offset) {
 	GenerateFrustumPlanes();
 }
 
+void ComponentCamera::ToggleMainCamera() {
+	_is_main_camera = !_is_main_camera;
+}
+
 ComponentCamera::ComponentCamera(const Json::Value& value)  {
 	Component::FromJson(value);
 	_type = type_component::CAMERA;
-	this->FromJson(value);
+	FromJson(value);
 }
 
 void ComponentCamera::SetVerticalFov(float vFov, float aspectRatio) {
@@ -197,10 +201,13 @@ bool ComponentCamera::ToJson(Json::Value& value, int pos) {
 	value[pos][JSON_TAG_FOV_HORIZONTAL] = _frustum.HorizontalFov();
 	value[pos][JSON_TAG_ASPECT_RATIO] = _frustum.AspectRatio();
 
+	value[pos][JSON_TAG_MAIN_CAMERA] = _is_main_camera;
+
 	return true;
 }
 
 bool ComponentCamera::FromJson(const Json::Value& value) {
+
 	if (!value.isNull()) 
 	{
 		_color = float4(value[JSON_TAG_COLOR][0].asFloat(), value[JSON_TAG_COLOR][1].asFloat(), value[JSON_TAG_COLOR][2].asFloat(), value[JSON_TAG_COLOR][3].asFloat());
@@ -214,7 +221,7 @@ bool ComponentCamera::FromJson(const Json::Value& value) {
 		_frustum.SetFront(vec(value[JSON_TAG_FRONT][0].asFloat(), value[JSON_TAG_FRONT][1].asFloat(), value[JSON_TAG_FRONT][2].asFloat()));
 		_frustum.SetUp(vec(value[JSON_TAG_UP][0].asFloat(), value[JSON_TAG_UP][1].asFloat(), value[JSON_TAG_UP][2].asFloat()));
 		_frustum.SetPos(vec(value[JSON_TAG_POSITION][0].asFloat(), value[JSON_TAG_POSITION][1].asFloat(), value[JSON_TAG_POSITION][2].asFloat()));
-		
+		_is_main_camera = value[JSON_TAG_MAIN_CAMERA].asBool();
 	}
 	else {
 		return false;

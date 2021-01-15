@@ -7,13 +7,13 @@ Component::Component() {
 }
 
 Component::Component(const Component& comp) {
-	this->_owner = comp._owner;
-	this->_active = comp._active;
-	this->_type = comp._type;
-	this->_uuid = comp._uuid;
+	_owner = comp._owner;
+	_active = comp._active;
+	_type = comp._type;
+	_uuid = comp._uuid;
 }
 Component::Component(const Json::Value& value) {
-	this->FromJson(value);
+	FromJson(value);
 }
 
 bool Component::ToJson(Json::Value& value, int pos) {

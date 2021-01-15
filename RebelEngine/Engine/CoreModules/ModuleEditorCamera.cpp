@@ -254,12 +254,10 @@ void ModuleEditorCamera::GetOpenGLMatrix(matrix_type _mType, float4x4& matrix) {
 
 }
 
-//GameObject& hittedGo = GameObject();
-
 bool ModuleEditorCamera::GetObjectPicked() {
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN) {
-		
+
 		ImVec2 mouse = ImGui::GetMousePos();
 		ImVec2 viewportPos = App->gui->_scene->GetViewportPos();
 		ImVec2 viewportSize = App->gui->_scene->GetViewportSize();
@@ -271,8 +269,10 @@ bool ModuleEditorCamera::GetObjectPicked() {
 		bool hit = false;
 		float minDistance = FLT_MAX;
 
-		GetObjectPickedRec(ray, hit, minDistance, *App->scene->_root);
+		GameObject* closest_go = GetObjectPickedRec(ray, hit, minDistance, *App->scene->_root);
+
 		if (!hit) App->gui->_inspector->UnSetFocusedGameObject();
+		else App->gui->_inspector->SetFocusedGameObject(*closest_go);
 
 		return hit;
 	}
@@ -280,20 +280,26 @@ bool ModuleEditorCamera::GetObjectPicked() {
 	return false;
 }
 
-void ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit,float& minDistance, GameObject& father) {
+GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, float& minDistance, GameObject& father) {
 
 	std::vector<std::unique_ptr<GameObject>>& children = father.GetChildren();
+	
+	GameObject* min_go = nullptr;
 	for (uint i = 0; i < children.size(); i++) {
 		if(children[i]->HasMesh()){
+
 			math::AABB aabb;
 			children[i]->GetAABB(aabb);
 			OBB _obb = aabb.Transform(children[i]->GetGlobalMatrix());
-			float distanceIn, distanceOut;
+			float distanceIn;
 			bool hitted = false;
+
 			if (ray.Intersects(_obb.MinimalEnclosingAABB())) {
+
 				Mesh* mesh = ((ComponentMeshRenderer*) children[i]->GetComponent(type_component::MESHRENDERER))->_mesh;
 				LineSegment triangleRay(ray);
 				triangleRay.Transform(children[i]->GetGlobalMatrix().Inverted());
+
 				for (int j = 0; j < mesh->_indices.size(); j += 3) {
 					Triangle tri = Triangle(mesh->_vertices[mesh->_indices[j]],
 						mesh->_vertices[mesh->_indices[j + 1]],
@@ -303,16 +309,21 @@ void ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit,float& m
 					if (hitted && distanceIn < minDistance) {
 						minDistance = distanceIn;
 						hit = true;
-						App->gui->_inspector->SetFocusedGameObject(*children[i]);
-						//hittedGo = *children[i];
+						min_go = children[i].get();
 					}
 				}
 			}
-				
-			
 		}
-		GetObjectPickedRec(ray, hit, minDistance, *children[i]);
+		float current_minDistance = minDistance;
+		GameObject* closest_child = GetObjectPickedRec(ray, hit, minDistance, *children[i]);
+
+		if (minDistance < current_minDistance) {
+			min_go = closest_child;
+		}
+
 	}
+
+	return min_go;
 
 }
 #pragma region setters

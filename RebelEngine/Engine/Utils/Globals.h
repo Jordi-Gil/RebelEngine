@@ -1,4 +1,5 @@
 #pragma once
+
 #include <windows.h>
 #include <stdio.h>
 
@@ -56,6 +57,9 @@ constexpr char* meshFormat[48] = { ".3d", ".3ds", ".ac", ".ase", ".b3d", ".blend
 #define DEFAULT_MESH_PATH "./Assets/Models/"
 #define DEFAULT_MESH_EXT ".mesh"
 
+#define DEFAULT_MATERIAL_PATH "./Assets/Materials/"
+#define DEFAULT_MATERIAL_EXT ".material"
+
 #define JSON_TAG_ACTIVE "Active"
 #define JSON_TAG_ASPECT_RATIO "AspectRatio"
 #define JSON_TAG_BACKGROUND_TYPE "Background_type"
@@ -68,7 +72,14 @@ constexpr char* meshFormat[48] = { ".3d", ".3ds", ".ac", ".ase", ".b3d", ".blend
 #define JSON_TAG_GAMEOBJECTS "GameObjects"
 #define JSON_TAG_GLOBAL_MATRIX "GlobalMatrix"
 #define JSON_TAG_LOCAL_MATRIX "LocalMatrix"
+#define JSON_TAG_MAIN_CAMERA "MainCamera"
+#define JSON_TAG_MATERIAL_COLOR "Color"
 #define JSON_TAG_MATERIAL_INDEX "MaterialIndex"
+#define JSON_TAG_MATERIAL_PATH "MaterialPath"
+#define JSON_TAG_MATERIAL_PATH_ALBEDO "Albedo"
+#define JSON_TAG_MATERIAL_PATH_NORMAL "Normal"
+#define JSON_TAG_MATERIAL_PATH_SPECULAR "Specular"
+#define JSON_TAG_MATERIAL_SMOOTHNESS "Smoothness"
 #define JSON_TAG_MESH_PATH "MeshPath"
 #define JSON_TAG_NAME "Name"
 #define JSON_TAG_NORMALS "Normals"

@@ -31,7 +31,7 @@ bool ModuleModel::Init() {
 	stream.callback = LogAssimp;
 	aiAttachLogStream(&stream);
 
-	LoadModelFromFBX("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
+	//LoadModelFromFBX("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
 	//LoadModelFromFBX("Assets/Models/WithoutDDS/Street_Environment/Street_environment_V01.FBX");
 	
 	return true;
@@ -145,6 +145,8 @@ void ModuleModel::LoadNodeHierarchy(const char* fileName, aiNode *node, GameObje
 				mesh->WriteJsonFile();
 
 				int mIdx = scene->mMeshes[node->mChildren[i]->mMeshes[0]]->mMaterialIndex;
+				//TODO: Load materials separately and search the material by name in the Resources manager
+				//		and assign it to the meshrenderer
 				MatStandard* material = new MatStandard(scene->mMaterials[mIdx]->GetName().C_Str());
 				material->LoadMaterialFromFBX(scene->mMaterials[mIdx], fileName);
 

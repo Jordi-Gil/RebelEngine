@@ -52,16 +52,18 @@ public:
 
 	uint32_t GetMorton() const { return _mortonCode; }
 	void GetAABB(AABB& aabb) const { aabb = _aabb; }
+	const char* GetFilePath() { return _filePath; }
+
+	void SetName(const char* name) { _name = _strdup(name); }
+	void SetFilePath(const char* filePath) { sprintf_s(_filePath, "%s", filePath); }
 
 	bool FromJson(const Json::Value& value);
 	bool WriteJsonFile();
-	void SetName(const char* name) { _name = _strdup(name); }
-	const char* GetFilePath() { return _filePath; }
-	void SetFilePath(const char* filePath) { sprintf_s(_filePath, "%s", filePath); }
 
 public:
 	std::vector<float3> _vertices;
 	std::vector<unsigned> _indices;
+
 private:
 
 	bool LoadVBOFromJson(const Json::Value& value);
@@ -81,13 +83,14 @@ private:
 
 	uint32_t _mortonCode;
 
-	AABB _aabb;
-	OBB _obb;
-	Json::Value _vboValue;
-	uint32_t mortonCode;
 	char* _name;
 	char _filePath[1024];
 	std::string _uuid;
+
+	AABB _aabb;
+	OBB _obb;
+
+	Json::Value _meshValue;
 	
 };
 

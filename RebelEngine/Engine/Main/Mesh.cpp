@@ -89,18 +89,18 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	_numVertices = mesh->mNumVertices;
-	_vboValue[0][JSON_TAG_VBO] = jValue; jValue.clear();
-	_vboValue[0][JSON_TAG_VBO_SIZE] = pos;
+	_meshValue[0][JSON_TAG_VBO] = jValue; jValue.clear();
+	_meshValue[0][JSON_TAG_VBO_SIZE] = pos;
 
 	jValue.append(max[0]); jValue.append(max[1]); jValue.append(max[2]);
-	_vboValue[0][JSON_TAG_VBO_MAX] = jValue; jValue.clear();
+	_meshValue[0][JSON_TAG_VBO_MAX] = jValue; jValue.clear();
 
 	jValue.append(min[0]); jValue.append(min[1]); jValue.append(min[2]);
-	_vboValue[0][JSON_TAG_VBO_MIN] = jValue; jValue.clear();
+	_meshValue[0][JSON_TAG_VBO_MIN] = jValue; jValue.clear();
 
 	_aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
-	vec centroid = _aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
-	//obb = OBB::OBB(aabb);
+	vec centroid = _aabb.Centroid(); _mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+
 }
 
 void Mesh::LoadEBO(const aiMesh* mesh) {
@@ -124,7 +124,7 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 		}
 	}
 	
-	_vboValue[0][JSON_TAG_EBO] = jValue;
+	_meshValue[0][JSON_TAG_EBO] = jValue;
 
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	
@@ -191,18 +191,18 @@ void Mesh::Clean() {
 
 bool Mesh::WriteJsonFile(){
 
-	_vboValue[0][JSON_TAG_NAME] = _name;
-	_vboValue[0][JSON_TAG_UUID] = _uuid;
-	_vboValue[0][JSON_TAG_MATERIAL_INDEX] = _matIndex;
-	_vboValue[0][JSON_TAG_NUM_VERTICES] = _numVertices;
-	_vboValue[0][JSON_TAG_NUM_FACES] = _numFaces;
-	_vboValue[0][JSON_TAG_NUM_INDICES] = _numIndices;
+	_meshValue[0][JSON_TAG_NAME] = _name;
+	_meshValue[0][JSON_TAG_UUID] = _uuid;
+	_meshValue[0][JSON_TAG_MATERIAL_INDEX] = _matIndex;
+	_meshValue[0][JSON_TAG_NUM_VERTICES] = _numVertices;
+	_meshValue[0][JSON_TAG_NUM_FACES] = _numFaces;
+	_meshValue[0][JSON_TAG_NUM_INDICES] = _numIndices;
 
 	sprintf(_filePath, "%s%s%s", DEFAULT_MESH_PATH, _name, DEFAULT_MESH_EXT);
 
 	Json::StyledWriter wr;
 	std::ofstream ofs(_filePath, std::ios_base::binary);
-	std::string st = wr.write(_vboValue);
+	std::string st = wr.write(_meshValue);
 	ofs.write(st.c_str(), st.size());
 	ofs.close();
 
@@ -267,7 +267,7 @@ bool Mesh::LoadVBOFromJson(const Json::Value& value)  {
 
 		_aabb = AABB::AABB(vec(value[JSON_TAG_VBO_MIN][0].asFloat(), value[JSON_TAG_VBO_MIN][1].asFloat(), value[JSON_TAG_VBO_MIN][2].asFloat()), 
 						  vec(value[JSON_TAG_VBO_MAX][0].asFloat(), value[JSON_TAG_VBO_MAX][1].asFloat(), value[JSON_TAG_VBO_MAX][2].asFloat()));
-		vec centroid = _aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+		vec centroid = _aabb.Centroid(); _mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	}
 	else  {
 		return false;

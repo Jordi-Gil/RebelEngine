@@ -25,18 +25,19 @@ ComponentTransform::ComponentTransform() {
 }
 
 ComponentTransform::ComponentTransform(const ComponentTransform& comp) {
-	this->_owner = comp._owner;
-	this->_active = comp._active;
-	this->_type = comp._type;
-	this->_uuid = comp._uuid;
-	this->_position = comp._position;
-	this->_rotation = comp._rotation;
-	this->_scale = comp._scale;
-	this->_rotationQuat = comp._rotationQuat;
-	this->_localMatrix = comp._localMatrix;
-	this->_globalMatrix = comp._globalMatrix;
+	_owner = comp._owner;
+	_active = comp._active;
+	_type = comp._type;
+	_uuid = comp._uuid;
+	_position = comp._position;
+	_rotation = comp._rotation;
+	_scale = comp._scale;
+	_rotationQuat = comp._rotationQuat;
+	_localMatrix = comp._localMatrix;
+	_globalMatrix = comp._globalMatrix;
 
 }
+
 ComponentTransform::ComponentTransform(const float3 position, const float3 rotation, const float3 scale) {
 
 	_type = type_component::TRANSFORM;
@@ -81,11 +82,11 @@ void ComponentTransform::SetTransform(const float3 position, const Quat rotation
 
 }
 
-ComponentTransform::ComponentTransform(const Json::Value& value) 
-{
+ComponentTransform::ComponentTransform(const Json::Value& value) {
+
 	Component::FromJson(value);
 	_type = type_component::TRANSFORM;
-	this->FromJson(value);
+	FromJson(value);
 }
 
 void ComponentTransform::SetTransform(const float3 position, const float3 rotation, const float3 scale) {

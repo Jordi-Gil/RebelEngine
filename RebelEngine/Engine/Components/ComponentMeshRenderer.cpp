@@ -43,7 +43,7 @@ ComponentMeshRenderer::ComponentMeshRenderer(const Json::Value& value) {
 	
 	Component::FromJson(value);
 	_type = type_component::MESHRENDERER;
-	this->FromJson(value);
+	FromJson(value);
 }
 
 ComponentMeshRenderer::~ComponentMeshRenderer() {
@@ -199,25 +199,26 @@ void ComponentMeshRenderer::Render() {
 	_mesh->Draw(_material, _owner->GetGlobalMatrix());
 }
 
-bool ComponentMeshRenderer::ToJson(Json::Value& value, int pos) 
-{
+bool ComponentMeshRenderer::ToJson(Json::Value& value, int pos)  {
+
 	Component::ToJson(value, pos);
 	value[pos][JSON_TAG_UUID] = _uuid;
 	value[pos][JSON_TAG_MESH_PATH] = _mesh->GetFilePath();
+	value[pos][JSON_TAG_MATERIAL_PATH] = _material->GetFilePath();
 
 	return true;
 }
 
-bool ComponentMeshRenderer::FromJson(const Json::Value& value) 
-{
+bool ComponentMeshRenderer::FromJson(const Json::Value& value)  {
+
 	if(!value.isNull())
 	{
-		std::ifstream ifs(value[JSON_TAG_MESH_PATH].asString());
+		std::ifstream ifs_mesh(value[JSON_TAG_MESH_PATH].asString());
 		Json::CharReaderBuilder reader;
 		Json::Value obj;
 		std::string error;
 
-		if (!Json::parseFromStream(reader, ifs, &obj, &error)) 
+		if (!Json::parseFromStream(reader, ifs_mesh, &obj, &error))
 		{
 			LOG(_ERROR, "Error parsing file: %s", error);
 			return false;
@@ -226,6 +227,19 @@ bool ComponentMeshRenderer::FromJson(const Json::Value& value)
 		_mesh = new Mesh();
 		_mesh->FromJson(obj[0]);
 		_mesh->SetFilePath(value[JSON_TAG_MESH_PATH].asCString());
+
+		std::ifstream ifs_material(value[JSON_TAG_MATERIAL_PATH].asString());
+
+		if (!Json::parseFromStream(reader, ifs_material, &obj, &error)) {
+			LOG(_ERROR, "Error parsing file: %s", error);
+			return false;
+		}
+
+		MatStandard* mat = new MatStandard();
+		mat->FromJson(obj[0]);
+		mat->SetFilePath(value[JSON_TAG_MATERIAL_PATH].asCString());
+		_material = mat;
+
 	}
 	else 
 	{
@@ -233,4 +247,3 @@ bool ComponentMeshRenderer::FromJson(const Json::Value& value)
 	}
 	return true;
 }
-

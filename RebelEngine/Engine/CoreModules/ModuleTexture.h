@@ -5,7 +5,7 @@
 
 struct TextureInformation {
 	unsigned int gl_id = 0;
-	std::string path;
+	std::string path = "";
 	unsigned int w, h;
 };
 

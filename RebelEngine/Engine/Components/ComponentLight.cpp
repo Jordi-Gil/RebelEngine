@@ -9,9 +9,9 @@
 
 void ComponentLight::DebugDraw() {
 	
-	switch (_type) {
+	switch (_light_type) {
 
-		SPOT_LIGHT: {
+		case SPOT_LIGHT: {
 			float3x3 rot = (_owner->GetGlobalMatrix()).RotatePart();
 			float3 position = (_owner->GetGlobalMatrix()).TranslatePart();
 			float3 forward = rot.Col(2);

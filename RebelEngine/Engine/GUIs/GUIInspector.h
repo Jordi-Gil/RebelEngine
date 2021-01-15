@@ -20,10 +20,8 @@ public:
 	const char* GetName() const override { return _name; }
 
 	void ToggleActive();
+
 	void SetFocusedGameObject(GameObject& focused);
-
-private:
-
 	void UnSetFocusedGameObject();
 	
 private:

@@ -19,7 +19,7 @@ class MatStandard : public Material {
 
 public:
 
-	MatStandard() : Material(material_type::SPECULAR_STANDARD) {};
+	MatStandard();
 	MatStandard(const std::string name);
 
 	void LoadMaterialFromFBX(const aiMaterial* aiMat, const char* fbxPath);
@@ -38,8 +38,12 @@ public:
 	void SetSmoothness(float smoothness);
 	void SetAlbedoMap(TextureInformation albedo);
 
+	bool FromJson(const Json::Value& value);
+	bool WriteJsonFile();
+
 private:
 
+	int _mask = 0;
 	float _smoothness = 1;
 
 	float3 _color = float3(0.45, 0.45, 0.45);
@@ -47,8 +51,6 @@ private:
 	TextureInformation _albedo_map;
 	TextureInformation _specular_map;
 	TextureInformation _normal_map;
-
-	int mask = 0;
 
 	//unsigned int _height_map;
 	//unsigned int _occulsion_map;

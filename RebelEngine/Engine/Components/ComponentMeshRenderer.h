@@ -33,10 +33,11 @@ public:
 		//aabb.Enclose(_mesh->_aabb); 
 		aabb = _mesh->_aabb;
 	};
-	bool ToJson(Json::Value& value, int pos);
-	bool FromJson(const Json::Value& value);
 
-private:
+	bool ToJson(Json::Value& value, int pos) override;
+	bool FromJson(const Json::Value& value) override;
+
+public:
 
 	Mesh* _mesh = nullptr;
 	Material* _material = nullptr;

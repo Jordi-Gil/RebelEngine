@@ -38,10 +38,10 @@ public:
 	void Draw();
 
 	void SetMask(Rebel_FrustumMask mask) { _mask = mask; }
+	void SetMainCamera(ComponentCamera& mainCamera);
 
 	void UpdateMinMax(float3 min, float3 max);
 
-	void InsertOrdered(GameObject& go);
 	bool Save();
 	bool Load();
 	bool ToJson(Json::Value& value, int pos);

@@ -44,8 +44,9 @@ bool ModuleScene::Init() {
 	_poolGameObjects = Pool<GameObject>(1000);
 
 	_skybox = new Skybox();
-
-	/*_root = std::make_unique<GameObject>("Hierarchy");
+	
+	_root = _poolGameObjects.get();
+	_root->SetName("Hierarchy");
 	_root->AddMask(GO_MASK_ROOT_NODE);
 
 	std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
@@ -60,15 +61,16 @@ bool ModuleScene::Init() {
 	go->SetParent(_root.get());
 	transform->SetOwner(go.get());
 	cam->SetOwner(go.get());
-
+	cam->ToggleMainCamera();
 	cam->SetPosition(transform->GetPosition());
+	
 
 	go->AddComponent(std::move(transform));
 	go->AddComponent(std::move(cam), GO_MASK_CAMERA);
 
 	_mainCamera = static_cast<ComponentCamera *>(go->GetComponent(type_component::CAMERA));
 
-	_root->AddChild(std::move(go));*/
+	_root->AddChild(std::move(go));
 
 	go = _poolGameObjects.get();
 	go->SetName("Directional Light");
@@ -76,12 +78,12 @@ bool ModuleScene::Init() {
 	transform->SetOwner(go.get());
 	std::unique_ptr<ComponentLight> light = std::make_unique<ComponentLight>(light_type::DIRECTIONAL_LIGHT);
 	light->SetOwner(go.get());
-
+	
 	go->AddComponent(std::move(transform));
 	go->AddComponent(std::move(light));
-
+	
 	_root->AddChild(std::move(go));
-
+	
 	return true;
 }
 
@@ -101,14 +103,14 @@ void ModuleScene::IterateRoot(GameObject& go) {
 
 bool ModuleScene::Start() {
 	
-	//Load();
+	Load();
 
 	IterateRoot(*_root);
 
 	_octree = new Octree();
 	_octree->_root->_bounds = AABB(_min, _max);
 
-	for (int i = 0; i < _objects.size(); ++i) {
+	for (unsigned int i = 0; i < _objects.size(); ++i) {
 		_octree->Insert(_octree->_root, _objects[i]);
 	}
 
@@ -197,6 +199,10 @@ void ModuleScene::Draw() {
 	else DrawFrustumOutput();
 }
 
+void ModuleScene::SetMainCamera(ComponentCamera& mainCamera) {
+	_mainCamera = &mainCamera;
+}
+
 void ModuleScene::UpdateMinMax(float3 min, float3 max) {
 
 	if (min.x < _min.x) _min.x = min.x;
@@ -256,7 +262,8 @@ bool ModuleScene::FromJson(const Json::Value& value) {
 
 	if (!root.isNull()) {
 		App->editorCamera->SetCamera(new ComponentCamera(value[JSON_TAG_EDITOR_CAMERA][0]));
-		_root = std::make_unique<GameObject>(root[0]);
+		_root = _poolGameObjects.get();
+		_root->FromJson(root[0]);
 	}
 	else {
 		//TODO: JSON ERROR
