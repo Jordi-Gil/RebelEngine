@@ -52,7 +52,7 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	unsigned int pos = 0;
 	unsigned int vertPos = 0;
 	Json::Value jValue(Json::arrayValue);
-	_vertices = std::vector<float3>(mesh->mNumVertices/3);
+	_vertices = std::vector<float3>(mesh->mNumVertices);
 
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i) {
 		//Position
