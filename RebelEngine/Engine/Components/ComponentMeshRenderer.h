@@ -8,6 +8,7 @@ public:
 
 	ComponentMeshRenderer();
 	ComponentMeshRenderer(const Json::Value& value);
+	ComponentMeshRenderer(const ComponentMeshRenderer& comp);
 	~ComponentMeshRenderer();
 
 	void Enable() override {}
@@ -26,8 +27,8 @@ public:
 	};
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);
-
-private:
 	Mesh* _mesh = nullptr;
+private:
+	
 };
 

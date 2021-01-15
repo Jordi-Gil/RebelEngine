@@ -15,6 +15,7 @@ public:
 	ComponentTransform(const float3 position, const float3 rotation, const float3 scale);
 	ComponentTransform(const aiMatrix4x4& matrix);
 	ComponentTransform(const Json::Value& value);
+	ComponentTransform(const ComponentTransform& comp);
 	
 	~ComponentTransform() {}
 

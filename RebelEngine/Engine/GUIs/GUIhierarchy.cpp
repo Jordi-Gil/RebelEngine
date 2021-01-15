@@ -46,11 +46,13 @@ void GUIHierarchy::DrawHierarchy(GameObject &go, uint depth) {
 	for (uint i = 0; i < children.size(); i++) {
 		
 		bool open = false;
+		char nodeName[_MAX_FNAME + 38]; // 38 = ## + uuid size
+		sprintf(nodeName, "%s##%s", children[i]->GetName(), children[i]->GetUUID().c_str());
 		if (children[i]->GetNumChildren() == 0) {
-			ImGui::Selectable(children[i]->GetName()); //TODO: Add boolean variable to mark selected object
+			ImGui::Selectable(nodeName); //TODO: Add boolean variable to mark selected object
 		}
 		else {
-			open = ImGui::TreeNodeEx(children[i]->GetName(), ImGuiTreeNodeFlags_OpenOnArrow);
+			open = ImGui::TreeNodeEx(nodeName, ImGuiTreeNodeFlags_OpenOnArrow);
 		}
 
 		if (ImGui::IsItemClicked(0)) {
@@ -119,7 +121,6 @@ void GUIHierarchy::Draw() {
 
 	if(open) {
 		DrawHierarchy(*App->scene->_root, 0);
-
 		ImGui::TreePop();
 	}
 	ImGui::End();

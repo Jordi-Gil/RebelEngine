@@ -50,23 +50,24 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	if (!data) LOG("glMapBuffer error", _ERROR);
 	
 	unsigned int pos = 0;
-
+	unsigned int vertPos = 0;
 	Json::Value jValue(Json::arrayValue);
+	_vertices = std::vector<float3>(mesh->mNumVertices);
 
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i) {
 		//Position
-		data[pos++] = mesh->mVertices[i].x; jValue.append(mesh->mVertices[i].x);
+		data[pos++] = mesh->mVertices[i].x; jValue.append(mesh->mVertices[i].x); 
 		if (mesh->mVertices[i].x > max[0]) max[0] = mesh->mVertices[i].x;
 		if (mesh->mVertices[i].x < min[0]) min[0] = mesh->mVertices[i].x;
 
-		data[pos++] = mesh->mVertices[i].y; jValue.append(mesh->mVertices[i].y);
+		data[pos++] = mesh->mVertices[i].y; jValue.append(mesh->mVertices[i].y); 
 		if (mesh->mVertices[i].y > max[1]) max[1] = mesh->mVertices[i].y;
 		if (mesh->mVertices[i].y < min[1]) min[1] = mesh->mVertices[i].y;
 
 		data[pos++] = mesh->mVertices[i].z; jValue.append(mesh->mVertices[i].z);
-		if (mesh->mVertices[i].z > max[2]) max[2] = mesh->mVertices[i].z;
+		if (mesh->mVertices[i].z > max[2]) max[2] = mesh->mVertices[i].z; 
 		if (mesh->mVertices[i].z < min[2]) min[2] = mesh->mVertices[i].z;
-
+		_vertices[vertPos++] = float3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 		//Normal
 		data[pos++] = mesh->mNormals[i].x; jValue.append(mesh->mNormals[i].x);
 		data[pos++] = mesh->mNormals[i].y; jValue.append(mesh->mNormals[i].y);
@@ -112,10 +113,12 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 	if(!indices) LOG("glMapBuffer error", _ERROR);
 
 	Json::Value jValue(Json::arrayValue);
+	
 	for (unsigned i = 0; i < mesh->mNumFaces; ++i) {
 		for (uint j = 0; j < mesh->mFaces[i].mNumIndices; j++) {
 			*(indices++) = mesh->mFaces[i].mIndices[j];
 			jValue.append(mesh->mFaces[i].mIndices[j]);
+			_indices.push_back(mesh->mFaces[i].mIndices[j]);
 		}
 	}
 	
@@ -244,9 +247,18 @@ bool Mesh::LoadVBOFromJson(const Json::Value& value)  {
 
 		if (!data) LOG("glMapBuffer error", _ERROR);
 
-		for (unsigned i = 0; i < value[JSON_TAG_VBO_SIZE].asUInt(); ++i)
+		for (unsigned i = 0; i < value[JSON_TAG_VBO_SIZE].asUInt(); i+=8)
 		{ 
 			data[i] = value[JSON_TAG_VBO][i].asFloat();
+			data[i+1] = value[JSON_TAG_VBO][i+1].asFloat();
+			data[i+2] = value[JSON_TAG_VBO][i+2].asFloat();
+			data[i+3] = value[JSON_TAG_VBO][i+3].asFloat();
+			data[i+4] = value[JSON_TAG_VBO][i+4].asFloat();
+			data[i+5] = value[JSON_TAG_VBO][i+5].asFloat();
+			data[i+6] = value[JSON_TAG_VBO][i+6].asFloat();
+			data[i+7] = value[JSON_TAG_VBO][i+7].asFloat();
+
+			_vertices.push_back(float3(data[i], data[i + 1], data[i + 2]));
 		}
 
 		glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -275,8 +287,10 @@ bool Mesh::LoadEBOFromJson(const Json::Value& value) {
 
 		if (!indices) LOG(_ERROR, "glMapBuffer error");
 		int aux = value[JSON_TAG_EBO].size();
-		for (unsigned i = 0; i < value[JSON_TAG_EBO].size(); ++i) {
+		_indices = std::vector<unsigned>(aux);
+		for (unsigned i = 0; i < aux; ++i) {
 			indices[i] = value[JSON_TAG_EBO][i].asUInt();
+			_indices[i] = value[JSON_TAG_EBO][i].asUInt();
 		}
 		
 		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);

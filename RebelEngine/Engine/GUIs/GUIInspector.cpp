@@ -114,3 +114,7 @@ void GUIInspector::SetFocusedGameObject(GameObject& focused){
 	_focused_go = &focused;
 	_focused_go->ToggleSelected();
 }
+void GUIInspector::UnSetFocusedGameObject() {
+	if (_focused_go) _focused_go->ToggleSelected();
+	_focused_go = nullptr;
+}
