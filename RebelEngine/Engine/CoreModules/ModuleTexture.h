@@ -4,8 +4,8 @@
 #include <string>
 
 struct TextureInformation {
-	unsigned int gl_id;
-	std::string name;
+	unsigned int gl_id = 0;
+	std::string path;
 	unsigned int w, h;
 };
 

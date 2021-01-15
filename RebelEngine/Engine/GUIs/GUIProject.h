@@ -17,6 +17,8 @@ public:
 
 	const char* GetName() const override { return _name; }
 
+	void GetTexture(std::filesystem::path& pwd);
+
 private:
 
 	ImGui::FileExplorer _fileExplorer;

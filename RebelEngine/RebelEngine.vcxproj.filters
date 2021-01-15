@@ -26,9 +26,7 @@
     <ClCompile Include="Engine\GUIs\GUIHierarchy.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
-    <ClCompile Include="Engine\Main\Skybox.cpp" />
     <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
-    <ClCompile Include="Engine\Main\Material.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Quadtree.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui.cpp" />
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\imgui_demo.cpp" />
@@ -127,6 +125,9 @@
     <ClCompile Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
     <ClCompile Include="Engine\Materials\MatStandard.cpp" />
+    <ClCompile Include="Engine\Materials\Skybox.cpp" />
+    <ClCompile Include="Engine\Materials\Material.cpp" />
+    <ClCompile Include="Engine\Components\ComponentLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Main\Application.h" />
@@ -159,9 +160,7 @@
     <ClInclude Include="Engine\GUIs\GUIHierarchy.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
-    <ClInclude Include="Engine\Main\Skybox.h" />
     <ClInclude Include="Engine\Components\ComponentCamera.h" />
-    <ClInclude Include="Engine\Main\Material.h" />
     <ClInclude Include="Engine\Main\Pool.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Quadtree.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsFontAwesome5.h" />
@@ -274,6 +273,9 @@
     <ClInclude Include="Engine\GUIs\GUIProject.h" />
     <ClInclude Include="Engine\Materials\MAtStandard.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsForkAwesome.h" />
+    <ClInclude Include="Engine\Materials\Skybox.h" />
+    <ClInclude Include="Engine\Materials\Material.h" />
+    <ClInclude Include="Engine\Components\ComponentLight.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core Modules">

@@ -17,9 +17,11 @@ namespace ImGui {
 		void DrawFileTree(std::string directoryPath);
 		void ShowContent();
 
+		void GetDraggedPath(std::filesystem::path& pwd);
+
 	private:
 		std::filesystem::path _pwd;
-
+		std::filesystem::path _pwd_dragged;
 	};
 
 }

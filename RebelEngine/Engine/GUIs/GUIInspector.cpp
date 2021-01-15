@@ -30,90 +30,19 @@ GUIInspector::GUIInspector(const char* name) {
 	_name = name;
 }
 
-//void GUIInspector::UpdateTransform() {
-//	
-//	ComponentTransform* ct = (ComponentTransform*) _focused_go->GetComponent(type_component::TRANSFORM);
-//	ct->SetTransform(position, rotation, scale);
-//	_focused_go->UpdateChildrenTransform();
-//
-//	if (_focused_go->GetMask() & GO_MASK_CAMERA) {
-//	
-//		Quat rotationQuat = ct->GetRotationQuat();
-//		ComponentCamera* cc = (ComponentCamera*) _focused_go->GetComponent(type_component::CAMERA);
-//		cc->SetPosition(position);
-//
-//		float3x3 rotationMatrix = float3x3::FromQuat(rotationQuat);
-//		cc->SetFront(rotationMatrix * -float3::unitZ);
-//		cc->SetUp(rotationMatrix * float3::unitY);
-//	
-//	}
-//}
-//
-//void GUIInspector::DrawDragFloat3(const char* name, float3& vector, float speed) {
-//	
-//	char invis[FILENAME_MAX] = "##" ;
-//	strcat(invis, name);
-//	ImGui::BeginColumns(invis, 4, ImGuiColumnsFlags_NoBorder | ImGuiColumnsFlags_NoResize);
-//	{
-//		ImGui::Text(name);
-//		for (int i = 0; i < 3; ++i) {
-//			ImGui::NextColumn();
-//			ImGui::PushID(&vector[i]);
-//			ImGui::Text(FLOAT3_LABELS[i]);
-//			ImGui::SameLine();
-//			if (ImGui::DragFloat("", &vector[i], speed)) {
-//				UpdateTransform();
-//			};
-//			ImGui::PopID();
-//		}
-//	}
-//	ImGui::EndColumns();
-//	
-//}
-
 void GUIInspector::Draw() {
 
+	ImGui::SetNextWindowSizeConstraints(ImVec2(500, 100), ImVec2(2000, 2000));
 	std::string wName(ICON_FA_INFO " "); wName.append(_name);
 	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
 	ImVec4 yellow(1.0000f, 0.8275f, 0.4112f, 1.0000f);
 
 	if (_focused_go) {
-
 		for (auto& ct : _focused_go->GetComponents()) {
 			ct->OnEditor();
 		}
-
-		
-		/*if (ImGui::CollapsingHeader("Transform")) {
-
-			ComponentTransform* ct = (ComponentTransform*) _focused_go->GetComponent(type_component::TRANSFORM);
-
-			ImGui::Text(_focused_go->GetName());
-			ImGui::Separator();
-
-			position = ct->GetPosition();
-			rotation = ct->GetRotation();
-			scale = ct->GetScale();
-
-			DrawDragFloat3("Position", position);
-			DrawDragFloat3("Rotation", rotation);
-			DrawDragFloat3("Scale", scale);
-		
-		}
-		
-		if (ImGui::CollapsingHeader("Textures")) {
-			for (auto texture : App->models->textures) {
-			
-				ImGui::Text("Texture: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%s", texture.second.name.c_str());
-				ImGui::Text("Texture Id: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%d", texture.first);
-				ImGui::Text("Size: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%d x %d", texture.second.w, texture.second.h);
-
-				ImGui::Image((void *) texture.first, ImVec2(128,128));
-			}
-		}*/
 	}
 	ImGui::End();
-
 }
 
 void GUIInspector::ToggleActive() {

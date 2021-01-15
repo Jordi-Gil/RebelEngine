@@ -32,3 +32,9 @@ void GUIProject::Draw() {
 void GUIProject::ToggleActive() {
 	_active = !_active;
 }
+
+void GUIProject::GetTexture(std::filesystem::path& pwd) {
+
+	_fileExplorer.GetDraggedPath(pwd);
+
+}

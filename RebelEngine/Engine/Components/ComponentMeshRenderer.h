@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Main/Mesh.h"
-#include "Main/Material.h"
+
+#include "Materials/Material.h"
 
 #include "Components/Component.h"
 
@@ -21,7 +22,7 @@ public:
 	void SetMaterial(Material* component_material);
 
 	void DebugDraw() override;
-	void OnEditor() override {}
+	void OnEditor() override;
 
 	void Render();
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Main/Material.h"
+#include "Materials/Material.h"
 
 #include "Math/float3.h"
 
@@ -28,11 +28,21 @@ public:
 	unsigned int GetSpecularMap() const { return _specular_map.gl_id; }
 	unsigned int GetNormalMap() const { return _normal_map.gl_id; }
 
+	float GetSmoothness() const { return _smoothness; }
+
 	void GetTextureInformation(MATSTANDARD_FLAGS flag, TextureInformation& texInfo);
+
+	void GetColor(float3& color) const { color = _color; }
+
+	void SetColor(float3 color);
+	void SetSmoothness(float smoothness);
+	void SetAlbedoMap(TextureInformation albedo);
 
 private:
 
-	float3 color = float3(0.45, 0.45, 0.45);
+	float _smoothness = 1;
+
+	float3 _color = float3(0.45, 0.45, 0.45);
 
 	TextureInformation _albedo_map;
 	TextureInformation _specular_map;

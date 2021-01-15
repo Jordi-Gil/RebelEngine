@@ -6,6 +6,9 @@
 
 #include "Geometry/Plane.h"
 
+#include "Math/Quat.h"
+#include "Math/float3x3.h"
+
 ComponentCamera::ComponentCamera() {
 
 	_frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
@@ -83,6 +86,16 @@ void ComponentCamera::SetFront(vec front){
 void ComponentCamera::SetUp(vec up) {
 	_frustum.SetUp(up);
 	_dity_planes = true;
+}
+
+void ComponentCamera::Transform(const Quat& rotationQuat, const float3& translation) {
+
+	_frustum.SetPos(translation);
+
+	float3x3 rotationMatrix = float3x3::FromQuat(rotationQuat);
+	_frustum.SetFront(rotationMatrix * -float3::unitZ);
+	_frustum.SetUp(rotationMatrix * float3::unitY);
+
 }
 
 void ComponentCamera::SetZNear(float znear) {

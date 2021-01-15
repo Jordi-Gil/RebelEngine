@@ -32,6 +32,8 @@ public:
 	void SetFront(vec front);
 	void SetUp(vec up);
 
+	void Transform(const Quat& rotationQuat, const float3& translation);
+
 	const float GetHorizontalFov() const { return _frustum.HorizontalFov(); }
 	const float GetVerticalFov() const { return _frustum.VerticalFov(); }
 	const float GetAspectRatio() const { return _frustum.AspectRatio(); }

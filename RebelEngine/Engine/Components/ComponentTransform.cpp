@@ -14,9 +14,11 @@
 
 #include "CoreModules/ModuleScene.h"
 
+#include "ComponentCamera.h"
+
 #include "AccelerationDataStructures/Octree.h"
 
-static constexpr const char* FLOAT3_LABELS[3] = { {"X"},{"Y"},{"Z"} };
+static constexpr char* FLOAT3_LABELS[3] = { {"X"},{"Y"},{"Z"} };
 
 ComponentTransform::ComponentTransform() {
 	_type = type_component::TRANSFORM;
@@ -33,8 +35,6 @@ ComponentTransform::ComponentTransform(const float3 position, const float3 rotat
 	_rotationQuat = Quat::FromEulerXYZ(DegToRad(rotation.x), DegToRad(rotation.y), DegToRad(rotation.z));
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
-
-	UpdateGlobalMatrix();
 }
 
 ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
@@ -54,8 +54,6 @@ ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
-	UpdateGlobalMatrix();
-
 }
 
 void ComponentTransform::SetTransform(const float3 position, const Quat rotation, const float3 scale) {
@@ -67,8 +65,6 @@ void ComponentTransform::SetTransform(const float3 position, const Quat rotation
 	_rotationQuat = rotation;
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
-
-	UpdateGlobalMatrix();
 
 }
 
@@ -184,11 +180,10 @@ bool ComponentTransform::FromJson(const Json::Value& value)
 	return true;
 }
 
-
 void ComponentTransform::DrawDragFloat3(const char* tag, float3& vector, float speed) {
 
 	char invis[FILENAME_MAX] = "##";
-	strcat(invis, tag);
+	strcat_s(invis, tag);
 	ImGui::BeginColumns(invis, 4, ImGuiColumnsFlags_NoBorder | ImGuiColumnsFlags_NoResize);
 	{
 		ImGui::Text(tag);
@@ -208,9 +203,7 @@ void ComponentTransform::DrawDragFloat3(const char* tag, float3& vector, float s
 
 void ComponentTransform::OnEditor() {
 
-	static bool bTransform = true;
-
-	if (ImGui::CollapsingHeader("Transform", &bTransform)) {
+	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		ImGui::Text(_owner->GetName());
 		ImGui::Separator();
@@ -218,6 +211,11 @@ void ComponentTransform::OnEditor() {
 		DrawDragFloat3("Position", _position);
 		DrawDragFloat3("Rotation", _rotation);
 		DrawDragFloat3("Scale", _scale);
+
+		if ((_owner->GetMask() & GO_MASK_CAMERA) != 0) {
+			ComponentCamera* cam = (ComponentCamera*) _owner->GetComponent(type_component::CAMERA);
+			cam->Transform(_rotationQuat, _position);
+		}
 
 	}
 }

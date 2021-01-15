@@ -145,6 +145,7 @@ void GUIConfiguration::Draw() {
 		}
 
 	}
+	//TODO: Deprecated, remove
 	if (ImGui::CollapsingHeader("Texture")) {
 		
 		ImGui::PushItemWidth(100);

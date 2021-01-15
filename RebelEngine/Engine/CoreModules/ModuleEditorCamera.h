@@ -80,7 +80,6 @@ private:
 
 private:
 
-
 	ComponentCamera* camera = nullptr;
 
 	float movSpeed;

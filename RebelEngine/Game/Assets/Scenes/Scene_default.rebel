@@ -3,16 +3,16 @@
       "EditorCamera" : [
          {
             "Active" : false,
-            "AspectRatio" : 1.3188512325286865,
+            "AspectRatio" : 1.4801177978515625,
             "Background_type" : 0,
             "Color" : [ 0.10000000149011612, 0.10000000149011612, 0.10000000149011612, 1.0 ],
-            "FOVHorizontal" : 1.2765343189239502,
-            "Front" : [ 0.54457801580429077, -0.62840408086776733, -0.55546665191650391 ],
+            "FOVHorizontal" : 1.3885707855224609,
+            "Front" : [ -0.26622679829597473, -0.51585108041763306, -0.81426101922988892 ],
             "Owner" : "",
-            "Position" : [ -72.369583129882813, 78.008956909179688, 72.023406982421875 ],
+            "Position" : [ 3.816190242767334, 4.5101709365844727, 6.8207292556762695 ],
             "Type" : 3,
-            "UP" : [ 0.43992915749549866, 0.77788698673248291, -0.44872534275054932 ],
-            "UUID" : "b5b6d973-ff7c-477d-83cd-7762e6c340a4",
+            "UP" : [ -0.16030927002429962, 0.8566785454750061, -0.49030900001525879 ],
+            "UUID" : "a739365c-87f7-4bf8-ae98-fbfbad4d1cd6",
             "ZFar" : 1000.0,
             "ZNear" : 0.0099999997764825821
          }
@@ -23,12 +23,12 @@
             "Components" : [
                {
                   "Active" : false,
-                  "Owner" : "dc638b71-365d-4759-a4d6-c94decb351e0",
+                  "Owner" : "a5800b44-2040-4e71-9461-d98f991c3c4c",
                   "Position" : [ 0.0, 0.0, 0.0 ],
                   "Rotation" : [ 0.0, 0.0, 0.0 ],
                   "Scale" : [ 1.0, 1.0, 1.0 ],
                   "Type" : 1,
-                  "UUID" : "9a65dda1-3280-454f-bcae-4fb7f9bf74e8"
+                  "UUID" : "f36a71c7-f62d-4473-aaf2-9a7c379aef25"
                }
             ],
             "GameObjects" : [
@@ -36,12 +36,12 @@
                   "Components" : [
                      {
                         "Active" : false,
-                        "Owner" : "9e5358bd-bf25-46de-85be-56d4b8262d64",
+                        "Owner" : "fbfe1f74-238a-4fec-812c-f3e7c85ad56d",
                         "Position" : [ 0.0, 0.0, 0.0 ],
                         "Rotation" : [ 0.0, 0.0, 0.0 ],
                         "Scale" : [ 1.0, 1.0, 1.0 ],
                         "Type" : 1,
-                        "UUID" : "348efa1f-329e-46dc-b980-998bc7d5ffdb"
+                        "UUID" : "7ce17fed-15df-42dd-911b-c69362edfe21"
                      },
                      {
                         "Active" : false,
@@ -50,29 +50,51 @@
                         "Color" : [ 0.10000000149011612, 0.10000000149011612, 0.10000000149011612, 1.0 ],
                         "FOVHorizontal" : 1.5707963705062866,
                         "Front" : [ -0.0, -0.0, -1.0 ],
-                        "Owner" : "9e5358bd-bf25-46de-85be-56d4b8262d64",
+                        "Owner" : "fbfe1f74-238a-4fec-812c-f3e7c85ad56d",
                         "Position" : [ 0.0, 0.0, 0.0 ],
                         "Type" : 3,
                         "UP" : [ 0.0, 1.0, 0.0 ],
-                        "UUID" : "7e4f1b60-229e-4547-803b-d69e2f21c8bb",
+                        "UUID" : "b3fa6871-a1d2-4a98-b0d2-2a851649eb43",
                         "ZFar" : 250.0,
                         "ZNear" : 0.10000000149011612
                      }
                   ],
                   "GameObjects" : null,
                   "Name" : "Camera",
-                  "UUID" : "9e5358bd-bf25-46de-85be-56d4b8262d64"
+                  "UUID" : "fbfe1f74-238a-4fec-812c-f3e7c85ad56d"
                },
                {
                   "Components" : [
                      {
                         "Active" : false,
-                        "Owner" : "1fb53c1a-8d8d-4748-9fa6-5eada7843956",
+                        "Owner" : "e357b4cc-d38f-4746-b866-d0fdd2c06a74",
                         "Position" : [ 0.0, 0.0, 0.0 ],
                         "Rotation" : [ 0.0, 0.0, 0.0 ],
                         "Scale" : [ 1.0, 1.0, 1.0 ],
                         "Type" : 1,
-                        "UUID" : "7d6f67fe-c828-49b3-9c10-872dacfdc382"
+                        "UUID" : "bfd949ae-1895-49f0-ae42-1aaae9d2ff4a"
+                     },
+                     {
+                        "Active" : false,
+                        "Owner" : "e357b4cc-d38f-4746-b866-d0fdd2c06a74",
+                        "Type" : 0,
+                        "UUID" : "0a3b1d5b-2a82-48a4-a5e6-0c551a1a1a52"
+                     }
+                  ],
+                  "GameObjects" : null,
+                  "Name" : "Directional Light",
+                  "UUID" : "e357b4cc-d38f-4746-b866-d0fdd2c06a74"
+               },
+               {
+                  "Components" : [
+                     {
+                        "Active" : false,
+                        "Owner" : "ef7b3853-c352-4442-a33a-997d84d7cd83",
+                        "Position" : [ 0.0, 0.0, 0.0 ],
+                        "Rotation" : [ 0.0, 0.0, 0.0 ],
+                        "Scale" : [ 1.0, 1.0, 1.0 ],
+                        "Type" : 1,
+                        "UUID" : "e24f8251-2624-4d26-b427-14b4c3e986d6"
                      }
                   ],
                   "GameObjects" : [
@@ -80,916 +102,55 @@
                         "Components" : [
                            {
                               "Active" : false,
-                              "Owner" : "1db64c3d-5a63-48fa-a98a-46838751446f",
-                              "Position" : [ 18.153732299804688, 0.0, 58.960910797119141 ],
-                              "Rotation" : [ 0.0, 1.0, 0.0 ],
-                              "Scale" : [ 1.0, 1.0, 1.0 ],
-                              "Type" : 1,
-                              "UUID" : "b95e875a-a4e1-4b67-9aa1-5bd71ca7529e"
-                           }
-                        ],
-                        "GameObjects" : null,
-                        "Name" : "Sky001",
-                        "UUID" : "1db64c3d-5a63-48fa-a98a-46838751446f"
-                     },
-                     {
-                        "Components" : [
-                           {
-                              "Active" : false,
-                              "Owner" : "56578b15-c550-4ab6-8a01-fe8fed590a30",
+                              "Owner" : "cecaca55-7433-4b64-8635-0739bdc1007a",
                               "Position" : [ 0.0, 0.0, 0.0 ],
-                              "Rotation" : [ 0.0, 5.9604644775390625e-08, 0.99999994039535522 ],
-                              "Scale" : [ 1.0, 0.99999994039535522, 0.99999994039535522 ],
-                              "Type" : 1,
-                              "UUID" : "4a0e9e77-a2d1-4c19-88b4-d37c6f7567fd"
-                           }
-                        ],
-                        "GameObjects" : [
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "b1880d97-18e5-492d-8a1f-5c381414a734",
-                                    "Position" : [ -41.47589111328125, 21.01409912109375, 0.0 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "0310c075-d99a-451d-b989-6dd8798a268a"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_004.mesh",
-                                    "Owner" : "b1880d97-18e5-492d-8a1f-5c381414a734",
-                                    "Type" : 2,
-                                    "UUID" : "9948f2af-bd37-4551-87db-c251624a27d2"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_004",
-                              "UUID" : "b1880d97-18e5-492d-8a1f-5c381414a734"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "18c29487-f66b-4e93-97ad-64e4c7277000",
-                                    "Position" : [ 17.707164764404297, 20.053276062011719, 2.1210729528320371e-07 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "13ff4114-e7f4-40a9-80f4-f6e781c4b2e2"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_001.mesh",
-                                    "Owner" : "18c29487-f66b-4e93-97ad-64e4c7277000",
-                                    "Type" : 2,
-                                    "UUID" : "d1373367-b6d8-4df8-8d16-7f3006402d05"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_001",
-                              "UUID" : "18c29487-f66b-4e93-97ad-64e4c7277000"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "f7b4f757-7864-4b17-984e-86fe4dc7b7fc",
-                                    "Position" : [ 16.010492324829102, 37.4932861328125, -1.5106878663573298e-06 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "dc2e0858-5cee-4cb8-ae6b-8af0b709dfa1"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_007.mesh",
-                                    "Owner" : "f7b4f757-7864-4b17-984e-86fe4dc7b7fc",
-                                    "Type" : 2,
-                                    "UUID" : "df8f8a5d-2581-41cb-a797-05526b6da089"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_007",
-                              "UUID" : "f7b4f757-7864-4b17-984e-86fe4dc7b7fc"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "3bec5c25-69e4-4ea2-b7ae-40a0b3ec1166",
-                                    "Position" : [ 40.979995727539063, 18.270824432373047, -2.0522466002148576e-06 ],
-                                    "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "0d32dc8b-58fb-4590-a24a-40ac52a8601a"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_008.mesh",
-                                    "Owner" : "3bec5c25-69e4-4ea2-b7ae-40a0b3ec1166",
-                                    "Type" : 2,
-                                    "UUID" : "c36a513e-8143-48df-90f8-fc564c1ebe0c"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_008",
-                              "UUID" : "3bec5c25-69e4-4ea2-b7ae-40a0b3ec1166"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "712f92ea-7c4f-4c0d-b320-6b5946306b9b",
-                                    "Position" : [ -2.1597719192504883, 1.8538382053375244, 0.0 ],
-                                    "Rotation" : [ -0.99999994039535522, 5.9604644775390625e-08, -0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "c9143c9a-23ae-4ff1-87de-a164210f9ac2"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/Line002.mesh",
-                                    "Owner" : "712f92ea-7c4f-4c0d-b320-6b5946306b9b",
-                                    "Type" : 2,
-                                    "UUID" : "09e9daae-6982-4a0b-875e-5e36179b35e4"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "Line002",
-                              "UUID" : "712f92ea-7c4f-4c0d-b320-6b5946306b9b"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "848149e9-7c00-4839-8f39-6ab94e6ff3fb",
-                                    "Position" : [ -0.02860260009765625, 0.026032090187072754, 0.0 ],
-                                    "Rotation" : [ 0.0, 0.97061645984649658, 0.0 ],
-                                    "Scale" : [ 0.99663525819778442, 0.97061645984649658, 0.99663525819778442 ],
-                                    "Type" : 1,
-                                    "UUID" : "d58a142b-7057-4c1d-b0e5-b8dcdb317124"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/Plane001.mesh",
-                                    "Owner" : "848149e9-7c00-4839-8f39-6ab94e6ff3fb",
-                                    "Type" : 2,
-                                    "UUID" : "ff0061cc-ffd8-4fe4-b1c3-b1e3fa325574"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "Plane001",
-                              "UUID" : "848149e9-7c00-4839-8f39-6ab94e6ff3fb"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "833fb625-f163-4718-b390-38af15db78cd",
-                                    "Position" : [ 25.154010772705078, -39.153720855712891, 8.5538641769744572e-07 ],
-                                    "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "2584271b-3b42-4669-8973-1a980b1a6cd9"
-                                 }
-                              ],
-                              "GameObjects" : [
-                                 {
-                                    "Components" : [
-                                       {
-                                          "Active" : false,
-                                          "Owner" : "134755f9-63a2-4353-868f-085b55626474",
-                                          "Position" : [ 25.154010772705078, -39.153720855712891, 8.5538641769744572e-07 ],
-                                          "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                          "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                          "Type" : 1,
-                                          "UUID" : "f576fc47-83a2-42ea-a167-0a5b65143e69"
-                                       },
-                                       {
-                                          "Active" : false,
-                                          "MeshPath" : "./Assets/Models/City_building_010.mesh",
-                                          "Owner" : "134755f9-63a2-4353-868f-085b55626474",
-                                          "Type" : 2,
-                                          "UUID" : "c0c664cc-21c4-4c43-b182-493ee994a67f"
-                                       }
-                                    ],
-                                    "GameObjects" : null,
-                                    "Name" : "City_building_010",
-                                    "UUID" : "134755f9-63a2-4353-868f-085b55626474"
-                                 },
-                                 {
-                                    "Components" : [
-                                       {
-                                          "Active" : false,
-                                          "Owner" : "3ea74b04-5161-4672-92d9-a019f4179e91",
-                                          "Position" : [ 25.154010772705078, -39.153720855712891, 8.5538641769744572e-07 ],
-                                          "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                          "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                          "Type" : 1,
-                                          "UUID" : "1d963392-6764-4333-a514-fa83b5f93cd8"
-                                       },
-                                       {
-                                          "Active" : false,
-                                          "MeshPath" : "./Assets/Models/City_building_010.mesh",
-                                          "Owner" : "3ea74b04-5161-4672-92d9-a019f4179e91",
-                                          "Type" : 2,
-                                          "UUID" : "7edd9737-adcb-4ca2-be6e-8aa116c0b8b9"
-                                       }
-                                    ],
-                                    "GameObjects" : null,
-                                    "Name" : "City_building_010",
-                                    "UUID" : "3ea74b04-5161-4672-92d9-a019f4179e91"
-                                 }
-                              ],
-                              "Name" : "City_building_010",
-                              "UUID" : "833fb625-f163-4718-b390-38af15db78cd"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "a1e67a62-f8ae-4bd6-808b-3090e4e53bee",
-                                    "Position" : [ 30.134540557861328, 37.4932861328125, -1.5106878663573298e-06 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "4fefc5ff-e2dd-460b-86fa-8400b1ae3d62"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_011.mesh",
-                                    "Owner" : "a1e67a62-f8ae-4bd6-808b-3090e4e53bee",
-                                    "Type" : 2,
-                                    "UUID" : "4f17ace5-21a7-4c74-b66b-5136d9be4ad0"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_011",
-                              "UUID" : "a1e67a62-f8ae-4bd6-808b-3090e4e53bee"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "9d7ffff1-b81b-44d7-b2e9-8f66e783adeb",
-                                    "Position" : [ -42.288055419921875, 33.201576232910156, 5.0146070407208754e-07 ],
-                                    "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "eee4ec0c-9a4d-46f8-8d98-33ef09fa0b56"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_013.mesh",
-                                    "Owner" : "9d7ffff1-b81b-44d7-b2e9-8f66e783adeb",
-                                    "Type" : 2,
-                                    "UUID" : "070fc409-e7d7-4549-9596-29c829948713"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_013",
-                              "UUID" : "9d7ffff1-b81b-44d7-b2e9-8f66e783adeb"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "dc12ddfb-4c40-4b8b-b40f-3a9d7b468a67",
-                                    "Position" : [ -19.439706802368164, 32.061729431152344, 0.0 ],
-                                    "Rotation" : [ -8.7422776573475858e-08, -1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "b108df88-62d1-40bc-8c6d-85b7a3983dbe"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_014.mesh",
-                                    "Owner" : "dc12ddfb-4c40-4b8b-b40f-3a9d7b468a67",
-                                    "Type" : 2,
-                                    "UUID" : "857d10ed-3c50-479e-a0a6-7a995a7d2044"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_014",
-                              "UUID" : "dc12ddfb-4c40-4b8b-b40f-3a9d7b468a67"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "8a3bab4a-8a7a-4319-8996-aa7ee7a97b03",
-                                    "Position" : [ 34.270423889160156, -41.972747802734375, 8.5538641769744572e-07 ],
-                                    "Rotation" : [ -8.7422776573475858e-08, -1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "ea851049-07c7-4ba4-9f44-005798783ec4"
-                                 }
-                              ],
-                              "GameObjects" : [
-                                 {
-                                    "Components" : [
-                                       {
-                                          "Active" : false,
-                                          "Owner" : "107b7da6-a9c7-4764-80d4-12e060a14eba",
-                                          "Position" : [ 34.270423889160156, -41.972747802734375, 8.5538641769744572e-07 ],
-                                          "Rotation" : [ -8.7422776573475858e-08, -1.0, 0.0 ],
-                                          "Scale" : [ 1.0, 1.0, 1.0 ],
-                                          "Type" : 1,
-                                          "UUID" : "7e06e5ff-6e98-46c9-beef-ff8316015c86"
-                                       },
-                                       {
-                                          "Active" : false,
-                                          "MeshPath" : "./Assets/Models/City_building_016.mesh",
-                                          "Owner" : "107b7da6-a9c7-4764-80d4-12e060a14eba",
-                                          "Type" : 2,
-                                          "UUID" : "4d0e1411-42d2-4296-afdf-6cc72b54572e"
-                                       }
-                                    ],
-                                    "GameObjects" : null,
-                                    "Name" : "City_building_010",
-                                    "UUID" : "107b7da6-a9c7-4764-80d4-12e060a14eba"
-                                 },
-                                 {
-                                    "Components" : [
-                                       {
-                                          "Active" : false,
-                                          "Owner" : "e4973769-e651-4e7c-a743-560c6717864f",
-                                          "Position" : [ 34.270423889160156, -41.972747802734375, 8.5538641769744572e-07 ],
-                                          "Rotation" : [ -8.7422776573475858e-08, -1.0, 0.0 ],
-                                          "Scale" : [ 1.0, 1.0, 1.0 ],
-                                          "Type" : 1,
-                                          "UUID" : "37e96358-5a57-4dcf-ad59-e454876ceb1c"
-                                       },
-                                       {
-                                          "Active" : false,
-                                          "MeshPath" : "./Assets/Models/City_building_016.mesh",
-                                          "Owner" : "e4973769-e651-4e7c-a743-560c6717864f",
-                                          "Type" : 2,
-                                          "UUID" : "edfa4ff5-5b63-461d-96da-20ec09d4f294"
-                                       }
-                                    ],
-                                    "GameObjects" : null,
-                                    "Name" : "City_building_010",
-                                    "UUID" : "e4973769-e651-4e7c-a743-560c6717864f"
-                                 }
-                              ],
-                              "Name" : "City_building_016",
-                              "UUID" : "8a3bab4a-8a7a-4319-8996-aa7ee7a97b03"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "21bae697-9287-4a5c-917c-b9ae91846cb0",
-                                    "Position" : [ 44.260082244873047, -39.153720855712891, 8.5538641769744572e-07 ],
-                                    "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "dab50aea-da1b-45a1-98d5-24c68a524bd4"
-                                 }
-                              ],
-                              "GameObjects" : [
-                                 {
-                                    "Components" : [
-                                       {
-                                          "Active" : false,
-                                          "Owner" : "adae5cd3-b109-42ec-a419-7236408b1dd4",
-                                          "Position" : [ 44.260082244873047, -39.153720855712891, 8.5538641769744572e-07 ],
-                                          "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                          "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                          "Type" : 1,
-                                          "UUID" : "18440f84-310e-49d2-b5e0-bf270edfb86b"
-                                       },
-                                       {
-                                          "Active" : false,
-                                          "MeshPath" : "./Assets/Models/City_building_017.mesh",
-                                          "Owner" : "adae5cd3-b109-42ec-a419-7236408b1dd4",
-                                          "Type" : 2,
-                                          "UUID" : "f492e05a-2bf4-4c44-aae4-ec202971ea58"
-                                       }
-                                    ],
-                                    "GameObjects" : null,
-                                    "Name" : "City_building_010",
-                                    "UUID" : "adae5cd3-b109-42ec-a419-7236408b1dd4"
-                                 },
-                                 {
-                                    "Components" : [
-                                       {
-                                          "Active" : false,
-                                          "Owner" : "375c4c26-22e4-4daf-8cf6-b09d10e12285",
-                                          "Position" : [ 44.260082244873047, -39.153720855712891, 8.5538641769744572e-07 ],
-                                          "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                          "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                          "Type" : 1,
-                                          "UUID" : "4d6afecd-61a1-4356-bc04-6aa347be7c80"
-                                       },
-                                       {
-                                          "Active" : false,
-                                          "MeshPath" : "./Assets/Models/City_building_017.mesh",
-                                          "Owner" : "375c4c26-22e4-4daf-8cf6-b09d10e12285",
-                                          "Type" : 2,
-                                          "UUID" : "31e81317-bf9a-4cc7-94f9-237778763d8f"
-                                       }
-                                    ],
-                                    "GameObjects" : null,
-                                    "Name" : "City_building_010",
-                                    "UUID" : "375c4c26-22e4-4daf-8cf6-b09d10e12285"
-                                 }
-                              ],
-                              "Name" : "City_building_017",
-                              "UUID" : "21bae697-9287-4a5c-917c-b9ae91846cb0"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "08e8b159-9f61-4a92-ab96-4d8c808e7ff9",
-                                    "Position" : [ -20.831323623657227, -27.426488876342773, 0.0 ],
-                                    "Rotation" : [ 3.8941436741879443e-07, -1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "89ac2c96-4253-4495-9ce7-770297949f13"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_022.mesh",
-                                    "Owner" : "08e8b159-9f61-4a92-ab96-4d8c808e7ff9",
-                                    "Type" : 2,
-                                    "UUID" : "4d4ff02c-dd04-4ac7-8463-4d8d9bbae3e4"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_022",
-                              "UUID" : "08e8b159-9f61-4a92-ab96-4d8c808e7ff9"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "b06f528e-a481-4b62-8116-36c6ec625e84",
-                                    "Position" : [ 42.130641937255859, 37.4932861328125, -1.5106878663573298e-06 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "3f339493-8776-48ce-a3fe-b9c964b1fb20"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_023.mesh",
-                                    "Owner" : "b06f528e-a481-4b62-8116-36c6ec625e84",
-                                    "Type" : 2,
-                                    "UUID" : "e0a765b6-36e2-452a-871b-f3d7fcfe6bca"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_023",
-                              "UUID" : "b06f528e-a481-4b62-8116-36c6ec625e84"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "7de0df60-4e1d-49e8-9854-0f6891277af2",
-                                    "Position" : [ -20.572771072387695, 43.060829162597656, -0.069194458425045013 ],
-                                    "Rotation" : [ 8.7422776573475858e-08, -1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "53c8fd73-7054-40d7-af19-89f573f0509d"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_024.mesh",
-                                    "Owner" : "7de0df60-4e1d-49e8-9854-0f6891277af2",
-                                    "Type" : 2,
-                                    "UUID" : "b9f59404-21ef-4783-a17f-6b5482ed8714"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_024",
-                              "UUID" : "7de0df60-4e1d-49e8-9854-0f6891277af2"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "81e64c33-cb3c-4fb0-84f3-97c22901736f",
-                                    "Position" : [ 31.51188850402832, -16.446016311645508, 0.0 ],
-                                    "Rotation" : [ 8.7422776573475858e-08, -1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "c01fbde2-7616-40e1-a6ec-1823e2f37b9e"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_026.mesh",
-                                    "Owner" : "81e64c33-cb3c-4fb0-84f3-97c22901736f",
-                                    "Type" : 2,
-                                    "UUID" : "2b9066a9-043b-4fe5-9753-8e96330e4a3b"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_026",
-                              "UUID" : "81e64c33-cb3c-4fb0-84f3-97c22901736f"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "1da65022-1912-4630-a209-9cbce51c7ef3",
-                                    "Position" : [ 13.38798999786377, -33.755039215087891, -9.3834518111179932e-07 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "32364550-8763-4f9a-b30b-a2b1d94b48bb"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_028.mesh",
-                                    "Owner" : "1da65022-1912-4630-a209-9cbce51c7ef3",
-                                    "Type" : 2,
-                                    "UUID" : "ffbaf2c5-8bc4-48b2-a612-e9f24d6c5d3c"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_028",
-                              "UUID" : "1da65022-1912-4630-a209-9cbce51c7ef3"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "4811a4a1-a4a1-401b-af12-29bf48d8785e",
-                                    "Position" : [ -2.5033531188964844, 15.800846099853516, 0.0 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "33a6a4b2-8c35-42fb-b266-488625d7d5d8"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/Object010.mesh",
-                                    "Owner" : "4811a4a1-a4a1-401b-af12-29bf48d8785e",
-                                    "Type" : 2,
-                                    "UUID" : "34e536af-7d1c-497e-96ae-f0bf5b6e2b50"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "Object010",
-                              "UUID" : "4811a4a1-a4a1-401b-af12-29bf48d8785e"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "f9f25725-eebb-4cde-accd-eab9226528ff",
-                                    "Position" : [ -42.807239532470703, -41.835563659667969, -9.3834518111179932e-07 ],
-                                    "Rotation" : [ -0.99999994039535522, 5.9604644775390625e-08, -0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "ab48e394-abd4-4d36-96a6-80d071bd9df2"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_030.mesh",
-                                    "Owner" : "f9f25725-eebb-4cde-accd-eab9226528ff",
-                                    "Type" : 2,
-                                    "UUID" : "7a05f4e6-73a2-4c84-a7a4-6508867fd2be"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_030",
-                              "UUID" : "f9f25725-eebb-4cde-accd-eab9226528ff"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "0a9804bc-03c7-4805-b599-652efca39e37",
-                                    "Position" : [ -34.679481506347656, -41.835563659667969, -9.3834518111179932e-07 ],
-                                    "Rotation" : [ -0.99999994039535522, 5.9604644775390625e-08, -0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "0301ae6c-c53c-4236-9094-168643666bd8"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_031.mesh",
-                                    "Owner" : "0a9804bc-03c7-4805-b599-652efca39e37",
-                                    "Type" : 2,
-                                    "UUID" : "5ae69e2f-2ddf-4c3f-98d1-2a8aec3ba15e"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_031",
-                              "UUID" : "0a9804bc-03c7-4805-b599-652efca39e37"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "d3831168-c18d-4230-84fc-26326e037600",
-                                    "Position" : [ -29.478403091430664, 21.01409912109375, 0.0 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "c1a24462-acbd-443c-9e15-a29a0b02fa5c"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_032.mesh",
-                                    "Owner" : "d3831168-c18d-4230-84fc-26326e037600",
-                                    "Type" : 2,
-                                    "UUID" : "b7841327-a2a1-4ea9-ab3f-48685372dee8"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_032",
-                              "UUID" : "d3831168-c18d-4230-84fc-26326e037600"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "be98d64c-9d4f-4d80-9f7c-057e1fe0e0aa",
-                                    "Position" : [ -32.361495971679688, 42.37042236328125, 5.0146070407208754e-07 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "ae063f93-562a-4cc1-93fe-2dd7c3bddf0d"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_033.mesh",
-                                    "Owner" : "be98d64c-9d4f-4d80-9f7c-057e1fe0e0aa",
-                                    "Type" : 2,
-                                    "UUID" : "440bbd68-2ffb-4f91-9392-614095832270"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_033",
-                              "UUID" : "be98d64c-9d4f-4d80-9f7c-057e1fe0e0aa"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "71fefac1-b5c7-4fa0-95a6-660d05ab8f29",
-                                    "Position" : [ 16.049516677856445, -16.696884155273438, 0.0 ],
-                                    "Rotation" : [ -0.99999994039535522, -1.1920928955078125e-07, -0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "53cce37a-816b-4f4e-89ac-e7bc65b59276"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_034.mesh",
-                                    "Owner" : "71fefac1-b5c7-4fa0-95a6-660d05ab8f29",
-                                    "Type" : 2,
-                                    "UUID" : "591a15bf-079f-416f-a46a-f7b89eef78da"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_034",
-                              "UUID" : "71fefac1-b5c7-4fa0-95a6-660d05ab8f29"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "862fd65c-386c-4dc3-9cff-bddd2a7c2954",
-                                    "Position" : [ 13.38798999786377, -40.802516937255859, -9.3834518111179932e-07 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "a20cc800-022a-4089-aa08-ce0cc880bf8d"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_035.mesh",
-                                    "Owner" : "862fd65c-386c-4dc3-9cff-bddd2a7c2954",
-                                    "Type" : 2,
-                                    "UUID" : "0626c1f7-4331-4992-be1a-6c87afeb6415"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_035",
-                              "UUID" : "862fd65c-386c-4dc3-9cff-bddd2a7c2954"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "f7ba7049-6b79-4ec7-8ce0-327ee5b1780a",
-                                    "Position" : [ -31.216331481933594, 33.201576232910156, 5.0146070407208754e-07 ],
-                                    "Rotation" : [ -0.99999994039535522, 5.9604644775390625e-08, -0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "ddaf1abe-e6f5-42ae-a200-6942ac9797af"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_036.mesh",
-                                    "Owner" : "f7ba7049-6b79-4ec7-8ce0-327ee5b1780a",
-                                    "Type" : 2,
-                                    "UUID" : "37fcb68e-8c5b-4a51-b3ef-e7aa02c818ea"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_036",
-                              "UUID" : "f7ba7049-6b79-4ec7-8ce0-327ee5b1780a"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "4a0e78d1-f1c3-4461-9342-5f8cafd00124",
-                                    "Position" : [ -20.317693710327148, -16.163608551025391, 0.0 ],
-                                    "Rotation" : [ 3.8941436741879443e-07, -1.0, 0.0 ],
-                                    "Scale" : [ 1.0, 1.0, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "d8fcf6bb-ce08-432b-aab9-89d13b1fb40a"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_037.mesh",
-                                    "Owner" : "4a0e78d1-f1c3-4461-9342-5f8cafd00124",
-                                    "Type" : 2,
-                                    "UUID" : "df278a65-090c-40e9-80b9-1c2f82540391"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_037",
-                              "UUID" : "4a0e78d1-f1c3-4461-9342-5f8cafd00124"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "a2caf938-056a-4f1e-9be4-1174c6181c88",
-                                    "Position" : [ -41.649002075195313, -16.495393753051758, 0.0 ],
-                                    "Rotation" : [ -0.99999994039535522, -1.1920928955078125e-07, -0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "7e401a2f-88c4-423b-800c-9e038d5de44b"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_038.mesh",
-                                    "Owner" : "a2caf938-056a-4f1e-9be4-1174c6181c88",
-                                    "Type" : 2,
-                                    "UUID" : "aad36cd5-3b56-444e-be70-8f6d1530f8b1"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_038",
-                              "UUID" : "a2caf938-056a-4f1e-9be4-1174c6181c88"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "7c0aeb46-9664-445e-abec-3e585e2a00cc",
-                                    "Position" : [ -42.807239532470703, -30.643888473510742, -9.3834518111179932e-07 ],
-                                    "Rotation" : [ -0.99999994039535522, 5.9604644775390625e-08, -0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "04184629-9f95-4160-b1df-3ca6c14885b5"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_039.mesh",
-                                    "Owner" : "7c0aeb46-9664-445e-abec-3e585e2a00cc",
-                                    "Type" : 2,
-                                    "UUID" : "eb06a5e0-4b00-4c98-af32-f024efa6a55b"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_039",
-                              "UUID" : "7c0aeb46-9664-445e-abec-3e585e2a00cc"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "c3204349-59bf-4f41-8e89-e1a89e53cc5b",
-                                    "Position" : [ -34.679481506347656, -30.643888473510742, -9.3834518111179932e-07 ],
-                                    "Rotation" : [ -0.99999994039535522, 5.9604644775390625e-08, -0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "79a1d6a3-583b-491c-9e4e-9a013e517832"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_040.mesh",
-                                    "Owner" : "c3204349-59bf-4f41-8e89-e1a89e53cc5b",
-                                    "Type" : 2,
-                                    "UUID" : "3fbb3f58-895e-4e3a-9f5b-2a2e9c950e99"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_040",
-                              "UUID" : "c3204349-59bf-4f41-8e89-e1a89e53cc5b"
-                           },
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "df4e258f-287b-4b1b-99c3-604fd3c8f2fd",
-                                    "Position" : [ 30.695278167724609, 21.612646102905273, 2.1210729528320371e-07 ],
-                                    "Rotation" : [ 0.99999994039535522, 5.9604644775390625e-08, 0.0 ],
-                                    "Scale" : [ 0.99999994039535522, 0.99999994039535522, 1.0 ],
-                                    "Type" : 1,
-                                    "UUID" : "233fdc50-7c0b-40eb-b555-a2a9eb1cccba"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MeshPath" : "./Assets/Models/City_building_041.mesh",
-                                    "Owner" : "df4e258f-287b-4b1b-99c3-604fd3c8f2fd",
-                                    "Type" : 2,
-                                    "UUID" : "13cf35f2-6346-435a-9f68-e1857fb2a2b6"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "City_building_041",
-                              "UUID" : "df4e258f-287b-4b1b-99c3-604fd3c8f2fd"
-                           }
-                        ],
-                        "Name" : "Dummy001",
-                        "UUID" : "56578b15-c550-4ab6-8a01-fe8fed590a30"
-                     },
-                     {
-                        "Components" : [
-                           {
-                              "Active" : false,
-                              "Owner" : "417c2234-080b-4d6b-8387-fe7d795ac0b1",
-                              "Position" : [ -78.312431335449219, 45.251216888427734, -97.031112670898438 ],
-                              "Rotation" : [ -0.62932056188583374, -0.74318861961364746, -0.2272152304649353 ],
-                              "Scale" : [ 1.0000002384185791, 1.0000002384185791, 1.0 ],
-                              "Type" : 1,
-                              "UUID" : "7f12ee1f-dfe8-40f2-81bc-652cb1828b3a"
-                           }
-                        ],
-                        "GameObjects" : null,
-                        "Name" : "Camera001",
-                        "UUID" : "417c2234-080b-4d6b-8387-fe7d795ac0b1"
-                     },
-                     {
-                        "Components" : [
-                           {
-                              "Active" : false,
-                              "Owner" : "56cb333f-2a1b-4bc6-ae55-ae309522b4ba",
-                              "Position" : [ -28.132621765136719, 20.873329162597656, -35.064212799072266 ],
-                              "Rotation" : [ -0.62932068109512329, -0.74318826198577881, -0.22721527516841888 ],
-                              "Scale" : [ 1.0, 1.0, 0.99999994039535522 ],
-                              "Type" : 1,
-                              "UUID" : "695f8620-63e3-4881-8d0a-533974f9cfc9"
-                           }
-                        ],
-                        "GameObjects" : null,
-                        "Name" : "Camera001.Target",
-                        "UUID" : "56cb333f-2a1b-4bc6-ae55-ae309522b4ba"
-                     },
-                     {
-                        "Components" : [
-                           {
-                              "Active" : false,
-                              "Owner" : "1be85f66-c70b-4b30-8266-61dbe39fd0e2",
-                              "Position" : [ -66.721267700195313, 141.93412780761719, 6.2041376622801181e-06 ],
-                              "Rotation" : [ 4.4703483581542969e-08, 0.90459388494491577, -0.42627441883087158 ],
-                              "Scale" : [ 1.0, 1.0, 0.99999994039535522 ],
-                              "Type" : 1,
-                              "UUID" : "7584998a-7667-4e47-8c10-41bc4aca1007"
-                           }
-                        ],
-                        "GameObjects" : null,
-                        "Name" : "Spot001",
-                        "UUID" : "1be85f66-c70b-4b30-8266-61dbe39fd0e2"
-                     },
-                     {
-                        "Components" : [
-                           {
-                              "Active" : false,
-                              "Owner" : "72f5794c-4f31-4710-98df-0343b78105d0",
-                              "Position" : [ 28.890945434570313, -60.963882446289063, -2.6648158382158726e-06 ],
-                              "Rotation" : [ 0.0, 1.0, -1.1920928244535389e-07 ],
+                              "Rotation" : [ 0.0, 0.0, 0.0 ],
                               "Scale" : [ 1.0, 1.0, 1.0 ],
                               "Type" : 1,
-                              "UUID" : "cc97bc1a-bba9-45d0-869c-b1bef6134ccd"
+                              "UUID" : "bbef3ed3-a7de-4e55-9459-cf9a9e90fccf"
+                           },
+                           {
+                              "Active" : false,
+                              "MeshPath" : "./Assets/Models/Baker_house.mesh",
+                              "Owner" : "cecaca55-7433-4b64-8635-0739bdc1007a",
+                              "Type" : 2,
+                              "UUID" : "52a55f2a-770b-4639-9644-36556bf97f37"
                            }
                         ],
                         "GameObjects" : null,
-                        "Name" : "Spot001.Target",
-                        "UUID" : "72f5794c-4f31-4710-98df-0343b78105d0"
+                        "Name" : "Baker_house",
+                        "UUID" : "cecaca55-7433-4b64-8635-0739bdc1007a"
+                     },
+                     {
+                        "Components" : [
+                           {
+                              "Active" : false,
+                              "Owner" : "0ad2d199-f320-40a8-a887-fa8f257f1d32",
+                              "Position" : [ 0.0, 0.0, 0.0 ],
+                              "Rotation" : [ 0.0, 0.0, 0.0 ],
+                              "Scale" : [ 1.0, 1.0, 1.0 ],
+                              "Type" : 1,
+                              "UUID" : "df6982dc-7578-467f-a01a-78121d504e67"
+                           },
+                           {
+                              "Active" : false,
+                              "MeshPath" : "./Assets/Models/Chimney.mesh",
+                              "Owner" : "0ad2d199-f320-40a8-a887-fa8f257f1d32",
+                              "Type" : 2,
+                              "UUID" : "c1dfea69-cc52-499a-a0b0-c2099b61f17b"
+                           }
+                        ],
+                        "GameObjects" : null,
+                        "Name" : "Chimney",
+                        "UUID" : "0ad2d199-f320-40a8-a887-fa8f257f1d32"
                      }
                   ],
-                  "Name" : "Street_environment_V01",
-                  "UUID" : "1fb53c1a-8d8d-4748-9fa6-5eada7843956"
+                  "Name" : "BakerHouse",
+                  "UUID" : "ef7b3853-c352-4442-a33a-997d84d7cd83"
                }
             ],
             "Name" : "Hierarchy",
-            "UUID" : "dc638b71-365d-4759-a4d6-c94decb351e0"
+            "UUID" : "a5800b44-2040-4e71-9461-d98f991c3c4c"
          }
       ]
    }

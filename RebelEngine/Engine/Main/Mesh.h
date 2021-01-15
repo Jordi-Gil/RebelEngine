@@ -8,7 +8,7 @@
 
 #include "json/json.h"
 
-#include "Main/Material.h"
+#include "Materials/Material.h"
 
 #include "Utils/RUUID.h"
 

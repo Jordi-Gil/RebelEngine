@@ -129,7 +129,7 @@ namespace ImGui {
 	bool IsImage(const std::string& extension) {
 
 		for (int i = 0; i < MARRAYSIZE(imageFormat); i++) {
-			if (_strcmpi(imageFormat[i], extension.c_str())) return true;
+			if (_strcmpi(imageFormat[i], extension.c_str()) == 0) return true;
 		}
 		return false;
 	}
@@ -153,17 +153,33 @@ namespace ImGui {
 			else if (IsImage(entry.path().extension().string())) {
 				label = std::string(ICON_FK_FILE_IMAGE_O " ").append(name);
 			}
+			else 
+				label = std::string(ICON_FK_FILE " ").append(name);
 
-			if (ImGui::Selectable(label.c_str(), selected)){//, ImGuiSelectableFlags_AllowDoubleClick)) {
+			if (ImGui::Selectable(label.c_str(), selected)){
 				selected_entry = name;
 			}
 		
-			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+			if (entry.is_directory() && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
 			{
 				selected_node = name;
+				_pwd = entry.path();
 				lookupFolders[name] = true;
 			}
+
+			if (ImGui::BeginDragDropSource()) {
+
+				ImGui::SetDragDropPayload("explorer_drag_n_drop", "", sizeof(const char*));
+				_pwd_dragged = entry.path();
+				ImGui::EndDragDropSource();
+
+			}
+
 		}
+	}
+
+	void FileExplorer::GetDraggedPath(std::filesystem::path& pwd) {
+		pwd = _pwd_dragged;
 	}
 
 }

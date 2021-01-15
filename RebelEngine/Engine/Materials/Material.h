@@ -18,6 +18,7 @@ public:
 	void SetName(const std::string& name);
 
 	const material_type GetType() const { return _type; }
+	const char* GetName() const { return _name.c_str(); }
 
 protected:
 

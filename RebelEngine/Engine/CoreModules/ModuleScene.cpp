@@ -1,5 +1,6 @@
 #include "ModuleScene.h"
 
+#include "Components/ComponentLight.h"
 #include "Components/ComponentCamera.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
@@ -9,9 +10,9 @@
 #include "CoreModules/ModuleEditorCamera.h"
 
 #include "Main/Application.h"
-
-#include "Main/Skybox.h"
 #include "Main/GameObject.h"
+
+#include "Materials/Skybox.h"
 
 #include <algorithm>
 #include <iostream>
@@ -66,6 +67,18 @@ bool ModuleScene::Init() {
 	go->AddComponent(std::move(cam), GO_MASK_CAMERA);
 
 	_mainCamera = static_cast<ComponentCamera *>(go->GetComponent(type_component::CAMERA));
+
+	_root->AddChild(std::move(go));
+
+	go = _poolGameObjects.get();
+	go->SetName("Directional Light");
+	transform = std::make_unique<ComponentTransform>();
+	transform->SetOwner(go.get());
+	std::unique_ptr<ComponentLight> light = std::make_unique<ComponentLight>(light_type::DIRECTIONAL_LIGHT);
+	light->SetOwner(go.get());
+
+	go->AddComponent(std::move(transform));
+	go->AddComponent(std::move(light));
 
 	_root->AddChild(std::move(go));
 

@@ -53,3 +53,15 @@ void MatStandard::GetTextureInformation(MATSTANDARD_FLAGS flag, TextureInformati
 	else if ((flag & NORMAL_MAP)) texInfo = _normal_map;
 
 }
+
+void MatStandard::SetColor(float3 color) {
+	_color = color;
+}
+
+void MatStandard::SetSmoothness(float smoothness) {
+	_smoothness = smoothness;
+}
+
+void MatStandard::SetAlbedoMap(TextureInformation albedo) {
+	_albedo_map = albedo;
+}
