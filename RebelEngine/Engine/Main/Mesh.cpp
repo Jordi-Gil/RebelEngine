@@ -1,17 +1,19 @@
 #include "Mesh.h"
 
+#include <iostream>
+#include <fstream>
+
+#include <GL/glew.h>
+#include "Math/float3x3.h"
+
+#include "Application.h"
+
 #include "CoreModules/ModuleEditorCamera.h"
 #include "CoreModules/ModuleProgram.h"
 #include "CoreModules/ModuleTexture.h"
 #include "CoreModules/ModuleScene.h"
 
-#include "Application.h"
-
-#include <GL/glew.h>
-#include "Math/float3x3.h"
-
-#include <iostream>
-#include <fstream>
+#include "Materials/MatStandard.h"
 
 // method to seperate bits from a given integer 3 positions apart
 inline uint32_t splitBy3(unsigned int a) {
@@ -87,18 +89,18 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	_numVertices = mesh->mNumVertices;
-	_vboValue[0][JSON_TAG_VBO] = jValue; jValue.clear();
-	_vboValue[0][JSON_TAG_VBO_SIZE] = pos;
+	_meshValue[0][JSON_TAG_VBO] = jValue; jValue.clear();
+	_meshValue[0][JSON_TAG_VBO_SIZE] = pos;
 
 	jValue.append(max[0]); jValue.append(max[1]); jValue.append(max[2]);
-	_vboValue[0][JSON_TAG_VBO_MAX] = jValue; jValue.clear();
+	_meshValue[0][JSON_TAG_VBO_MAX] = jValue; jValue.clear();
 
 	jValue.append(min[0]); jValue.append(min[1]); jValue.append(min[2]);
-	_vboValue[0][JSON_TAG_VBO_MIN] = jValue; jValue.clear();
+	_meshValue[0][JSON_TAG_VBO_MIN] = jValue; jValue.clear();
 
 	_aabb = AABB::AABB(vec(min[0], min[1], min[2]), vec(max[0], max[1], max[2]));
-	vec centroid = _aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
-	//obb = OBB::OBB(aabb);
+	vec centroid = _aabb.Centroid(); _mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+
 }
 
 void Mesh::LoadEBO(const aiMesh* mesh) {
@@ -122,7 +124,7 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 		}
 	}
 	
-	_vboValue[0][JSON_TAG_EBO] = jValue;
+	_meshValue[0][JSON_TAG_EBO] = jValue;
 
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	
@@ -152,7 +154,9 @@ void Mesh::CreateVAO() {
 
 }
 
-void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& materials, const float4x4& model) {
+void Mesh::Draw(Material* material, const float4x4& model) {
+
+	MatStandard* mat = static_cast<MatStandard*>(material);
 
 	unsigned int program = App->program->GetMainProgram();
 
@@ -169,9 +173,7 @@ void Mesh::Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& 
 
 	glBindVertexArray(_VAO);
 	glActiveTexture(GL_TEXTURE0);
-	//TODO: TEXTURE HARDCORED
-	//glBindTexture(GL_TEXTURE_2D, materials[matIndex].first);
-	glBindTexture(GL_TEXTURE_2D, materials[0].first);
+	glBindTexture(GL_TEXTURE_2D, mat->GetAlbedoMap());
 
 	glDrawElements(GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, nullptr);
 
@@ -189,18 +191,18 @@ void Mesh::Clean() {
 
 bool Mesh::WriteJsonFile(){
 
-	_vboValue[0][JSON_TAG_NAME] = _name;
-	_vboValue[0][JSON_TAG_UUID] = _uuid;
-	_vboValue[0][JSON_TAG_MATERIAL_INDEX] = _matIndex;
-	_vboValue[0][JSON_TAG_NUM_VERTICES] = _numVertices;
-	_vboValue[0][JSON_TAG_NUM_FACES] = _numFaces;
-	_vboValue[0][JSON_TAG_NUM_INDICES] = _numIndices;
+	_meshValue[0][JSON_TAG_NAME] = _name;
+	_meshValue[0][JSON_TAG_UUID] = _uuid;
+	_meshValue[0][JSON_TAG_MATERIAL_INDEX] = _matIndex;
+	_meshValue[0][JSON_TAG_NUM_VERTICES] = _numVertices;
+	_meshValue[0][JSON_TAG_NUM_FACES] = _numFaces;
+	_meshValue[0][JSON_TAG_NUM_INDICES] = _numIndices;
 
 	sprintf(_filePath, "%s%s%s", DEFAULT_MESH_PATH, _name, DEFAULT_MESH_EXT);
 
 	Json::StyledWriter wr;
 	std::ofstream ofs(_filePath, std::ios_base::binary);
-	std::string st = wr.write(_vboValue);
+	std::string st = wr.write(_meshValue);
 	ofs.write(st.c_str(), st.size());
 	ofs.close();
 
@@ -265,7 +267,7 @@ bool Mesh::LoadVBOFromJson(const Json::Value& value)  {
 
 		_aabb = AABB::AABB(vec(value[JSON_TAG_VBO_MIN][0].asFloat(), value[JSON_TAG_VBO_MIN][1].asFloat(), value[JSON_TAG_VBO_MIN][2].asFloat()), 
 						  vec(value[JSON_TAG_VBO_MAX][0].asFloat(), value[JSON_TAG_VBO_MAX][1].asFloat(), value[JSON_TAG_VBO_MAX][2].asFloat()));
-		vec centroid = _aabb.Centroid(); mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
+		vec centroid = _aabb.Centroid(); _mortonCode = mortonEncode_magicbits(centroid[0], centroid[1], centroid[2]);
 	}
 	else  {
 		return false;

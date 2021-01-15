@@ -1,5 +1,9 @@
 #pragma once
+
 #include "Main/Mesh.h"
+
+#include "Materials/Material.h"
+
 #include "Components/Component.h"
 
 class ComponentMeshRenderer : public Component {
@@ -16,8 +20,12 @@ public:
 	void Disable() override {}
 
 	void SetMesh(Mesh* component_mesh);
+	void SetMaterial(Material* component_material);
 
-	void Draw() override;
+	void DebugDraw() override;
+	void OnEditor() override;
+
+	void Render();
 
 	type_component GetType() const override { return _type; }
 	uint32_t GetMorton() const { return _mesh->GetMorton(); }
@@ -25,10 +33,14 @@ public:
 		//aabb.Enclose(_mesh->_aabb); 
 		aabb = _mesh->_aabb;
 	};
-	bool ToJson(Json::Value& value, int pos);
-	bool FromJson(const Json::Value& value);
+
+	bool ToJson(Json::Value& value, int pos) override;
+	bool FromJson(const Json::Value& value) override;
+
+public:
+
 	Mesh* _mesh = nullptr;
-private:
-	
+	Material* _material = nullptr;
+
 };
 

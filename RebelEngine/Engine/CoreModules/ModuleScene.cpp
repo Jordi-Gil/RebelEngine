@@ -1,5 +1,6 @@
 #include "ModuleScene.h"
 
+#include "Components/ComponentLight.h"
 #include "Components/ComponentCamera.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
@@ -9,9 +10,9 @@
 #include "CoreModules/ModuleEditorCamera.h"
 
 #include "Main/Application.h"
-
-#include "Main/Skybox.h"
 #include "Main/GameObject.h"
+
+#include "Materials/Skybox.h"
 
 #include <algorithm>
 #include <iostream>
@@ -43,8 +44,9 @@ bool ModuleScene::Init() {
 	_poolGameObjects = Pool<GameObject>(1000);
 
 	_skybox = new Skybox();
-
-	/*_root = std::make_unique<GameObject>("Hierarchy");
+	
+	_root = _poolGameObjects.get();
+	_root->SetName("Hierarchy");
 	_root->AddMask(GO_MASK_ROOT_NODE);
 
 	std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
@@ -59,16 +61,29 @@ bool ModuleScene::Init() {
 	go->SetParent(_root.get());
 	transform->SetOwner(go.get());
 	cam->SetOwner(go.get());
-
+	cam->ToggleMainCamera();
 	cam->SetPosition(transform->GetPosition());
+	
 
 	go->AddComponent(std::move(transform));
 	go->AddComponent(std::move(cam), GO_MASK_CAMERA);
 
 	_mainCamera = static_cast<ComponentCamera *>(go->GetComponent(type_component::CAMERA));
 
-	_root->AddChild(std::move(go));*/
+	_root->AddChild(std::move(go));
 
+	go = _poolGameObjects.get();
+	go->SetName("Directional Light");
+	transform = std::make_unique<ComponentTransform>();
+	transform->SetOwner(go.get());
+	std::unique_ptr<ComponentLight> light = std::make_unique<ComponentLight>(light_type::DIRECTIONAL_LIGHT);
+	light->SetOwner(go.get());
+	
+	go->AddComponent(std::move(transform));
+	go->AddComponent(std::move(light));
+	
+	_root->AddChild(std::move(go));
+	
 	return true;
 }
 
@@ -95,7 +110,7 @@ bool ModuleScene::Start() {
 	_octree = new Octree();
 	_octree->_root->_bounds = AABB(_min, _max);
 
-	for (int i = 0; i < _objects.size(); ++i) {
+	for (unsigned int i = 0; i < _objects.size(); ++i) {
 		_octree->Insert(_octree->_root, _objects[i]);
 	}
 
@@ -151,7 +166,10 @@ void ModuleScene::DrawRecursive(GameObject &go) {
 	}
 
 	for (auto const& component : go.GetComponents()) {
-		component->Draw();
+		if (component->GetType() == type_component::MESHRENDERER) {
+			static_cast<ComponentMeshRenderer*>(component.get())->Render();
+		}
+		component->DebugDraw();
 	}
 
 }
@@ -160,7 +178,10 @@ void ModuleScene::DrawFrustumOutput() {
 
 	for (const auto& go : _objectsToDraw) {
 		for (auto const& component : go->GetComponents()) {
-			component->Draw();
+			if (component->GetType() == type_component::MESHRENDERER) {
+				static_cast<ComponentMeshRenderer*>(component.get())->Render();
+			}
+			component->DebugDraw();
 		}
 	}
 
@@ -176,6 +197,10 @@ void ModuleScene::DrawFrustumOutput() {
 void ModuleScene::Draw() {
 	if((_mask & NO_FRUSTUM) != 0) DrawRecursive(*_root);
 	else DrawFrustumOutput();
+}
+
+void ModuleScene::SetMainCamera(ComponentCamera& mainCamera) {
+	_mainCamera = &mainCamera;
 }
 
 void ModuleScene::UpdateMinMax(float3 min, float3 max) {
@@ -237,7 +262,8 @@ bool ModuleScene::FromJson(const Json::Value& value) {
 
 	if (!root.isNull()) {
 		App->editorCamera->SetCamera(new ComponentCamera(value[JSON_TAG_EDITOR_CAMERA][0]));
-		_root = std::make_unique<GameObject>(root[0]);
+		_root = _poolGameObjects.get();
+		_root->FromJson(root[0]);
 	}
 	else {
 		//TODO: JSON ERROR

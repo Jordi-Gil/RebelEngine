@@ -83,7 +83,7 @@ bool ModuleWindow::Init() {
 bool ModuleWindow::Start() {
 
 	TextureInformation info;
-	texIcon = App->texturer->loadTexture("Assets/Images/Logo/rebel_logo.png", info);
+	texIcon = App->texturer->LoadTexture("Assets/Images/Logo/rebel_logo.png", info);
 	return true;
 }
 

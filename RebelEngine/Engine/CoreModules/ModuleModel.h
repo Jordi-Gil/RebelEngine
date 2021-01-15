@@ -17,7 +17,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void LoadModel(const char* fileName);
+	void LoadModelFromFBX(const char* fileName);
 	void LoadTexture(const char* fileName);
 
 	//TODO: Move to a proper class
@@ -27,12 +27,9 @@ public:
 	void SetWrapS(int i);
 	void SetWrapT(int i);
 
-	std::vector<std::pair<unsigned int, TextureInformation>> textures;
-
 private:
 
-	void LoadTextures(aiMaterial** const materials, unsigned int mNumMaterials, const char* fbxPath);
-	void LoadNodeHierarchy(aiNode* node, GameObject &father, const aiScene* scene, 
+	void LoadNodeHierarchy(const char* fileName, aiNode* node, GameObject &father, const aiScene* scene, 
 			const std::vector<std::string>& lights, const std::vector<std::string>& cameras, 
 			const aiVector3D& aiScaling, const aiQuaternion& aiQuat, const aiVector3D& aiRot);
 

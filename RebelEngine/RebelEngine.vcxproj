@@ -158,6 +158,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Components\ComponentLight.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\BSP.h" />
     <ClInclude Include="Engine\Components\ComponentCamera.h" />
     <ClInclude Include="Engine\Components\ComponentMeshRenderer.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Engine\GUIs\GUITerminal.h" />
     <ClInclude Include="Engine\GUIs\GUIInspector.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
+    <ClInclude Include="External-Libraries\ImGui\Include\ImGui\IconsForkAwesome.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imfilebrowser.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\ImGuizmo.h" />
     <ClInclude Include="External-Libraries\ImGui\Include\ImGui\imgui_file_explorer.h" />
@@ -291,7 +293,7 @@
     <ClInclude Include="External-Libraries\MathGeoLib-1.5\Include\Math\TransformOps.h" />
     <ClInclude Include="External-Libraries\MathGeoLib-1.5\Include\Math\vec2d.h" />
     <ClInclude Include="External-Libraries\MathGeoLib-1.5\Include\Time\Clock.h" />
-    <ClInclude Include="Engine\Main\Material.h" />
+    <ClInclude Include="Engine\Materials\Material.h" />
     <ClInclude Include="Engine\CoreModules\ModuleGUI.h" />
     <ClInclude Include="Engine\CoreModules\ModuleScene.h" />
     <ClInclude Include="Engine\AccelerationDataStructures\Octree.h" />
@@ -300,9 +302,11 @@
     <ClInclude Include="Engine\GUIs\GUIProject.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Components\ComponentTransform.h" />
-    <ClInclude Include="Engine\Main\Skybox.h" />
+    <ClInclude Include="Engine\Materials\Skybox.h" />
+    <ClInclude Include="Engine\Materials\MAtStandard.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Components\ComponentLight.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\BSP.cpp" />
     <ClCompile Include="Engine\Components\Component.cpp" />
     <ClCompile Include="Engine\Components\ComponentCamera.cpp" />
@@ -420,14 +424,15 @@
     <ClCompile Include="External-Libraries\MathGeoLib-1.5\Include\Math\SSEMath.cpp" />
     <ClCompile Include="External-Libraries\MathGeoLib-1.5\Include\Math\TransformOps.cpp" />
     <ClCompile Include="External-Libraries\MathGeoLib-1.5\Include\Time\Clock.cpp" />
-    <ClCompile Include="Engine\Main\Material.cpp" />
+    <ClCompile Include="Engine\Materials\Material.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleGUI.cpp" />
     <ClCompile Include="Engine\CoreModules\ModuleScene.cpp" />
     <ClCompile Include="Engine\Components\ComponentTransform.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Octree.cpp" />
-    <ClCompile Include="Engine\Main\Skybox.cpp" />
+    <ClCompile Include="Engine\Materials\Skybox.cpp" />
     <ClCompile Include="Engine\AccelerationDataStructures\Quadtree.cpp" />
     <ClCompile Include="Engine\GUIs\GUIProject.cpp" />
+    <ClCompile Include="Engine\Materials\MatStandard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="External-Libraries\MathGeoLib-1.5\Include\Geometry\KDTree.inl" />

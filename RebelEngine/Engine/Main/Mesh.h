@@ -5,7 +5,11 @@
 
 #include "Geometry/AABB.h"
 #include "Geometry/OBB.h"
+
 #include "json/json.h"
+
+#include "Materials/Material.h"
+
 #include "Utils/RUUID.h"
 
 struct TextureInformation;
@@ -42,22 +46,24 @@ public:
 	void LoadEBO(const aiMesh* mesh);
 	void CreateVAO();
 
-	void Draw(const std::vector<std::pair<unsigned int, TextureInformation>>& materials, const float4x4& model);
+	void Draw(Material* material, const float4x4& model);
 
 	void Clean();
 
 	uint32_t GetMorton() const { return _mortonCode; }
 	void GetAABB(AABB& aabb) const { aabb = _aabb; }
+	const char* GetFilePath() { return _filePath; }
+
+	void SetName(const char* name) { _name = _strdup(name); }
+	void SetFilePath(const char* filePath) { sprintf_s(_filePath, "%s", filePath); }
 
 	bool FromJson(const Json::Value& value);
 	bool WriteJsonFile();
-	void SetName(const char* name) { _name = strdup(name); }
-	const char* GetFilePath() { return _filePath; }
-	void SetFilePath(const char* filePath) { sprintf(_filePath, "%s", filePath); }
 
 public:
 	std::vector<float3> _vertices;
 	std::vector<unsigned> _indices;
+
 private:
 
 	bool LoadVBOFromJson(const Json::Value& value);
@@ -77,13 +83,14 @@ private:
 
 	uint32_t _mortonCode;
 
-	AABB _aabb;
-	OBB _obb;
-	Json::Value _vboValue;
-	uint32_t mortonCode;
 	char* _name;
 	char _filePath[1024];
 	std::string _uuid;
+
+	AABB _aabb;
+	OBB _obb;
+
+	Json::Value _meshValue;
 	
 };
 

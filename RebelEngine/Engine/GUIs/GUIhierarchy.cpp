@@ -13,7 +13,6 @@
 
 #include "GUIInspector.h"
 
-
 GUIHierarchy::GUIHierarchy(const char* name) {
 	_name = name;
 	_dragged = -1;

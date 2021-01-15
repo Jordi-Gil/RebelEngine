@@ -17,6 +17,14 @@ GLenum magnification[] = { GL_NEAREST, GL_LINEAR };
 
 GLenum wrap[] = { GL_CLAMP_TO_EDGE, GL_CLAMP_TO_BORDER, GL_MIRRORED_REPEAT, GL_REPEAT, GL_MIRROR_CLAMP_TO_EDGE };
 
+void LogError(errno_t error, const char* path) {
+	char errmsg[256];
+	strerror_s(errmsg, 256, error);
+	LOG(_ERROR, "Couldn't split the given path %s. Error: %s", path, errmsg);
+
+	return;
+}
+
 bool ModuleTexture::Init() {
 
 	LOG(_INFO, "Creating DevIL context");
@@ -33,7 +41,39 @@ bool ModuleTexture::Init() {
 	return true;
 }
 
-unsigned int ModuleTexture::loadTexture(const char* path, TextureInformation& info) {
+bool ModuleTexture::LoadFromFBX(const char* path, const char* fbxPath, TextureInformation& info) {
+
+	LOG(_INFO, "Loading texture from path %s defined in the .FBX", path);
+	if (!LoadTexture(path, info)) {
+
+		char fullpath[_MAX_PATH]; char dir[_MAX_DIR]; char fileName[_MAX_FNAME], extension[_MAX_EXT];
+		
+		//Try to Load from same directory than the FBX.
+		_splitpath_s(fbxPath, NULL, 0, dir, _MAX_DIR, NULL, 0, NULL, 0);
+		_splitpath_s(path, NULL, 0, NULL, 0, fileName, _MAX_FNAME, extension, _MAX_EXT);
+		sprintf_s(fullpath, _MAX_PATH, "%s%s%s", dir, fileName, extension);
+
+		if (!LoadTexture(fullpath, info)) {
+
+			sprintf_s(fullpath, _MAX_PATH, "Assets/Textures/%s%s", fileName, extension);
+			if (!LoadTexture(fullpath, info)) {
+
+				LOG(_ERROR, "Impossible to load texture.");
+				return false;
+
+			}
+			else LOG(_INFO, "Texture loaded from path: %s", fullpath);
+
+		}
+		else LOG(_INFO, "Texture loaded from path: %s", fullpath);
+
+	}
+	else LOG(_INFO, "Texture loaded from path: %s", path);
+
+	return true;
+}
+
+bool ModuleTexture::LoadTexture(const char* path, TextureInformation& info) {
 
 	unsigned int texId = 0, image;
 
@@ -46,6 +86,7 @@ unsigned int ModuleTexture::loadTexture(const char* path, TextureInformation& in
 
 	if (error != IL_NO_ERROR) {
 		LOG(_ERROR, "Error loading image %s, iluError [%d]: %s", path, error, iluErrorString(error));
+		return false;
 	}
 
 	if (success) {
@@ -74,15 +115,18 @@ unsigned int ModuleTexture::loadTexture(const char* path, TextureInformation& in
 		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
 		glGenerateMipmap(GL_TEXTURE_2D);
 
+		info.gl_id = texId;
+		info.path = path;
+
 	}
 
 	ilDeleteImages(1, &image);
 
-	return texId;
+	return true;
 
 }
 
-unsigned int ModuleTexture::loadCubeMap(const char* path)
+unsigned int ModuleTexture::LoadCubeMap(const char* path)
 {
 	LOG(_INFO, "LOADING CUBEMAP");
 
@@ -163,7 +207,5 @@ void ModuleTexture::SetWrapR(unsigned i, unsigned texID) {
 
 bool ModuleTexture::CleanUp() {
 	ilShutDown();
-	//No shutdown for ilu and ilut?
-
 	return true;
 }

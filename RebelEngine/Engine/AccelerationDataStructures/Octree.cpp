@@ -2,7 +2,7 @@
 
 #include "Utils/debugdraw.h"
 
-int Octree::_maxObjPerNode = 5;
+unsigned int Octree::_maxObjPerNode = 5;
 
 void OctreeNode::Shake() {
 
@@ -124,7 +124,7 @@ void Octree::DebugDraw(OctreeNode* node) {
 		}
 	}
 	else {
-		for (int i = 0; i < node->_gos.size(); i++) {
+		for (unsigned int i = 0; i < node->_gos.size(); i++) {
 			AABB box; node->_gos[i]->GetAABB(box);
 			OBB obb = box.Transform(node->_gos[i]->GetGlobalMatrix());
 			dd::aabb(

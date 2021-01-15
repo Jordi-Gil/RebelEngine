@@ -42,33 +42,32 @@ GameObject::GameObject(const GameObject& go) {
 
 GameObject::GameObject(GameObject&& go) {
 
-	this->_active = go._active;
-	this->_name = go._name;
-	this->_parent = go._parent;
-	this->_uuid = go._uuid;
+	_active = go._active;
+	_name = go._name;
+	_parent = go._parent;
+	_uuid = go._uuid;
 
 	go._parent = nullptr;
 	go._name = nullptr;
 
 	for (auto it = go._children.begin(); it != go._children.end(); ++it) {
 		(*it)->_parent = this;
-		this->_children.emplace_back(std::move(*it));
+		_children.emplace_back(std::move(*it));
 	}
 	go._children.clear();
 	go._children.shrink_to_fit();
 
 	for (auto it = go._components.begin(); it != go._components.end(); ++it) {
 		(*it)->SetOwner(this);
-		this->_components.emplace_back(std::move(*it));
+		_components.emplace_back(std::move(*it));
 	}
 	go._components.clear();
 	go._components.shrink_to_fit();
 	
 }
 
-GameObject::GameObject(const Json::Value& value) 
-{
-	this->FromJson(value);
+GameObject::GameObject(const Json::Value& value) {
+	FromJson(value);
 }
 
 void GameObject::AddChild(std::unique_ptr<GameObject>&& go){
@@ -235,12 +234,22 @@ bool GameObject::FromJson(const Json::Value& value)  {
 			switch (type)
 			{
 			case type_component::NONE: comp = std::make_unique<Component>(jsonComp); AddMask(GAME_OBJECT_MASK::GO_MASK_NONE);   break;
-			case type_component::CAMERA: comp = std::make_unique<ComponentCamera>(jsonComp); AddMask(GAME_OBJECT_MASK::GO_MASK_CAMERA); break;
+			case type_component::CAMERA:
+			{
+				comp = std::make_unique<ComponentCamera>(jsonComp);
+				AddMask(GAME_OBJECT_MASK::GO_MASK_CAMERA);
+				ComponentCamera* aux = (ComponentCamera*)comp.get();
+				if (aux->IsMainCamera())
+					App->scene->SetMainCamera(*aux);
+				break;
+			}
 			case type_component::MESHRENDERER:
+			{
 				comp = std::make_unique<ComponentMeshRenderer>(jsonComp);
 				AddMask(GAME_OBJECT_MASK::GO_MASK_MESH);
 				_meshRenderer = static_cast<ComponentMeshRenderer*>(comp.get());
 				break;
+			}
 			case type_component::TRANSFORM: comp = std::make_unique<ComponentTransform>(jsonComp); break;
 			}
 			comp->SetOwner(this);
@@ -250,7 +259,7 @@ bool GameObject::FromJson(const Json::Value& value)  {
 
 		for (Json::Value jsonGo : value[JSON_TAG_GAMEOBJECTS])
 		{
-			std::unique_ptr<GameObject> go = std::make_unique<GameObject>();
+			std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get();
 			go->SetParent(this);
 			go->FromJson(jsonGo);
 			AddChild(std::move(go));

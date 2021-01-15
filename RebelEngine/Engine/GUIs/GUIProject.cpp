@@ -2,8 +2,8 @@
 
 #include "ImGui/imgui_file_explorer.h"
 
+#include "ImGui/IconsForkAwesome.h"
 #include "ImGui/IconsFontAwesome5.h"
-#include "ImGui/IconsMaterialDesignIcons.h"
 
 static constexpr char* path = "Assets";
 
@@ -14,7 +14,7 @@ GUIProject::GUIProject(const char* name) {
 
 void GUIProject::Draw() {
 
-	std::string wName(ICON_FA_FOLDER " "); wName.append(_name);
+	std::string wName(ICON_FK_FOLDER " "); wName.append(_name);
 	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
 
 	ImGui::Columns(2);
@@ -23,7 +23,7 @@ void GUIProject::Draw() {
 
 	ImGui::NextColumn();
 
-	//_fileExplorer.DrawFileTree(path);
+	_fileExplorer.ShowContent();
 
 	ImGui::End();
 
@@ -31,4 +31,10 @@ void GUIProject::Draw() {
 
 void GUIProject::ToggleActive() {
 	_active = !_active;
+}
+
+void GUIProject::GetTexture(std::filesystem::path& pwd) {
+
+	_fileExplorer.GetDraggedPath(pwd);
+
 }

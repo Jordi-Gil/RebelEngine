@@ -1,34 +1,43 @@
 #include "ComponentTransform.h"
 
-#include "Main/Application.h"
+#include <assimp/cimport.h>
 
+#include <ImGui/imgui.h>
+#include <ImGui/imgui_internal.h>
+#include <ImGui/imgui_utils.h>
+
+
+#include "Main/Application.h"
 #include "Main/GameObject.h"
 
 #include "Utils/debugdraw.h"
 
 #include "CoreModules/ModuleScene.h"
 
+#include "ComponentCamera.h"
+
 #include "AccelerationDataStructures/Octree.h"
 
-#include <assimp/cimport.h>
+static constexpr char* FLOAT3_LABELS[3] = { {"X"},{"Y"},{"Z"} };
 
 ComponentTransform::ComponentTransform() {
 	_type = type_component::TRANSFORM;
 }
 
 ComponentTransform::ComponentTransform(const ComponentTransform& comp) {
-	this->_owner = comp._owner;
-	this->_active = comp._active;
-	this->_type = comp._type;
-	this->_uuid = comp._uuid;
-	this->_position = comp._position;
-	this->_rotation = comp._rotation;
-	this->_scale = comp._scale;
-	this->_rotationQuat = comp._rotationQuat;
-	this->_localMatrix = comp._localMatrix;
-	this->_globalMatrix = comp._globalMatrix;
+	_owner = comp._owner;
+	_active = comp._active;
+	_type = comp._type;
+	_uuid = comp._uuid;
+	_position = comp._position;
+	_rotation = comp._rotation;
+	_scale = comp._scale;
+	_rotationQuat = comp._rotationQuat;
+	_localMatrix = comp._localMatrix;
+	_globalMatrix = comp._globalMatrix;
 
 }
+
 ComponentTransform::ComponentTransform(const float3 position, const float3 rotation, const float3 scale) {
 
 	_type = type_component::TRANSFORM;
@@ -40,8 +49,6 @@ ComponentTransform::ComponentTransform(const float3 position, const float3 rotat
 	_rotationQuat = Quat::FromEulerXYZ(DegToRad(rotation.x), DegToRad(rotation.y), DegToRad(rotation.z));
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
-
-	UpdateGlobalMatrix();
 }
 
 ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
@@ -61,8 +68,6 @@ ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
-	UpdateGlobalMatrix();
-
 }
 
 void ComponentTransform::SetTransform(const float3 position, const Quat rotation, const float3 scale) {
@@ -75,15 +80,13 @@ void ComponentTransform::SetTransform(const float3 position, const Quat rotation
 
 	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
 
-	UpdateGlobalMatrix();
-
 }
 
-ComponentTransform::ComponentTransform(const Json::Value& value) 
-{
+ComponentTransform::ComponentTransform(const Json::Value& value) {
+
 	Component::FromJson(value);
 	_type = type_component::TRANSFORM;
-	this->FromJson(value);
+	FromJson(value);
 }
 
 void ComponentTransform::SetTransform(const float3 position, const float3 rotation, const float3 scale) {
@@ -118,6 +121,16 @@ void ComponentTransform::SetTransform(const aiMatrix4x4& matrix) {
 	UpdateGlobalMatrix();
 }
 
+void ComponentTransform::UpdateLocalMatrix(){
+	
+	_rotationQuat = Quat::FromEulerXYZ(DegToRad(_rotation.x), DegToRad(_rotation.y), DegToRad(_rotation.z));
+
+	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
+
+	UpdateGlobalMatrix();
+
+}
+
 void ComponentTransform::UpdateGlobalMatrix() {
 	
 	if (_owner != nullptr) {
@@ -132,7 +145,7 @@ void ComponentTransform::UpdateGlobalMatrix() {
 	}
 }
 
-void ComponentTransform::Draw() {
+void ComponentTransform::DebugDraw() {
 	if (_owner->IsSelected()) { 
 		dd::axisTriad(_globalMatrix, 0.1f, 2.0f); 
 	}
@@ -179,4 +192,44 @@ bool ComponentTransform::FromJson(const Json::Value& value)
 		return false;
 	}
 	return true;
+}
+
+void ComponentTransform::DrawDragFloat3(const char* tag, float3& vector, float speed) {
+
+	char invis[FILENAME_MAX] = "##";
+	strcat_s(invis, tag);
+	ImGui::BeginColumns(invis, 4, ImGuiColumnsFlags_NoBorder | ImGuiColumnsFlags_NoResize);
+	{
+		ImGui::Text(tag);
+		for (int i = 0; i < 3; ++i) {
+			ImGui::NextColumn();
+			ImGui::PushID(&vector[i]);
+			ImGui::Text(FLOAT3_LABELS[i]);
+			ImGui::SameLine();
+			if (ImGui::DragFloat("", &vector[i], speed)) {
+				UpdateLocalMatrix();
+			};
+			ImGui::PopID();
+		}
+	}
+	ImGui::EndColumns();
+}
+
+void ComponentTransform::OnEditor() {
+
+	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+		ImGui::Text(_owner->GetName());
+		ImGui::Separator();
+
+		DrawDragFloat3("Position", _position);
+		DrawDragFloat3("Rotation", _rotation);
+		DrawDragFloat3("Scale", _scale);
+
+		if ((_owner->GetMask() & GO_MASK_CAMERA) != 0) {
+			ComponentCamera* cam = (ComponentCamera*) _owner->GetComponent(type_component::CAMERA);
+			cam->Transform(_rotationQuat, _position);
+		}
+
+	}
 }
