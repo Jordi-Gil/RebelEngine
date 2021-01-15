@@ -45,7 +45,7 @@ bool ModuleScene::Init() {
 
 	_skybox = new Skybox();
 
-	_root = std::make_unique<GameObject>("Hierarchy");
+	/*_root = std::make_unique<GameObject>("Hierarchy");
 	_root->AddMask(GO_MASK_ROOT_NODE);
 
 	std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
@@ -68,7 +68,7 @@ bool ModuleScene::Init() {
 
 	_mainCamera = static_cast<ComponentCamera *>(go->GetComponent(type_component::CAMERA));
 
-	_root->AddChild(std::move(go));
+	_root->AddChild(std::move(go));*/
 
 	go = _poolGameObjects.get();
 	go->SetName("Directional Light");
@@ -255,8 +255,8 @@ bool ModuleScene::FromJson(const Json::Value& value) {
 	Json::Value root = value[JSON_TAG_ROOT];
 
 	if (!root.isNull()) {
-		_root = std::make_unique<GameObject>(root[0]);
 		App->editorCamera->SetCamera(new ComponentCamera(value[JSON_TAG_EDITOR_CAMERA][0]));
+		_root = std::make_unique<GameObject>(root[0]);
 	}
 	else {
 		//TODO: JSON ERROR

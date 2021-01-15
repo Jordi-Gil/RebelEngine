@@ -59,6 +59,9 @@ public:
 	const char* GetFilePath() { return _filePath; }
 	void SetFilePath(const char* filePath) { sprintf_s(_filePath, "%s", filePath); }
 
+public:
+	std::vector<float3> _vertices;
+	std::vector<unsigned> _indices;
 private:
 
 	bool LoadVBOFromJson(const Json::Value& value);
@@ -85,6 +88,6 @@ private:
 	char* _name;
 	char _filePath[1024];
 	std::string _uuid;
-
+	
 };
 

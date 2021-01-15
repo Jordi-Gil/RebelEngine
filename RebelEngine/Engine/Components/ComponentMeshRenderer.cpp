@@ -31,6 +31,14 @@ ComponentMeshRenderer::ComponentMeshRenderer() {
 	_type = type_component::MESHRENDERER;
 }
 
+ComponentMeshRenderer::ComponentMeshRenderer(const ComponentMeshRenderer& comp) {
+	this->_owner = comp._owner;
+	this->_active = comp._active;
+	this->_type = comp._type;
+	this->_uuid = comp._uuid;
+	this->_mesh = comp._mesh;
+}
+
 ComponentMeshRenderer::ComponentMeshRenderer(const Json::Value& value) {
 	
 	Component::FromJson(value);

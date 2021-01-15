@@ -22,12 +22,10 @@ public:
 	void ToggleActive();
 	void SetFocusedGameObject(GameObject& focused);
 
-
 private:
 
-	/*void UpdateTransform();
-	void DrawDragFloat3(const char* name, float3& vector, float speed = 0.01f);*/
-
+	void UnSetFocusedGameObject();
+	
 private:
 	 GameObject* _focused_go = nullptr;
 };

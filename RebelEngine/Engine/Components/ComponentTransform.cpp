@@ -24,6 +24,19 @@ ComponentTransform::ComponentTransform() {
 	_type = type_component::TRANSFORM;
 }
 
+ComponentTransform::ComponentTransform(const ComponentTransform& comp) {
+	this->_owner = comp._owner;
+	this->_active = comp._active;
+	this->_type = comp._type;
+	this->_uuid = comp._uuid;
+	this->_position = comp._position;
+	this->_rotation = comp._rotation;
+	this->_scale = comp._scale;
+	this->_rotationQuat = comp._rotationQuat;
+	this->_localMatrix = comp._localMatrix;
+	this->_globalMatrix = comp._globalMatrix;
+
+}
 ComponentTransform::ComponentTransform(const float3 position, const float3 rotation, const float3 scale) {
 
 	_type = type_component::TRANSFORM;

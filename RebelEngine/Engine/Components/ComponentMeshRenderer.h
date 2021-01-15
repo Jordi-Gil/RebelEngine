@@ -12,6 +12,7 @@ public:
 
 	ComponentMeshRenderer();
 	ComponentMeshRenderer(const Json::Value& value);
+	ComponentMeshRenderer(const ComponentMeshRenderer& comp);
 	~ComponentMeshRenderer();
 
 	void Enable() override {}
