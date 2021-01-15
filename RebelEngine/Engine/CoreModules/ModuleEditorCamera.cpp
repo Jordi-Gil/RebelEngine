@@ -196,7 +196,7 @@ update_status ModuleEditorCamera::Update() {
 		RotateKeyboard();
 		RotateMouse(x, y);
 		OrbitCenterScene(x, y);
-		GetObjectPicked();
+		if(App->gui->_scene->IsSceneHovered()) GetObjectPicked();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN) {

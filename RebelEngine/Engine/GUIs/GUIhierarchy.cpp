@@ -121,7 +121,6 @@ void GUIHierarchy::Draw() {
 
 	if(open) {
 		DrawHierarchy(*App->scene->_root, 0);
-
 		ImGui::TreePop();
 	}
 	ImGui::End();
