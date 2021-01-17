@@ -99,7 +99,7 @@ bool ComponentLight::FromJson(const Json::Value& value){
 		_constant_att = value[JSON_TAG_LIGHT_CONSTANT_ATT].asFloat();
 		_linear_att = value[JSON_TAG_LIGHT_LINEAR_ATT].asFloat();
 		_quadratic_att = value[JSON_TAG_LIGHT_QUADRATIC_ATT].asFloat();
-		_light_type = (light_type) value[JSON_TAG_TYPE].asInt();
+		_light_type = (light_type) value[JSON_TAG_LIGHT_TYPE].asInt();
 		_color = float3(
 				value[JSON_TAG_LIGHT_COLOR][0].asFloat(),
 				value[JSON_TAG_LIGHT_COLOR][1].asFloat(),
@@ -161,7 +161,7 @@ void ComponentLight::DebugDraw() {
 
 void ComponentLight::OnEditor() {
 
-	static int current = 0;
+	static int current = _light_type;
 
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen)) {
 
