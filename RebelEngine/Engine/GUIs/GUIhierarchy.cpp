@@ -47,11 +47,17 @@ void GUIHierarchy::DrawHierarchy(GameObject &go, uint depth) {
 		bool open = false;
 		char nodeName[_MAX_FNAME + 38]; // 38 = ## + uuid size
 		sprintf(nodeName, "%s##%s", children[i]->GetName(), children[i]->GetUUID().c_str());
+
 		if (children[i]->GetNumChildren() == 0) {
-			ImGui::Selectable(nodeName); //TODO: Add boolean variable to mark selected object
+			ImGui::Selectable(nodeName, children[i]->IsSelected()); //TODO: Add boolean variable to mark selected object
 		}
-		else {
-			open = ImGui::TreeNodeEx(nodeName, ImGuiTreeNodeFlags_OpenOnArrow);
+		else{
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+			if (children[i]->IsSelected())
+			{
+				flags = flags | ImGuiTreeNodeFlags_Selected;
+			}
+			open = ImGui::TreeNodeEx(nodeName, flags);
 		}
 
 		if (ImGui::IsItemClicked(0)) {
