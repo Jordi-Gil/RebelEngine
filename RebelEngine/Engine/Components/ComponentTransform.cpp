@@ -103,6 +103,7 @@ void ComponentTransform::SetTransform(const float3 position, const float3 rotati
 	UpdateGlobalMatrix();
 
 }
+
 void ComponentTransform::SetTransform(const float4x4& matrix) {
 
 	float3x3 rot = matrix.RotatePart();
@@ -119,6 +120,7 @@ void ComponentTransform::SetTransform(const float4x4& matrix) {
 
 	UpdateGlobalMatrix();
 }
+
 void ComponentTransform::SetTransform(const aiMatrix4x4& matrix) {
 
 	aiVector3D pos, sca;

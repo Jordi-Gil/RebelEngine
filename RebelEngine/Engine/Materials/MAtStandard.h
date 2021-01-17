@@ -50,7 +50,7 @@ private:
 	int _mask = 0;
 	float _smoothness = 1;
 
-	float3 _color = float3(0.45, 0.45, 0.45);
+	float3 _color = float3(0.45f, 0.45f, 0.45f);
 
 	TextureInformation _maps[3];
 

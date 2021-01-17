@@ -65,7 +65,7 @@ bool ModuleInput::Init() {
 }
 
 // Called every draw update
-update_status ModuleInput::Update() {
+update_status ModuleInput::PreUpdate() {
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
@@ -95,7 +95,12 @@ update_status ModuleInput::Update() {
 	}
 
     SDL_Event sdlEvent;
-
+	int mouse_x, mouse_y;
+	SDL_GetMouseState(&mouse_x, &mouse_y);
+	mouse.x = mouse_x;
+	mouse.y = mouse_y;
+	mouse_motion.x = 0;
+	mouse_motion.y = 0;
 	mouseWheel = 0;
 
     while (SDL_PollEvent(&sdlEvent) != 0) {
@@ -128,7 +133,10 @@ update_status ModuleInput::Update() {
 			case SDL_MOUSEWHEEL:
 				mouseWheel = sdlEvent.wheel.y;
 				break;
-
+			case SDL_MOUSEMOTION:
+				mouse_motion.x += sdlEvent.motion.xrel;
+				mouse_motion.y += sdlEvent.motion.yrel;
+				break;
 			case SDL_DROPFILE:
 				char* dropped_filedir = sdlEvent.drop.file;
 				LOG(_INFO, "Dropped file: %s", dropped_filedir);

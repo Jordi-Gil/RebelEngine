@@ -71,18 +71,14 @@ void ComponentMeshRenderer::DebugDraw(){
 	assert(_owner != nullptr && "Component without and owner");
 	
 	if (_owner->IsSelected()) {
-		AABB box;  _owner->GetAABB(box);
-		OBB obb = box.Transform(_owner->GetGlobalMatrix());
+		//AABB box;  _owner->GetAABB(box);
+		//OBB obb = box.Transform(_owner->GetGlobalMatrix());
 		//OBB obb;
 		//float4x4 global = _owner->GetGlobalMatrix();
-		//global.scaleX = 1;
-		//global.scaleY = 1;
-		//global.scaleZ = 1;
-		//obb.SetFrom(box);
-		//obb.Scale(obb.CenterPoint(), _owner->GetGlobalMatrix().GetScale());
-		//obb.Transform(global);
-		AABB res = obb.MinimalEnclosingAABB();
-		dd::aabb(res.minPoint, res.maxPoint, dd::colors::Orange);
+		//float3x3 rotation; float3 position, scale;
+		//global.Decompose(position, rotation, scale);
+		//AABB res = obb.MinimalEnclosingAABB();
+		//dd::aabb(res.minPoint, res.maxPoint, dd::colors::Orange);
 		/*float3 corners[8]; obb.GetCornerPoints(corners);
 		dd::box(corners,dd::colors::Orange);*/
 	}
@@ -153,7 +149,7 @@ void ComponentMeshRenderer::OnEditor() {
 		MatStandard* matSt = (MatStandard*)_material;
 		
 		static int current = 0;
-		float3 color; matSt->SetColor(color);
+		float3 color; matSt->GetColor(color);
 		float smoothness = matSt->GetSmoothness();
 
 		unsigned int texId;

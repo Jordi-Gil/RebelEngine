@@ -3,18 +3,18 @@
       "EditorCamera" : [
          {
             "Active" : false,
-            "AspectRatio" : 1.4462572336196899,
+            "AspectRatio" : 1.3762886524200439,
             "Background_type" : 0,
             "Color" : [ 0.10000000149011612, 0.10000000149011612, 0.10000000149011612, 1.0 ],
-            "FOVHorizontal" : 1.3658609390258789,
-            "Front" : [ -0.86448639631271362, -0.49991816282272339, -0.052395440638065338 ],
+            "FOVHorizontal" : 1.317573070526123,
+            "Front" : [ -0.55422300100326538, -0.36487671732902527, 0.74813228845596313 ],
             "MainCamera" : false,
             "Owner" : "",
-            "Position" : [ 6.9724111557006836, 7.6172976493835449, -0.42926055192947388 ],
+            "Position" : [ 2.4979104995727539, 2.9031896591186523, -5.312126636505127 ],
             "Type" : 3,
-            "UP" : [ -0.49899587035179138, 0.86607640981674194, -0.030244562774896622 ],
-            "UUID" : "63084bf9-49cc-4398-80c8-08e2f008286f",
-            "ZFar" : 3000.0,
+            "UP" : [ -0.21719737350940704, 0.93105602264404297, 0.29318934679031372 ],
+            "UUID" : "f543bd2f-bec4-435e-869c-cf5e649ee0d1",
+            "ZFar" : 1000.0,
             "ZNear" : 0.0099999997764825821
          }
       ],
@@ -24,12 +24,12 @@
             "Components" : [
                {
                   "Active" : false,
-                  "Owner" : "a8973399-125d-4ed7-a1fb-9c057cf831e9",
+                  "Owner" : "cebc1cfc-c9b2-457f-8f80-7f63c7414d8a",
                   "Position" : [ 0.0, 0.0, 0.0 ],
                   "Rotation" : [ 0.0, 0.0, 0.0 ],
                   "Scale" : [ 1.0, 1.0, 1.0 ],
                   "Type" : 1,
-                  "UUID" : "db68296e-d7ee-4eea-907f-864f3fe04748"
+                  "UUID" : "950b576a-48ca-4083-96d5-3048786bee23"
                }
             ],
             "GameObjects" : [
@@ -37,12 +37,12 @@
                   "Components" : [
                      {
                         "Active" : false,
-                        "Owner" : "087e24cc-ba9f-409e-ba89-0745a5cf455d",
-                        "Position" : [ 0.0, 0.0, 5.070000171661377 ],
+                        "Owner" : "bf321eb6-bfe4-4756-ae39-72a73ab0214f",
+                        "Position" : [ 0.0, 0.0, 0.0 ],
                         "Rotation" : [ 0.0, 0.0, 0.0 ],
                         "Scale" : [ 1.0, 1.0, 1.0 ],
                         "Type" : 1,
-                        "UUID" : "e02b1c86-2ede-4895-8a6a-cecf7a839b53"
+                        "UUID" : "d1b5223b-9451-40ba-8e74-a57f7cbde746"
                      },
                      {
                         "Active" : false,
@@ -52,29 +52,29 @@
                         "FOVHorizontal" : 1.5707963705062866,
                         "Front" : [ -0.0, -0.0, -1.0 ],
                         "MainCamera" : true,
-                        "Owner" : "087e24cc-ba9f-409e-ba89-0745a5cf455d",
-                        "Position" : [ 0.0, 0.0, 5.070000171661377 ],
+                        "Owner" : "bf321eb6-bfe4-4756-ae39-72a73ab0214f",
+                        "Position" : [ 0.0, 0.0, 0.0 ],
                         "Type" : 3,
                         "UP" : [ 0.0, 1.0, 0.0 ],
-                        "UUID" : "0110c084-cd69-4556-96ba-fd8f8761214f",
+                        "UUID" : "91a6b466-0f31-4130-be24-d45a4b6eeeff",
                         "ZFar" : 250.0,
                         "ZNear" : 0.10000000149011612
                      }
                   ],
                   "GameObjects" : null,
                   "Name" : "Camera",
-                  "UUID" : "c0347333-4d64-4daf-b254-27d308647a3e"
+                  "UUID" : "bf321eb6-bfe4-4756-ae39-72a73ab0214f"
                },
                {
                   "Components" : [
                      {
                         "Active" : false,
-                        "Owner" : "03b8d573-4d8e-460c-a02a-81fedcb41685",
-                        "Position" : [ 0.0, 0.56000000238418579, 4.0 ],
-                        "Rotation" : [ 0.0, 180.0, 0.0 ],
+                        "Owner" : "ecb0aa21-9814-4d0c-8f7e-b089bfef77b0",
+                        "Position" : [ 0.0, 0.0, 0.0 ],
+                        "Rotation" : [ 0.0, 0.0, 0.0 ],
                         "Scale" : [ 1.0, 1.0, 1.0 ],
                         "Type" : 1,
-                        "UUID" : "28dab482-2b65-4c85-9501-e558ecda588e"
+                        "UUID" : "da2df0e2-0391-4f5f-93bf-18606cc863b4"
                      },
                      {
                         "Active" : false,
@@ -83,28 +83,28 @@
                         "Light color" : [ 1.0, 1.0, 1.0 ],
                         "Light type" : 0,
                         "Linear Attenuation" : 0.090000003576278687,
-                        "Owner" : "03b8d573-4d8e-460c-a02a-81fedcb41685",
+                        "Owner" : "ecb0aa21-9814-4d0c-8f7e-b089bfef77b0",
                         "Quadratic Attenuation" : 0.032000001519918442,
                         "Range" : 10.0,
                         "Spot angle" : 30.0,
                         "Type" : 4,
-                        "UUID" : "d7a90073-df2e-43ee-83cc-4ff3248c531d"
+                        "UUID" : "f814149a-50e1-4c48-b306-8d3230ce14e9"
                      }
                   ],
                   "GameObjects" : null,
                   "Name" : "Directional Light",
-                  "UUID" : "03b8d573-4d8e-460c-a02a-81fedcb41685"
+                  "UUID" : "ecb0aa21-9814-4d0c-8f7e-b089bfef77b0"
                },
                {
                   "Components" : [
                      {
                         "Active" : false,
-                        "Owner" : "54f57b01-3948-448f-a795-37949bdc8a36",
+                        "Owner" : "6f945fd2-b3d7-42ac-a329-28e980e34cbb",
                         "Position" : [ 0.0, 0.0, 0.0 ],
                         "Rotation" : [ 0.0, 0.0, 0.0 ],
                         "Scale" : [ 1.0, 1.0, 1.0 ],
                         "Type" : 1,
-                        "UUID" : "65e0da36-4884-4c1d-98b6-6b766f297f7a"
+                        "UUID" : "01931e32-a58a-4afe-8470-5807153829c1"
                      }
                   ],
                   "GameObjects" : [
@@ -112,57 +112,33 @@
                         "Components" : [
                            {
                               "Active" : false,
-                              "Owner" : "e706d74b-f8b0-4b79-92a2-07667f756350",
-                              "Position" : [ 0.14548707008361816, 0.0, 0.0 ],
-                              "Rotation" : [ -0.0, 0.0, -0.0 ],
-                              "Scale" : [ 1.0, 1.918514609336853, 1.0 ],
+                              "Owner" : "d81018dc-eaec-431d-9b38-94a667f08f79",
+                              "Position" : [ 0.0, 0.0, 0.0 ],
+                              "Rotation" : [ 0.0, 1.0, 0.0 ],
+                              "Scale" : [ 1.0, 1.0, 1.0 ],
                               "Type" : 1,
-                              "UUID" : "8d39db49-5a7f-4305-8227-a8e0816aca65"
+                              "UUID" : "17937d59-89c7-4ac3-a3c3-96a52db60ed4"
                            },
                            {
                               "Active" : false,
-                              "MaterialPath" : "./Assets/Materials/Baker_house.material",
-                              "MeshPath" : "./Assets/Models/Baker_house.mesh",
-                              "Owner" : "e706d74b-f8b0-4b79-92a2-07667f756350",
-                              "Type" : 2,
-                              "UUID" : "130244be-d0a1-4ae0-8070-2cef95e1b64c"
-                           }
-                        ],
-                        "GameObjects" : null,
-                        "Name" : "Baker_house",
-                        "UUID" : "e706d74b-f8b0-4b79-92a2-07667f756350"
-                     },
-                     {
-                        "Components" : [
-                           {
-                              "Active" : false,
-                              "Owner" : "1ce8bbef-80d4-4fe8-899a-7eae7270eb37",
-                              "Position" : [ 3.4001138210296631, -0.35834857821464539, -3.2795431613922119 ],
-                              "Rotation" : [ -6.9778847694396973, 1.0124647617340088, 0.12387461215257645 ],
-                              "Scale" : [ 0.99999439716339111, 0.99999868869781494, 1.0000028610229492 ],
-                              "Type" : 1,
-                              "UUID" : "15655119-1033-47fc-b3a9-f9b815cdc8e6"
-                           },
-                           {
-                              "Active" : false,
-                              "MaterialPath" : "./Assets/Materials/Robot_ef2307f5-2fe3-4d48-905a-6eaf32a29695.material",
+                              "MaterialPath" : "./Assets/Materials/Robot_cbd11fff-2112-488e-808e-b82021e9a0df.material",
                               "MeshPath" : "./Assets/Models/Robot.mesh",
-                              "Owner" : "e33ab5f3-ebf1-4819-b5e1-ae5dcd782a35",
+                              "Owner" : "d81018dc-eaec-431d-9b38-94a667f08f79",
                               "Type" : 2,
-                              "UUID" : "23cb9e9e-ec3b-4207-b871-fabb0c269874"
+                              "UUID" : "a61868f5-a9ed-4d9c-a526-752374becc1a"
                            }
                         ],
                         "GameObjects" : null,
                         "Name" : "Robot",
-                        "UUID" : "e33ab5f3-ebf1-4819-b5e1-ae5dcd782a35"
+                        "UUID" : "d81018dc-eaec-431d-9b38-94a667f08f79"
                      }
                   ],
                   "Name" : "Robot",
-                  "UUID" : "54f57b01-3948-448f-a795-37949bdc8a36"
+                  "UUID" : "6f945fd2-b3d7-42ac-a329-28e980e34cbb"
                }
             ],
             "Name" : "Hierarchy",
-            "UUID" : "a8973399-125d-4ed7-a1fb-9c057cf831e9"
+            "UUID" : "cebc1cfc-c9b2-457f-8f80-7f63c7414d8a"
          }
       ]
    }
