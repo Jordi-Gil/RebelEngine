@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "Math/float3x3.h"
+#include "Math/float4x4.h"
 #include "Math/float2.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -72,8 +73,18 @@ void ComponentMeshRenderer::DebugDraw(){
 	if (_owner->IsSelected()) {
 		AABB box;  _owner->GetAABB(box);
 		OBB obb = box.Transform(_owner->GetGlobalMatrix());
+		//OBB obb;
+		//float4x4 global = _owner->GetGlobalMatrix();
+		//global.scaleX = 1;
+		//global.scaleY = 1;
+		//global.scaleZ = 1;
+		//obb.SetFrom(box);
+		//obb.Scale(obb.CenterPoint(), _owner->GetGlobalMatrix().GetScale());
+		//obb.Transform(global);
 		AABB res = obb.MinimalEnclosingAABB();
 		dd::aabb(res.minPoint, res.maxPoint, dd::colors::Orange);
+		/*float3 corners[8]; obb.GetCornerPoints(corners);
+		dd::box(corners,dd::colors::Orange);*/
 	}
 }
 

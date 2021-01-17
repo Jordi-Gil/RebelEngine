@@ -1,19 +1,25 @@
 #include "GUIScene.h"
 
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 
 #include "CoreModules/ModuleRender.h"
 #include "CoreModules/ModuleWindow.h"
 #include "CoreModules/ModuleScene.h"
 #include "CoreModules/ModuleEditorCamera.h"
+#include "CoreModules/ModuleGUI.h"
+
+
+#include "Components/ComponentTransform.h"
 
 #include "ImGui/IconsFontAwesome5.h"
-
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_utils.h"
 #include "ImGui/imgui_internal.h"
 #include "ImGui/ImGuizmo.h"
+
+#include "GUIs/GUIInspector.h"
 
 float sceneWidth = 0;
 float sceneHeight = 0;
@@ -43,11 +49,17 @@ void GUIScene::Draw() {
 	ImGui::SameLine();
 	if(ImGui::RadioButton("Octree Frustum Culling", &e, 2)) { App->scene->SetMask(OCTREE); }
 
-	ImGui::EndMenuBar();
+	static int imguiOP = ImGuizmo::OPERATION::TRANSLATE;
+	if (ImGui::RadioButton("Translate", &imguiOP, 0)) {}
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Rotate", &imguiOP, 1)) {}
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Scale", &imguiOP, 2)) {}
 
+	ImGui::EndMenuBar();
 	_sceneFocused = ImGui::IsWindowFocused();
 	_sceneHovered = ImGui::IsWindowHovered();
-
+	
 	_viewportPos =  ImGui::GetCursorScreenPos();
 	_viewportSize = ImVec2(_sceneWindowWidth, _sceneWindowHeight);
 	ImGui::GetWindowDrawList()->AddImage(
@@ -64,33 +76,27 @@ void GUIScene::Draw() {
 		_sceneWindowHeight = ImGui::GetWindowHeight(); sceneHeight = _sceneWindowHeight;
 		App->editorCamera->WindowResized(_sceneWindowWidth, _sceneWindowHeight);
 	}
+	
+	GameObject* focusedGo = App->gui->_inspector->GetFocusedGameObject();
+	if (focusedGo != nullptr) {
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, _sceneWindowWidth, _sceneWindowHeight);
+		ImGuizmo::SetDrawlist();
+		ImGuizmo::Enable(true);
+		ImGuizmo::SetOrthographic(false);
 
-	/* In progress. Infit mouse rotation
-	bool startWrap = ImGui::GetIO().MouseDown[ImGuiMouseButton_Right];
 
-	if (startWrap && sceneFocused) {
+		math::float4x4 viewMat;
+		App->editorCamera->GetOpenGLMatrix(matrix_type::VIEW_MATRIX, viewMat);
+		math::float4x4 projMat;
+		App->editorCamera->GetOpenGLMatrix(matrix_type::PROJECTION_MATRIX, projMat);
+		ComponentTransform* focusedTransform = (ComponentTransform*)(focusedGo->GetComponent(type_component::TRANSFORM));
+		math::float4x4 compGlobalMat = focusedTransform->GetGlobalMatrix().Transposed();
 
-		int ptX, ptY;
-		SDL_GetMouseState(&ptX, &ptY);
-		bool outside = false;
-
-		ImVec2 mousePos;
-		mousePos.x = ImGui::GetMousePos().x - ImGui::GetCursorScreenPos().x - ImGui::GetScrollX();
-
-		ImVec2 mouseStart = ImGui::GetWindowContentRegionMin();
-		mouseStart.x += ImGui::GetWindowPos().x;
-		mouseStart.y += ImGui::GetWindowPos().y + ImGui::GetScrollY() + ImGui::GetStyle().FramePadding.y;
-
-		if (mousePos.x < 0.005) {
-			ptX = mouseStart.x;
-			outside = true;
+		ImGuizmo::Manipulate(viewMat.ptr(), projMat.ptr(), (ImGuizmo::OPERATION)imguiOP, ImGuizmo::MODE::LOCAL, compGlobalMat.ptr());
+		if (ImGuizmo::IsUsing()) {
+				focusedTransform->SetTransform(compGlobalMat.Transposed());
 		}
-
-		if (mousePos.y < 0.005) {
-			ptY = mouseStart.y;
-			outside = true;
-		}
-	} */
+	}
 	ImGui::End();
 }
 

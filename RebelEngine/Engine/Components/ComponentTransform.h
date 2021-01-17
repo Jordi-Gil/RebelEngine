@@ -22,6 +22,7 @@ public:
 	void SetTransform(const float3 position, const Quat rotation, const float3 scale);
 	void SetTransform(const float3 position, const float3 rotation, const float3 scale);
 	void SetTransform(const aiMatrix4x4& matrix);
+	void SetTransform(const float4x4& matrix);
 
 	void UpdateGlobalMatrix();
 	void UpdateLocalMatrix();
