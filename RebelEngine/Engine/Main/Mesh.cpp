@@ -304,7 +304,9 @@ bool Mesh::WriteJsonFile(){
 	_meshValue[0][JSON_TAG_NUM_FACES] = _numFaces;
 	_meshValue[0][JSON_TAG_NUM_INDICES] = _numIndices;
 
-	sprintf(_filePath, "%s%s%s", DEFAULT_MESH_PATH, _name, DEFAULT_MESH_EXT);
+	char filename[FILENAME_MAX];
+	sprintf(filename, "%s%s", _name, _uuid.c_str());
+	sprintf(_filePath, "%s%s%s", DEFAULT_MESH_PATH, filename, DEFAULT_MESH_EXT);
 
 	Json::StyledWriter wr;
 	std::ofstream ofs(_filePath, std::ios_base::binary);

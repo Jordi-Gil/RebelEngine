@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <vector>
+#include <set>
 
 #include "Math/float3.h"
 
@@ -41,6 +42,7 @@ public:
 
 	void SetMask(Rebel_FrustumMask mask) { _mask = mask; }
 	void SetMainCamera(ComponentCamera& mainCamera);
+	void SetDrawOctree(bool drawOctree);
 
 	void UpdateMinMax(float3 min, float3 max);
 
@@ -60,7 +62,6 @@ private:
 
 	void FrustumCulling(OctreeNode* node);
 	void FrustumCulling();
-
 	
 public:
 
@@ -82,11 +83,12 @@ private:
 	float3 _min = float3(FLT_MAX, FLT_MAX, FLT_MAX);
 
 	std::vector<GameObject*> _objects;
-	std::vector<GameObject *> _objectsToDraw;
+	std::set<GameObject *> _objectsToDraw;
 	std::vector<GameObject*> _lights;
 
 	bool _isPlaying = false;
 	bool _isSaving = false;
 	bool _isLoading = false;
+	bool _drawOctree = false;
 };
 

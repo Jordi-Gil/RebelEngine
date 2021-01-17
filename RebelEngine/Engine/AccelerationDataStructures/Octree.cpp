@@ -8,7 +8,7 @@
 
 #include "Components/ComponentCamera.h"
 
-unsigned int Octree::_maxObjPerNode = 5;
+unsigned int Octree::_maxObjPerNode = 50;
 unsigned int Octree::_minSize = 100;
 
 

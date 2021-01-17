@@ -45,6 +45,7 @@ bool ModuleScene::Init() {
 
 	_skybox = new Skybox();
 	
+	/*
 	_root = _poolGameObjects.get();
 	_root->SetName("Hierarchy");
 	_root->AddMask(GO_MASK_ROOT_NODE);
@@ -83,7 +84,7 @@ bool ModuleScene::Init() {
 	go->AddComponent(std::move(light), GO_MASK_LIGHT);
 	
 	_root->AddChild(std::move(go));
-	
+	*/
 	return true;
 }
 
@@ -96,13 +97,13 @@ void ModuleScene::IterateRoot(GameObject& go) {
 	if (go.HasMesh()) {
 		_objects.push_back(&go);
 	}
-	else if ((go.GetMask() & GO_MASK_CAMERA) != 0) _objectsToDraw.push_back(&go);
+	else if ((go.GetMask() & GO_MASK_CAMERA) != 0) _objectsToDraw.insert(&go);
 	else if ((go.GetMask() & GO_MASK_LIGHT) != 0) _lights.push_back(&go);
 }
 
 bool ModuleScene::Start() {
 	
-	//Load();
+	Load();
 
 	IterateRoot(*_root);
 
@@ -123,7 +124,7 @@ void ModuleScene::FrustumCulling(OctreeNode* node) {
 		for (const auto& go : node->_gos) {
 			OBB obb; go->GetOBB(obb);
 			if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
-				_objectsToDraw.push_back(go);
+				_objectsToDraw.insert(go);
 			}
 		}
 
@@ -140,7 +141,7 @@ void ModuleScene::FrustumCulling() {
 	for (const auto &go : _objects) {
 		OBB obb; go->GetOBB(obb);
 		if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
-			_objectsToDraw.push_back(go);
+			_objectsToDraw.insert(go);
 		}
 	}
 }
@@ -151,7 +152,7 @@ update_status ModuleScene::PreUpdate() {
 	if( (_mask & LINEAR_AABB) != 0 ) { FrustumCulling(); }
 	else if ((_mask & OCTREE) != 0) { 
 		FrustumCulling(_octree->_root);
-		_octree->DebugDraw(_octree->_root);
+		if(_drawOctree) _octree->DebugDraw(_octree->_root);
 	}
 
 	return UPDATE_CONTINUE;
@@ -184,9 +185,10 @@ void ModuleScene::DrawFrustumOutput() {
 	}
 
 	_objectsToDraw.clear();
-	_objectsToDraw.shrink_to_fit();
 	_objects.clear();
 	_objects.shrink_to_fit();
+	_lights.clear();
+	_lights.shrink_to_fit();
 
 	IterateRoot(*_root);
 
@@ -199,6 +201,10 @@ void ModuleScene::Draw() {
 
 void ModuleScene::SetMainCamera(ComponentCamera& mainCamera) {
 	_mainCamera = &mainCamera;
+}
+
+void ModuleScene::SetDrawOctree(bool drawOctree) {
+	_drawOctree = drawOctree;
 }
 
 void ModuleScene::UpdateMinMax(float3 min, float3 max) {

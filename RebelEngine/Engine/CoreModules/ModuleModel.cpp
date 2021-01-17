@@ -34,7 +34,7 @@ bool ModuleModel::Init() {
 	aiAttachLogStream(&stream);
 
 	//LoadModelFromFBX("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
-	LoadModelFromFBX("Assets/Models/Unity/Robot/Robot.FBX");
+	//LoadModelFromFBX("Assets/Models/Unity/Robot/Robot.FBX");
 	//LoadModelFromFBX("Assets/Models/WithoutDDS/Street_Environment/Street_environment_V01.FBX");
 	
 	return true;
