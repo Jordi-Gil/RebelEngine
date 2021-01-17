@@ -142,6 +142,7 @@ update_status ModuleScene::PreUpdate() {
 
 	if( (_mask & LINEAR_AABB) != 0 ) { FrustumCulling(); }
 	else if ((_mask & OCTREE) != 0) { 
+		_objectsToDraw.clear();
 		FrustumCulling(_octree->_root);
 		if(_drawOctree) _octree->DebugDraw(_octree->_root);
 	}
@@ -174,6 +175,8 @@ void ModuleScene::DrawFrustumOutput() {
 			component->DebugDraw();
 		}
 	}
+
+	_mainCamera->DebugDraw();
 
 	_objectsToDraw.clear();
 	_objects.clear();

@@ -26,7 +26,7 @@ const std::vector<std::string> MyReadFile(const char* path) {
 }
 
 //Can a file be read at compile time? In C++20, but before?
-const std::vector<std::string> libs = MyReadFile("Assets/Windows/libraries.txt");
+const std::vector<std::string> libs = MyReadFile("Windows/libraries.txt");
 const unsigned int size = libs.size();
 
 GUIAbout::GUIAbout(const char* name) {
@@ -49,7 +49,7 @@ void GUIAbout::Draw() {
 
 		ImGui::Text("Version: Rebel Engine"); ImGui::SameLine(); ImGui::Text(VERSION);
 		ImGui::Text("Rebel is a game engine programmed entirely in C++.");
-		ImGui::Text("Author:"); ImGui::SameLine(); ImGui::Text("Jordi Gil Gonzalez");
+		ImGui::Text("Authors:"); ImGui::SameLine(); ImGui::Text("Jordi Gil Gonzalez and Cristian Ferrer Galan");
 		if (ImGui::CollapsingHeader("Libraries used")) {
 			for (unsigned int i = 0; i < size; i += 3) {
 				ImGui::BulletText(""); ImGui::SameLine();  ImGui::TextURL(libs[i].c_str(), libs[i+1].c_str(), 0); ImGui::SameLine(); ImGui::Text(libs[i+2].c_str());

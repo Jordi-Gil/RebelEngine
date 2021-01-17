@@ -25,3 +25,12 @@ Built-in memory leak detection.
 Infoware 0.5.5
 https://github.com/ThePhD/infoware
 C++ Library for pulling system and hardware information, without hitting the command line.
+ImGuizmo
+https://github.com/CedricGuillemet/ImGuizmo
+ImGizmo is a small library built ontop of Dear ImGui. Allow you to manipulate 4x4 float matrices.
+JsonCpp
+https://github.com/open-source-parsers/jsoncpp
+JsonCpp is a C++ library that allows manipulating JSON values, including serialization and deserialization to and from strings.
+Brofiler
+https://github.com/bombomby/optick
+Optick is a super-lightweight C++ profiler for Games.

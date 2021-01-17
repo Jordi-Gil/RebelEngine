@@ -65,7 +65,7 @@ bool ModuleWindow::Init() {
 	SDL_SetWindowMaximumSize(window, maxWidth, maxHeight);
 	SDL_SetWindowBrightness(window, 1.0f);
 
-	SDL_Surface *icon = IMG_Load("Assets/Images/Logo/rebel_logo_no_text.png");
+	SDL_Surface *icon = IMG_Load("Images/Logo/rebel_logo_no_text.png");
 	SDL_SetWindowIcon(window, icon);
 
 	SDL_MaximizeWindow(window);
@@ -83,7 +83,8 @@ bool ModuleWindow::Init() {
 bool ModuleWindow::Start() {
 
 	TextureInformation info;
-	texIcon = App->texturer->LoadTexture("Assets/Images/Logo/rebel_logo.png", info);
+	texIcon = info.gl_id; 
+	App->texturer->LoadTexture("Images/Logo/rebel_logo.png", info);
 	return true;
 }
 
