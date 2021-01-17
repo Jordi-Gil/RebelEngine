@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets/Models/WithDDS/BakerHouse/Baker_house.dds",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Baker_house_ee4fd5b3-992d-42d1-9698-101918ed50c2",
+      "Normal" : "",
+      "Smoothness" : 1.0,
+      "Specular" : "",
+      "Type" : 1,
+      "UUID" : "ee4fd5b3-992d-42d1-9698-101918ed50c2"
+   }
+]

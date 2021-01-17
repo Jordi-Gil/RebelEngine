@@ -46,7 +46,7 @@ public:
 	void LoadEBO(const aiMesh* mesh);
 	void CreateVAO();
 
-	void Draw(Material* material, const float4x4& model);
+	void Render(Material* material, const float4x4& model);
 
 	void Clean();
 

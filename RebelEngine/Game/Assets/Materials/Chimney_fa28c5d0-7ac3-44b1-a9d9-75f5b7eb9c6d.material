@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets/Models/WithDDS/BakerHouse/Baker_house.dds",
+      "Color" : [ -107374176.0, -107374176.0, -107374176.0 ],
+      "Name" : "Chimney_fa28c5d0-7ac3-44b1-a9d9-75f5b7eb9c6d",
+      "Normal" : "",
+      "Smoothness" : 1.0,
+      "Specular" : "",
+      "Type" : 1,
+      "UUID" : "fa28c5d0-7ac3-44b1-a9d9-75f5b7eb9c6d"
+   }
+]

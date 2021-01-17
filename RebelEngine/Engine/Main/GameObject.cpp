@@ -4,6 +4,7 @@
 
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentCamera.h"
+#include "Components/ComponentLight.h"
 #include "Components/Component.h"
 
 #include "Application.h"
@@ -233,24 +234,37 @@ bool GameObject::FromJson(const Json::Value& value)  {
 			std::unique_ptr<Component> comp;
 			switch (type)
 			{
-			case type_component::NONE: comp = std::make_unique<Component>(jsonComp); AddMask(GAME_OBJECT_MASK::GO_MASK_NONE);   break;
-			case type_component::CAMERA:
-			{
-				comp = std::make_unique<ComponentCamera>(jsonComp);
-				AddMask(GAME_OBJECT_MASK::GO_MASK_CAMERA);
-				ComponentCamera* aux = (ComponentCamera*)comp.get();
-				if (aux->IsMainCamera())
-					App->scene->SetMainCamera(*aux);
-				break;
-			}
-			case type_component::MESHRENDERER:
-			{
-				comp = std::make_unique<ComponentMeshRenderer>(jsonComp);
-				AddMask(GAME_OBJECT_MASK::GO_MASK_MESH);
-				_meshRenderer = static_cast<ComponentMeshRenderer*>(comp.get());
-				break;
-			}
-			case type_component::TRANSFORM: comp = std::make_unique<ComponentTransform>(jsonComp); break;
+				case type_component::NONE:
+				{
+					comp = std::make_unique<Component>(jsonComp);
+					AddMask(GAME_OBJECT_MASK::GO_MASK_NONE);
+					break;
+				}
+				case type_component::CAMERA:
+				{
+					comp = std::make_unique<ComponentCamera>(jsonComp);
+					AddMask(GAME_OBJECT_MASK::GO_MASK_CAMERA);
+					ComponentCamera* aux = (ComponentCamera*)comp.get();
+					if (aux->IsMainCamera())
+						App->scene->SetMainCamera(*aux);
+					break;
+				}
+				case type_component::MESHRENDERER:
+				{
+					comp = std::make_unique<ComponentMeshRenderer>(jsonComp);
+					AddMask(GAME_OBJECT_MASK::GO_MASK_MESH);
+					_meshRenderer = static_cast<ComponentMeshRenderer*>(comp.get());
+					break;
+				}
+				case type_component::TRANSFORM: {
+					comp = std::make_unique<ComponentTransform>(jsonComp);
+					break;
+				}
+				case type_component::LIGHT:{
+					comp = std::make_unique<ComponentLight>(jsonComp);
+					AddMask(GAME_OBJECT_MASK::GO_MASK_LIGHT);
+					break;
+				}
 			}
 			comp->SetOwner(this);
 

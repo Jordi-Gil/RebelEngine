@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "D:\\Documentos\\Jordi\\UPC\\RebelEngine\\RebelEngine\\Game\\Assets\\Models\\Unity\\Robot\\RobotDiffuse.png",
+      "Color" : [ -107374176.0, -107374176.0, -107374176.0 ],
+      "Name" : "Robot_d92e63b9-8a1f-4522-b64b-dbef4516ef64",
+      "Normal" : "",
+      "Smoothness" : 1.0,
+      "Specular" : "D:\\Documentos\\Jordi\\UPC\\RebelEngine\\RebelEngine\\Game\\Assets\\Models\\Unity\\Robot\\RobotSpecular.tif",
+      "Type" : 1,
+      "UUID" : "d92e63b9-8a1f-4522-b64b-dbef4516ef64"
+   }
+]

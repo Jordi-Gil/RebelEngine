@@ -23,6 +23,7 @@ public:
 	const material_type GetType() const { return _type; }
 	const char* GetName() const { return _name.c_str(); }
 	const char* GetFilePath() { return _filePath; }
+	const char* GetUUID() const { return _uuid.c_str(); }
 
 	bool FromJson(const Json::Value& value);
 	bool WriteJsonFile();

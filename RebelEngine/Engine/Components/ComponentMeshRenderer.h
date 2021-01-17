@@ -4,6 +4,8 @@
 
 #include "Materials/Material.h"
 
+#include "Materials/MAtStandard.h"
+
 #include "Components/Component.h"
 
 class ComponentMeshRenderer : public Component {
@@ -41,6 +43,10 @@ public:
 
 	Mesh* _mesh = nullptr;
 	Material* _material = nullptr;
+
+private:
+
+	void DrawFrame(int frameId, unsigned int texId, MatStandard_Flags_ flag);
 
 };
 

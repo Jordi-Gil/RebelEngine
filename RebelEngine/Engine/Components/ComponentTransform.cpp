@@ -174,8 +174,7 @@ bool ComponentTransform::ToJson(Json::Value& value, int pos) {
 
 }
 
-bool ComponentTransform::FromJson(const Json::Value& value) 
-{
+bool ComponentTransform::FromJson(const Json::Value& value) {
 
 	if(!value.isNull())
 	{
@@ -208,6 +207,7 @@ void ComponentTransform::DrawDragFloat3(const char* tag, float3& vector, float s
 			ImGui::SameLine();
 			if (ImGui::DragFloat("", &vector[i], speed)) {
 				UpdateLocalMatrix();
+				_owner->UpdateChildrenTransform();
 			};
 			ImGui::PopID();
 		}

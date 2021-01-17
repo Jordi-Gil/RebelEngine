@@ -285,6 +285,7 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 	std::vector<std::unique_ptr<GameObject>>& children = father.GetChildren();
 	
 	GameObject* min_go = nullptr;
+
 	for (uint i = 0; i < children.size(); i++) {
 		if(children[i]->HasMesh()){
 
@@ -314,6 +315,7 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 				}
 			}
 		}
+
 		float current_minDistance = minDistance;
 		GameObject* closest_child = GetObjectPickedRec(ray, hit, minDistance, *children[i]);
 
@@ -326,6 +328,7 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 	return min_go;
 
 }
+
 #pragma region setters
 
 void ModuleEditorCamera::SetVerticalFov(float vFov, float aspectRatio) {

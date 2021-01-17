@@ -23,7 +23,7 @@ ModuleScene::ModuleScene() {
 }
 
 ModuleScene::ModuleScene(const Json::Value& value) {
-	this->FromJson(value);
+	FromJson(value);
 }
 
 ModuleScene::~ModuleScene() {
@@ -80,7 +80,7 @@ bool ModuleScene::Init() {
 	light->SetOwner(go.get());
 	
 	go->AddComponent(std::move(transform));
-	go->AddComponent(std::move(light));
+	go->AddComponent(std::move(light), GO_MASK_LIGHT);
 	
 	_root->AddChild(std::move(go));
 	
@@ -93,17 +93,18 @@ void ModuleScene::IterateRoot(GameObject& go) {
 		IterateRoot(*children);
 	}
 
-	if (go.HasMesh()) { 
+	if (go.HasMesh()) {
 		_objects.push_back(&go);
 		OBB obb; go.GetOBB(obb);
 		UpdateMinMax(obb.MinimalEnclosingAABB().minPoint, obb.MinimalEnclosingAABB().maxPoint);
 	}
-	else if (go.GetMask() & GO_MASK_CAMERA) _objectsToDraw.push_back(&go);
+	else if ((go.GetMask() & GO_MASK_CAMERA) != 0) _objectsToDraw.push_back(&go);
+	else if ((go.GetMask() & GO_MASK_LIGHT) != 0) _lights.push_back(&go);
 }
 
 bool ModuleScene::Start() {
 	
-	Load();
+	//Load();
 
 	IterateRoot(*_root);
 
@@ -269,4 +270,8 @@ bool ModuleScene::FromJson(const Json::Value& value) {
 		//TODO: JSON ERROR
 	}
 	return true;
+}
+
+void ModuleScene::GetLights(std::vector<GameObject*>& lights) {
+	lights = _lights;
 }

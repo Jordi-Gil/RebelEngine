@@ -13,6 +13,7 @@
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_utils.h"
 #include "ImGui/imgui_internal.h"
+#include "ImGui/ImGuizmo.h"
 
 float sceneWidth = 0;
 float sceneHeight = 0;
@@ -63,6 +64,7 @@ void GUIScene::Draw() {
 		_sceneWindowHeight = ImGui::GetWindowHeight(); sceneHeight = _sceneWindowHeight;
 		App->editorCamera->WindowResized(_sceneWindowWidth, _sceneWindowHeight);
 	}
+
 	/* In progress. Infit mouse rotation
 	bool startWrap = ImGui::GetIO().MouseDown[ImGuiMouseButton_Right];
 

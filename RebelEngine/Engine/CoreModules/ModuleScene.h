@@ -37,6 +37,8 @@ public:
 
 	void Draw();
 
+	void GetLights(std::vector<GameObject*>& lights);
+
 	void SetMask(Rebel_FrustumMask mask) { _mask = mask; }
 	void SetMainCamera(ComponentCamera& mainCamera);
 
@@ -77,6 +79,7 @@ private:
 
 	std::vector<GameObject*> _objects;
 	std::vector<GameObject *> _objectsToDraw;
+	std::vector<GameObject*> _lights;
 
 };
 
