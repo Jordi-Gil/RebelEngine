@@ -443,6 +443,12 @@
     <None Include="External-Libraries\MathGeoLib-1.5\Include\Math\float2.inl" />
     <None Include="External-Libraries\MathGeoLib-1.5\Include\Math\Matrix.inl" />
     <None Include="Game\shaders\fragment.frag" />
+    <None Include="Game\Shaders\LightStructs.glsl" />
+    <None Include="Game\Shaders\MaterialsStruct.glsl" />
+    <None Include="Game\shaders\PBR_Phong.frag" />
+    <None Include="Game\Shaders\PBR_Phong.vert" />
+    <None Include="Game\Shaders\skybox.frag" />
+    <None Include="Game\Shaders\skybox.vert" />
     <None Include="Game\shaders\vertex.vert" />
   </ItemGroup>
   <ItemGroup>
@@ -450,6 +456,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Game\Shaders\LightsConfiguration.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

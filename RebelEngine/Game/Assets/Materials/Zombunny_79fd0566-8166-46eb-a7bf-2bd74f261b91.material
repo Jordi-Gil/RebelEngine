@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\ZomBunny\\ZomBunnyDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Zombunny_79fd0566-8166-46eb-a7bf-2bd74f261b91",
+      "Normal" : "Assets\\Models\\Unity\\ZomBunny\\ZomBunnyNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\ZomBunny\\ZomBunnySpecular.tif",
+      "Type" : 1,
+      "UUID" : "79fd0566-8166-46eb-a7bf-2bd74f261b91"
+   }
+]

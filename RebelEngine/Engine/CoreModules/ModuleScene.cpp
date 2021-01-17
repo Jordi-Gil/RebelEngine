@@ -23,7 +23,7 @@ ModuleScene::ModuleScene() {
 }
 
 ModuleScene::ModuleScene(const Json::Value& value) {
-	this->FromJson(value);
+	FromJson(value);
 }
 
 ModuleScene::~ModuleScene() {
@@ -80,7 +80,7 @@ bool ModuleScene::Init() {
 	light->SetOwner(go.get());
 	
 	go->AddComponent(std::move(transform));
-	go->AddComponent(std::move(light));
+	go->AddComponent(std::move(light), GO_MASK_LIGHT);
 	
 	_root->AddChild(std::move(go));
 	
@@ -93,22 +93,21 @@ void ModuleScene::IterateRoot(GameObject& go) {
 		IterateRoot(*children);
 	}
 
-	if (go.HasMesh()) { 
+	if (go.HasMesh()) {
 		_objects.push_back(&go);
-		OBB obb; go.GetOBB(obb);
-		UpdateMinMax(obb.MinimalEnclosingAABB().minPoint, obb.MinimalEnclosingAABB().maxPoint);
 	}
-	else if (go.GetMask() & GO_MASK_CAMERA) _objectsToDraw.push_back(&go);
+	else if ((go.GetMask() & GO_MASK_CAMERA) != 0) _objectsToDraw.push_back(&go);
+	else if ((go.GetMask() & GO_MASK_LIGHT) != 0) _lights.push_back(&go);
 }
 
 bool ModuleScene::Start() {
 	
-	Load();
+	//Load();
 
 	IterateRoot(*_root);
 
 	_octree = new Octree();
-	_octree->_root->_bounds = AABB(_min, _max);
+	_octree->_root->_bounds = AABB(float3(-100, -100, -100), float3(100, 100, 100));
 
 	for (unsigned int i = 0; i < _objects.size(); ++i) {
 		_octree->Insert(_octree->_root, _objects[i]);
@@ -122,8 +121,7 @@ void ModuleScene::FrustumCulling(OctreeNode* node) {
 	if (_mainCamera->Intersects(node->_bounds)) {
 
 		for (const auto& go : node->_gos) {
-			AABB box; go->GetAABB(box);
-			OBB obb = box.Transform(go->GetGlobalMatrix());
+			OBB obb; go->GetOBB(obb);
 			if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
 				_objectsToDraw.push_back(go);
 			}
@@ -140,7 +138,7 @@ void ModuleScene::FrustumCulling(OctreeNode* node) {
 
 void ModuleScene::FrustumCulling() {
 	for (const auto &go : _objects) {
-		AABB box;  go->GetAABB(box);  OBB obb = box.Transform(go->GetGlobalMatrix());
+		OBB obb; go->GetOBB(obb);
 		if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
 			_objectsToDraw.push_back(go);
 		}
@@ -149,7 +147,7 @@ void ModuleScene::FrustumCulling() {
 
 update_status ModuleScene::PreUpdate() {
 
-	
+
 	if( (_mask & LINEAR_AABB) != 0 ) { FrustumCulling(); }
 	else if ((_mask & OCTREE) != 0) { 
 		FrustumCulling(_octree->_root);
@@ -244,7 +242,23 @@ bool ModuleScene::Load() {
 	}
 
 	FromJson(obj[0]);
+
+	_objects.clear();
+	_lights.clear();
+
+	IterateRoot(*_root);
+
+	if (_octree) delete _octree;
+
+	_octree = new Octree();
+	_octree->_root->_bounds = AABB(float3(-100, -100, -100), float3(100, 100, 100));
+
+	for (unsigned int i = 0; i < _objects.size(); ++i) {
+		_octree->Insert(_octree->_root, _objects[i]);
+	}
+
 	_isLoading = false;
+
 	return true;
 }
 
@@ -272,6 +286,10 @@ bool ModuleScene::FromJson(const Json::Value& value) {
 		//TODO: JSON ERROR
 	}
 	return true;
+}
+
+void ModuleScene::GetLights(std::vector<GameObject*>& lights) {
+	lights = _lights;
 }
 
 void ModuleScene::TogglePlay() {

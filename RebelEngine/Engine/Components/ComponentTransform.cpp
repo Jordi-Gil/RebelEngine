@@ -103,13 +103,12 @@ void ComponentTransform::SetTransform(const float3 position, const float3 rotati
 	UpdateGlobalMatrix();
 
 }
+
 void ComponentTransform::SetTransform(const float4x4& matrix) {
 
 	float3x3 rot = matrix.RotatePart();
 	float4x4 aux;
 	matrix.Decompose(_position, aux, _scale);
-	/*_position = matrix.TranslatePart();
-	_scale = matrix.GetScale();*/
 	float3 rad = aux.ToEulerXYZ();
 	_rotation = float3(RadToDeg(rad.x), RadToDeg(rad.y), RadToDeg(rad.z));
 
@@ -119,6 +118,7 @@ void ComponentTransform::SetTransform(const float4x4& matrix) {
 
 	UpdateGlobalMatrix();
 }
+
 void ComponentTransform::SetTransform(const aiMatrix4x4& matrix) {
 
 	aiVector3D pos, sca;
@@ -150,14 +150,15 @@ void ComponentTransform::UpdateLocalMatrix(){
 void ComponentTransform::UpdateGlobalMatrix() {
 	
 	if (_owner != nullptr) {
-		if (_owner->GetParent() != nullptr) {
-			_globalMatrix = _owner->GetParent()->GetGlobalMatrix() * _localMatrix;
+		GameObject* parent = _owner->GetParent();
+		if (parent != nullptr) {
+			_globalMatrix = parent->GetGlobalMatrix() * _localMatrix;
 		}
 		else
 			_globalMatrix = _localMatrix;
 		
-		//if(App->scene->_octree != nullptr && (_owner->GetMask() & GO_MASK_MESH) != 0) 
-		//	App->scene->_octree->Update(App->scene->_octree->_root, _owner);
+		if(App->scene->_octree != nullptr && (_owner->GetMask() & GO_MASK_MESH) != 0) 
+			App->scene->_octree->Update(App->scene->_octree->_root, _owner);
 	}
 }
 
@@ -190,8 +191,7 @@ bool ComponentTransform::ToJson(Json::Value& value, int pos) {
 
 }
 
-bool ComponentTransform::FromJson(const Json::Value& value) 
-{
+bool ComponentTransform::FromJson(const Json::Value& value) {
 
 	if(!value.isNull())
 	{
@@ -224,6 +224,7 @@ void ComponentTransform::DrawDragFloat3(const char* tag, float3& vector, float s
 			ImGui::SameLine();
 			if (ImGui::DragFloat("", &vector[i], speed)) {
 				UpdateLocalMatrix();
+				_owner->UpdateChildrenTransform();
 			};
 			ImGui::PopID();
 		}

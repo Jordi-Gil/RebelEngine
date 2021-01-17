@@ -11,10 +11,11 @@
 #include "json/json.h"
 
 enum GAME_OBJECT_MASK {
-	GO_MASK_NONE		= 1 << 1,
-	GO_MASK_ROOT_NODE	= 1 << 2,
-	GO_MASK_MESH		= 1 << 3,
-	GO_MASK_CAMERA		= 1 << 4
+	GO_MASK_NONE		= 0,
+	GO_MASK_ROOT_NODE	= 1 << 1,
+	GO_MASK_MESH		= 1 << 2,
+	GO_MASK_CAMERA		= 1 << 3,
+	GO_MASK_LIGHT		= 1 << 4
 };
 
 class GameObject {
@@ -32,9 +33,13 @@ public:
 	void AddComponent(std::unique_ptr<Component>&& comp, GAME_OBJECT_MASK mask = GO_MASK_NONE);
 	void SetName(const char* name);
 	void SetParent(GameObject* go);
+	void SetToDelete() { _delete = true; }
 	void AddMask(GAME_OBJECT_MASK mask);
 	bool HasComponent(type_component type) const;
 	bool HasMesh() const {  return (_mask & GO_MASK_MESH) != 0; }
+
+	void DeleteMarkedChildren();
+	void CollapseChildIntoParent();
 
 	void UpdateChildrenTransform();
 	bool ToJson(Json::Value& value, int pos);
@@ -43,6 +48,7 @@ public:
 	void ToggleSelected();
 
 #pragma region getters
+
 	const char* GetName() const { return _name.c_str(); }
 	int GetNumChildren() const { return _children.size(); };
 	GameObject* GetParent() const { return _parent; }
@@ -73,6 +79,7 @@ private:
 
 	bool _active = false;
 	bool _selected = false;
+	bool _delete = false;
 
 	int _mask = GO_MASK_NONE;
 

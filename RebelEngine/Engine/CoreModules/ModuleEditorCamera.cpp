@@ -287,13 +287,13 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 	std::vector<std::unique_ptr<GameObject>>& children = father.GetChildren();
 	
 	GameObject* min_go = nullptr;
+
 	for (uint i = 0; i < children.size(); i++) {
 		if(children[i]->HasMesh()){
 
-			math::AABB aabb;
-			children[i]->GetAABB(aabb);
-			OBB _obb = aabb.Transform(children[i]->GetGlobalMatrix());
-			//_obb.Scale(_obb.CenterPoint(),children[i]->GetGlobalMatrix().GetScale());
+			OBB _obb;
+			children[i]->GetOBB(_obb);
+
 			float distanceIn;
 			bool hitted = false;
 
@@ -303,10 +303,10 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 				LineSegment triangleRay(ray);
 				triangleRay.Transform(children[i]->GetGlobalMatrix().Inverted());
 
-				for (int j = 0; j < mesh->_indices.size(); j += 3) {
-					Triangle tri = Triangle(mesh->_vertices[mesh->_indices[j]],
-						mesh->_vertices[mesh->_indices[j + 1]],
-						mesh->_vertices[mesh->_indices[j + 2]]);
+				for (int j = 0; j < mesh->_indices.size();) {
+					Triangle tri = Triangle(mesh->_vertices[mesh->_indices[j++]],
+						mesh->_vertices[mesh->_indices[j++]],
+						mesh->_vertices[mesh->_indices[j++]]);
 
 					hitted = triangleRay.Intersects(tri, &distanceIn, NULL);
 					if (hitted && distanceIn < minDistance) {
@@ -317,6 +317,7 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 				}
 			}
 		}
+
 		float current_minDistance = minDistance;
 		GameObject* closest_child = GetObjectPickedRec(ray, hit, minDistance, *children[i]);
 
@@ -329,6 +330,7 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 	return min_go;
 
 }
+
 #pragma region setters
 
 void ModuleEditorCamera::SetVerticalFov(float vFov, float aspectRatio) {

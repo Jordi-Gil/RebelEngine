@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\Firetruck\\FiretruckDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Firetruck_1c180108-9954-47d8-b54e-05e20da4f338",
+      "Normal" : "Assets\\Models\\Unity\\Firetruck\\FiretruckNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\Firetruck\\FiretruckSpecular.tif",
+      "Type" : 1,
+      "UUID" : "1c180108-9954-47d8-b54e-05e20da4f338"
+   }
+]
