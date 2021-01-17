@@ -23,6 +23,7 @@ public:
 
 	void SetFocusedGameObject(GameObject& focused);
 	void UnSetFocusedGameObject();
+	GameObject* GetFocusedGameObject() { return _focused_go; }
 	
 private:
 	 GameObject* _focused_go = nullptr;
