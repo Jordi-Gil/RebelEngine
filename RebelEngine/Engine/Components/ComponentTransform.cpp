@@ -6,6 +6,7 @@
 #include <ImGui/imgui_internal.h>
 #include <ImGui/imgui_utils.h>
 
+#include "Math/float3x3.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -102,7 +103,22 @@ void ComponentTransform::SetTransform(const float3 position, const float3 rotati
 	UpdateGlobalMatrix();
 
 }
+void ComponentTransform::SetTransform(const float4x4& matrix) {
 
+	float3x3 rot = matrix.RotatePart();
+	float4x4 aux;
+	matrix.Decompose(_position, aux, _scale);
+	/*_position = matrix.TranslatePart();
+	_scale = matrix.GetScale();*/
+	float3 rad = aux.ToEulerXYZ();
+	_rotation = float3(RadToDeg(rad.x), RadToDeg(rad.y), RadToDeg(rad.z));
+
+	_rotationQuat = Quat(aux);
+
+	_localMatrix = float4x4::FromTRS(_position, _rotationQuat, _scale);
+
+	UpdateGlobalMatrix();
+}
 void ComponentTransform::SetTransform(const aiMatrix4x4& matrix) {
 
 	aiVector3D pos, sca;
@@ -147,7 +163,7 @@ void ComponentTransform::UpdateGlobalMatrix() {
 
 void ComponentTransform::DebugDraw() {
 	if (_owner->IsSelected()) { 
-		dd::axisTriad(_globalMatrix, 0.1f, 2.0f); 
+		//dd::axisTriad(_globalMatrix, 0.1f, 2.0f); 
 	}
 }
 

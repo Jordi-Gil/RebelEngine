@@ -9,6 +9,8 @@
 #include "GUIs/GUIScene.h"
 #include "GUIs/GUIInspector.h"
 
+#include "ImGui/ImGuizmo.h"
+
 #include "Math/float3x3.h"
 #include "Math/Quat.h"
 #include "MathGeoLib.h"
@@ -196,7 +198,7 @@ update_status ModuleEditorCamera::Update() {
 		RotateKeyboard();
 		RotateMouse(x, y);
 		OrbitCenterScene(x, y);
-		if(App->gui->_scene->IsSceneHovered()) GetObjectPicked();
+		if(App->gui->_scene->IsSceneHovered() && !ImGuizmo::IsOver()) GetObjectPicked();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN) {
@@ -291,6 +293,7 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 			math::AABB aabb;
 			children[i]->GetAABB(aabb);
 			OBB _obb = aabb.Transform(children[i]->GetGlobalMatrix());
+			//_obb.Scale(_obb.CenterPoint(),children[i]->GetGlobalMatrix().GetScale());
 			float distanceIn;
 			bool hitted = false;
 
