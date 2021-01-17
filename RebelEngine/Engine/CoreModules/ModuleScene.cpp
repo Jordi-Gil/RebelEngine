@@ -105,15 +105,6 @@ bool ModuleScene::Start() {
 	
 	Load();
 
-	IterateRoot(*_root);
-
-	_octree = new Octree();
-	_octree->_root->_bounds = AABB(float3(-100, -100, -100), float3(100, 100, 100));
-
-	for (unsigned int i = 0; i < _objects.size(); ++i) {
-		_octree->Insert(_octree->_root, _objects[i]);
-	}
-
 	return true;
 }
 
