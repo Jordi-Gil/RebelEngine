@@ -136,34 +136,39 @@ void GameObject::GetOBB(OBB& obb) const {
 
 GameObject& GameObject::operator=(const GameObject& go) {
 
-	this->_active = go._active;
-	this->_name = go._name;
-	this->_parent = go._parent;
+	_active = go._active;
+	_name = go._name;
+	_parent = go._parent;
 
-	this->_children.clear();
+	_children.clear();
 	for (const auto& child : go._children) {
 		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
 		*aux = *child;
 		this->_children.push_back(std::move(aux));
 	}
 
-	this->_components.clear();
+	_components.clear();
 	for (const auto& component : go._components) {
 		switch (component->GetType())
 		{
 		case type_component::CAMERA:{
 			ComponentCamera* compAux = (ComponentCamera*)(component.get());
-			this->_components.push_back(std::make_unique<ComponentCamera>(*compAux));
+			_components.push_back(std::make_unique<ComponentCamera>(*compAux));
 			break;
 			}
 		case type_component::MESHRENDERER: {
 			ComponentMeshRenderer* compAux = (ComponentMeshRenderer*)(component.get());
-			this->_components.push_back(std::make_unique<ComponentMeshRenderer>(*compAux));
+			_components.push_back(std::make_unique<ComponentMeshRenderer>(*compAux));
 			break;
 		}
 		case type_component::TRANSFORM: {
 			ComponentTransform* compAux = (ComponentTransform*)(component.get());
-			this->_components.push_back(std::make_unique<ComponentTransform>(*compAux));
+			_components.push_back(std::make_unique<ComponentTransform>(*compAux));
+			break;
+		}
+		case type_component::LIGHT: {
+			ComponentLight* compAux = (ComponentLight*)(component.get());
+			_components.push_back(std::make_unique<ComponentLight>(*compAux));
 			break;
 		}
 		default:

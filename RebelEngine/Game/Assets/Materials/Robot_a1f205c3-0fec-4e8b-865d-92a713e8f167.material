@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\Robot\\RobotDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Robot_a1f205c3-0fec-4e8b-865d-92a713e8f167",
+      "Normal" : "",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\Robot\\RobotSpecular.tif",
+      "Type" : 1,
+      "UUID" : "a1f205c3-0fec-4e8b-865d-92a713e8f167"
+   }
+]

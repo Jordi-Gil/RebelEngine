@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\Hearse\\HearseDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Hearse_41b6bd4f-cd45-4993-a237-fef92bf18d5a",
+      "Normal" : "Assets\\Models\\Unity\\Hearse\\HearseNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\Hearse\\HearseSpecular.tif",
+      "Type" : 1,
+      "UUID" : "41b6bd4f-cd45-4993-a237-fef92bf18d5a"
+   }
+]

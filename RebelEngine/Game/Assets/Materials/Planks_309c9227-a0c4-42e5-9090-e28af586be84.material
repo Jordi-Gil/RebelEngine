@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "\\Documentos\\Jordi\\UPC\\RebelEngine\\RebelEngine\\Game\\Assets\\Models\\Unity\\Floor\\PlanksDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Planks_309c9227-a0c4-42e5-9090-e28af586be84",
+      "Normal" : "D:\\Documentos\\Jordi\\UPC\\RebelEngine\\RebelEngine\\Game\\Assets\\Models\\Unity\\Floor\\PlanksNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "D:\\Documentos\\Jordi\\UPC\\RebelEngine\\RebelEngine\\Game\\Assets\\Models\\Unity\\Floor\\PlanksSpecular.tif",
+      "Type" : 1,
+      "UUID" : "309c9227-a0c4-42e5-9090-e28af586be84"
+   }
+]

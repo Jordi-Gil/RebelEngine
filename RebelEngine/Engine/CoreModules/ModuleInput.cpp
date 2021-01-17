@@ -110,7 +110,7 @@ update_status ModuleInput::PreUpdate() {
 		switch (sdlEvent.type) {
 
 			case SDL_QUIT:
-				App->scene->Save();
+				if(!App->scene->IsPlaying()) App->scene->Save();
 				return UPDATE_STOP;
 			case SDL_WINDOWEVENT:
 				switch (sdlEvent.window.event) {
@@ -120,7 +120,7 @@ update_status ModuleInput::PreUpdate() {
 							App->window->ResizeWindow(sdlEvent.window.data1, sdlEvent.window.data2);
 						break;
 					case SDL_WINDOWEVENT_CLOSE:
-						App->scene->Save();
+						if(!App->scene->IsPlaying()) App->scene->Save();
 						return UPDATE_STOP;
 				}
 				break;

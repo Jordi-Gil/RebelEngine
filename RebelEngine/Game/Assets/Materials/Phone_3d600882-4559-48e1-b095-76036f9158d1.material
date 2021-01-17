@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\ptish-phone\\textures\\PhoneDiff.TGA.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Phone_3d600882-4559-48e1-b095-76036f9158d1",
+      "Normal" : "Assets\\Models\\Unity\\ptish-phone\\textures\\PhoneNM.TGA.png",
+      "Smoothness" : 1.0,
+      "Specular" : "",
+      "Type" : 1,
+      "UUID" : "3d600882-4559-48e1-b095-76036f9158d1"
+   }
+]

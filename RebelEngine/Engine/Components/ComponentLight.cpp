@@ -37,6 +37,11 @@ ComponentLight::ComponentLight(const ComponentLight& copy) {
 	_inner_angle = copy._inner_angle;
 	_outter_angle = copy._outter_angle;
 	_light_type = copy._light_type;
+	
+	_constant_att = copy._constant_att;
+	_linear_att = copy._linear_att;
+	_quadratic_att = copy._quadratic_att;
+	_color = copy._color;
 
 }
 

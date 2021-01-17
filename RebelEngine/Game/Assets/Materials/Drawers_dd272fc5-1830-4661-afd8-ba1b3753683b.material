@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\Drawers\\DrawersDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Drawers_dd272fc5-1830-4661-afd8-ba1b3753683b",
+      "Normal" : "Assets\\Models\\Unity\\Drawers\\DrawersNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\Drawers\\DrawersSpecular.tif",
+      "Type" : 1,
+      "UUID" : "dd272fc5-1830-4661-afd8-ba1b3753683b"
+   }
+]

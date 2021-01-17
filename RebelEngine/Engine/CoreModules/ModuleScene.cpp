@@ -95,8 +95,6 @@ void ModuleScene::IterateRoot(GameObject& go) {
 
 	if (go.HasMesh()) {
 		_objects.push_back(&go);
-		OBB obb; go.GetOBB(obb);
-		UpdateMinMax(obb.MinimalEnclosingAABB().minPoint, obb.MinimalEnclosingAABB().maxPoint);
 	}
 	else if ((go.GetMask() & GO_MASK_CAMERA) != 0) _objectsToDraw.push_back(&go);
 	else if ((go.GetMask() & GO_MASK_LIGHT) != 0) _lights.push_back(&go);
@@ -244,7 +242,23 @@ bool ModuleScene::Load() {
 	}
 
 	FromJson(obj[0]);
+
+	_objects.clear();
+	_lights.clear();
+
+	IterateRoot(*_root);
+
+	if (_octree) delete _octree;
+
+	_octree = new Octree();
+	_octree->_root->_bounds = AABB(float3(-100, -100, -100), float3(100, 100, 100));
+
+	for (unsigned int i = 0; i < _objects.size(); ++i) {
+		_octree->Insert(_octree->_root, _objects[i]);
+	}
+
 	_isLoading = false;
+
 	return true;
 }
 
