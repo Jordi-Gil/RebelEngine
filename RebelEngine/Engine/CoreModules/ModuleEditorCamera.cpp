@@ -294,7 +294,6 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 			math::AABB aabb;
 			children[i]->GetAABB(aabb);
 			OBB _obb = aabb.Transform(children[i]->GetGlobalMatrix());
-			//_obb.Scale(_obb.CenterPoint(),children[i]->GetGlobalMatrix().GetScale());
 			float distanceIn;
 			bool hitted = false;
 
@@ -304,10 +303,10 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 				LineSegment triangleRay(ray);
 				triangleRay.Transform(children[i]->GetGlobalMatrix().Inverted());
 
-				for (int j = 0; j < mesh->_indices.size(); j += 3) {
-					Triangle tri = Triangle(mesh->_vertices[mesh->_indices[j]],
-						mesh->_vertices[mesh->_indices[j + 1]],
-						mesh->_vertices[mesh->_indices[j + 2]]);
+				for (int j = 0; j < mesh->_indices.size();) {
+					Triangle tri = Triangle(mesh->_vertices[mesh->_indices[j++]],
+						mesh->_vertices[mesh->_indices[j++]],
+						mesh->_vertices[mesh->_indices[j++]]);
 
 					hitted = triangleRay.Intersects(tri, &distanceIn, NULL);
 					if (hitted && distanceIn < minDistance) {

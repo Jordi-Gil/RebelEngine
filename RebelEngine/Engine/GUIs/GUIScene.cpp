@@ -95,6 +95,7 @@ void GUIScene::Draw() {
 		ImGuizmo::Manipulate(viewMat.ptr(), projMat.ptr(), (ImGuizmo::OPERATION)imguiOP, ImGuizmo::MODE::LOCAL, compGlobalMat.ptr());
 		if (ImGuizmo::IsUsing()) {
 				focusedTransform->SetTransform(compGlobalMat.Transposed());
+				focusedGo->UpdateChildrenTransform();
 		}
 	}
 	ImGui::End();

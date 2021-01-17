@@ -1,5 +1,7 @@
 #include "ModuleModel.h"
 
+#include <filesystem>
+
 #include <GL/GL.h>
 
 #include <assimp/cimport.h>
@@ -38,11 +40,11 @@ bool ModuleModel::Init() {
 	return true;
 }
 
-void LoadMesh(Mesh& mesh, const char* name, aiMesh* aimesh) {
+bool LoadMesh(Mesh& mesh, const char* name, aiMesh* aimesh) {
 
 	mesh.SetName(name);
 	mesh.LoadVBO(aimesh);
-	mesh.LoadEBO(aimesh);
+	if (!mesh.LoadEBO(aimesh)) return false;
 	mesh.CreateVAO();
 	mesh.WriteJsonFile();
 
@@ -97,6 +99,8 @@ void ModuleModel::LoadModelFromFBX(const char* fileName) {
 		go->AddComponent(std::move(transform));
 
 		LoadNodeHierarchy(fileName, father, *go, scene, lights, cameras, aiPos, aiQuat, aiScaling);
+
+		go->DeleteMarkedChildren();
 		App->scene->_root->AddChild(std::move(go));
 
 		LOG(_INFO, "3D Model %s loaded", fn);
@@ -156,7 +160,8 @@ void ModuleModel::LoadNodeHierarchy(const char* fileName, aiNode *node, GameObje
 				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 
 				Mesh* mesh = new Mesh();
-				LoadMesh(*mesh, node->mChildren[i]->mName.C_Str(), scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
+				bool result = LoadMesh(*mesh, node->mChildren[i]->mName.C_Str(), scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
+				if(!result) go->SetToDelete();
 				
 				int mIdx = scene->mMeshes[node->mChildren[i]->mMeshes[0]]->mMaterialIndex;
 				//TODO: Load materials separately and search the material by name in the Resources manager
@@ -164,6 +169,15 @@ void ModuleModel::LoadNodeHierarchy(const char* fileName, aiNode *node, GameObje
 				//		scene->mMaterials[mIdx]->GetName().C_Str()
 				MatStandard* material = new MatStandard();
 				LoadMaterialSpec(*material, node->mChildren[i]->mName.C_Str(), scene->mMaterials[mIdx], fileName);
+
+				if (!result) {
+					//Delete because the mesh loaded is incorrect
+					go->SetToDelete();
+					std::filesystem::path p = mesh->GetFilePath();
+					std::filesystem::remove(p);
+					p = material->GetFilePath();
+					std::filesystem::remove(p);
+				}
 
 				renderer_mesh->SetOwner(go.get());
 				renderer_mesh->SetMesh(mesh);
@@ -185,7 +199,7 @@ void ModuleModel::LoadNodeHierarchy(const char* fileName, aiNode *node, GameObje
 					renderer_mesh->SetOwner(go_mesh.get());
 
 					Mesh* mesh = new Mesh();
-					LoadMesh(*mesh, node->mChildren[i]->mName.C_Str(), scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
+					bool result = LoadMesh(*mesh, node->mChildren[i]->mName.C_Str(), scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
 
 					int mIdx = scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mMaterialIndex;
 					//TODO: Load materials separately and search the material by name in the Resources manager
@@ -193,6 +207,15 @@ void ModuleModel::LoadNodeHierarchy(const char* fileName, aiNode *node, GameObje
 					//		scene->mMaterials[mIdx]->GetName().C_Str()
 					MatStandard* material = new MatStandard();
 					LoadMaterialSpec(*material, node->mChildren[i]->mName.C_Str(), scene->mMaterials[mIdx], fileName);
+
+					if (!result) {
+						//Delete because the mesh loaded is incorrect
+						go_mesh->SetToDelete();
+						std::filesystem::path p = mesh->GetFilePath();
+						std::filesystem::remove(p);
+						p = material->GetFilePath();
+						std::filesystem::remove(p);
+					}
 
 					renderer_mesh->SetMesh(mesh);
 					renderer_mesh->SetMaterial(material);

@@ -12,19 +12,17 @@
 #include "Utils/debugdraw.h"
 #include <ImGui/imgui_internal.h>
 
-static const char* lightTypes[3] = { "Directional Light", "Point Light", "Spot Light" };
+static constexpr char* lightTypesLabel[3] = { "Directional Light", "Point Light", "Spot Light" };
+static constexpr light_type lightTypes[3] = { DIRECTIONAL_LIGHT, POINT_LIGHT, SPOT_LIGHT };
 
 ComponentLight::ComponentLight() {
 	_type = type_component::LIGHT;
 }
 
-ComponentLight::ComponentLight(light_type type, float intensity, float range, float angle) {
+ComponentLight::ComponentLight(light_type type) {
 
 	_type = type_component::LIGHT;
 	_light_type = type;
-	_intensity = intensity;
-	_range = range;
-	_spot_angle = angle;
 
 }
 
@@ -36,8 +34,8 @@ ComponentLight::ComponentLight(const ComponentLight& copy) {
 	_uuid = copy._uuid;
 
 	_intensity = copy._intensity;
-	_range = copy._range;
-	_spot_angle = copy._spot_angle;
+	_inner_angle = copy._inner_angle;
+	_outter_angle = copy._outter_angle;
 	_light_type = copy._light_type;
 
 }
@@ -52,12 +50,12 @@ void ComponentLight::SetIntensity(float intensity) {
 	_intensity = intensity;
 }
 
-void ComponentLight::SetRange(float range) {
-	_range = range;
+void ComponentLight::SetInnerAngle(float inner_angle) {
+	_inner_angle = inner_angle;
 }
 
-void ComponentLight::SetSpotAngle(float angle) {
-	_spot_angle = angle;
+void ComponentLight::SetOutterAngle(float outter_angle) {
+	_outter_angle = outter_angle;
 }
 
 void ComponentLight::SetColor(const float3& color) {
@@ -72,8 +70,8 @@ bool ComponentLight::ToJson(Json::Value& value, int pos){
 	
 	Component::ToJson(value, pos);
 	value[pos][JSON_TAG_LIGHT_INTENSITY] = _intensity;
-	value[pos][JSON_TAG_LIGHT_RANGE] = _range;
-	value[pos][JSON_TAG_LIGHT_ANGLE] = _spot_angle;
+	value[pos][JSON_TAG_LIGHT_INNER_ANGLE] = _inner_angle;
+	value[pos][JSON_TAG_LIGHT_OUTTER_ANGLE] = _outter_angle;
 	value[pos][JSON_TAG_LIGHT_TYPE] = (int)_light_type;
 	value[pos][JSON_TAG_LIGHT_CONSTANT_ATT] = _constant_att;
 	value[pos][JSON_TAG_LIGHT_LINEAR_ATT] = _linear_att;
@@ -91,8 +89,8 @@ bool ComponentLight::FromJson(const Json::Value& value){
 	if (!value.isNull()) {
 
 		_intensity = value[JSON_TAG_LIGHT_INTENSITY].asFloat();
-		_range = value[JSON_TAG_LIGHT_RANGE].asFloat();
-		_spot_angle = value[JSON_TAG_LIGHT_ANGLE].asFloat();
+		_inner_angle = value[JSON_TAG_LIGHT_INNER_ANGLE].asFloat();
+		_outter_angle = value[JSON_TAG_LIGHT_OUTTER_ANGLE].asFloat();
 		_constant_att = value[JSON_TAG_LIGHT_CONSTANT_ATT].asFloat();
 		_linear_att = value[JSON_TAG_LIGHT_LINEAR_ATT].asFloat();
 		_quadratic_att = value[JSON_TAG_LIGHT_QUADRATIC_ATT].asFloat();
@@ -115,25 +113,27 @@ void ComponentLight::DebugDraw() {
 		switch (_light_type) {
 
 			case SPOT_LIGHT: {
-				float3x3 rot = (_owner->GetGlobalMatrix()).RotatePart();
-				float3 position = (_owner->GetGlobalMatrix()).TranslatePart();
-				float3 forward = rot.Col(2);
+				float4x4 global = _owner->GetGlobalMatrix();
+				float3 position = global.TranslatePart();
+				float3 forward = global.WorldZ();
 
-				dd::cone(position, -forward, dd::colors::Yellow, 1, 0.01);
+				dd::cone(position, forward, dd::colors::Yellow, DegToRad(_inner_angle), DegToRad(_outter_angle));
 				break;
 			}
 
 			case POINT_LIGHT: {
 
 				float3 position = _owner->GetGlobalMatrix().TranslatePart();
-				dd::sphere(position, dd::colors::Yellow, _range);
+				dd::sphere(position, dd::colors::Yellow, 1);
 				break;
 
 			}
 
 			case DIRECTIONAL_LIGHT: {
-				float3 forward = (_owner->GetGlobalMatrix()).RotatePart().Col(2);
-				float3 position = _owner->GetGlobalMatrix().TranslatePart();
+
+				float4x4 global = _owner->GetGlobalMatrix();
+				float3 position = global.TranslatePart();
+				float3 forward = global.WorldZ();
 
 				for (int i = 0; i < 10; i++) {
 
@@ -161,56 +161,59 @@ void ComponentLight::OnEditor() {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		std::string id;
-
-		ImGui::BeginColumns("##light",2, ImGuiColumnsFlags_NoBorder | ImGuiColumnsFlags_NoResize);
-		
-		ImGui::Text("Type");
-		ImGui::Text("Color");
-		ImGui::Text("Intensity");
-		if (_light_type == POINT_LIGHT) {
-			ImGui::Text("Attenuation");
-			ImGui::Text("Constant");
-			ImGui::Text("Linear");
-			ImGui::Text("Quadratic");
-		}
-
-		ImGui::NextColumn();
-
 		id = "##type_"; id.append(_uuid);
 		ImGui::PushID(id.c_str());
-		ImGui::Combo("##", &current, lightTypes, IM_ARRAYSIZE(lightTypes));
+		if (ImGui::Combo("Type", &current, lightTypesLabel, IM_ARRAYSIZE(lightTypesLabel))) {
+			_light_type = lightTypes[current];
+		};
 		ImGui::PopID();
 
 		id = "##color_"; id.append(_uuid);
 		ImGui::PushID(id.c_str());
-		ImGui::ColorEdit4("", &_color[0], ImGuiColorEditFlags_NoInputs);		
+		ImGui::ColorEdit4("Color", &_color[0], ImGuiColorEditFlags_NoInputs);		
 		ImGui::PopID();
 
 		id = "##intensity_"; id.append(_uuid);
 		ImGui::PushID(id.c_str());
-		ImGui::DragFloat("", &_intensity, 0.01f, 0, 500, "%.2f");
+		ImGui::DragFloat("Intensity", &_intensity, 0.01f, 0, 500, "%.2f");
 		ImGui::PopID();
 
-		if (_light_type == POINT_LIGHT) {
+		if (_light_type == POINT_LIGHT || _light_type == SPOT_LIGHT) {
+			
 			ImGui::NewLine();
 			
-			id = "##constant_"; id.append(_uuid);
+			id = "Constant##constant_"; id.append(_uuid);
 			ImGui::PushID(id.c_str());
-			ImGui::Text("%s",_constant_att);
+			ImGui::Text("1");
 			ImGui::PopID();
 
 			id = "##linear_"; id.append(_uuid);
 			ImGui::PushID(id.c_str());
-			ImGui::DragFloat("", &_linear_att, 0.01f, 0, 1, "%.2f");
+			ImGui::DragFloat("Linear", &_linear_att, 0.001f, 0, 1, "%.2f");
 			ImGui::PopID();
 
 			id = "##constant_"; id.append(_uuid);
 			ImGui::PushID(id.c_str());
-			ImGui::DragFloat("", &_quadratic_att, 0.01f, 0, 1, "%.2f");
+			ImGui::DragFloat("Constant", &_quadratic_att, 0.001f, 0, 1, "%.2f");
 			ImGui::PopID();
+
+			if (_light_type == SPOT_LIGHT) {
+				
+				id = "##inner_"; id.append(_uuid);
+				ImGui::PushID(id.c_str());
+				ImGui::DragFloat("Inner Angle", &_inner_angle, 0.1f, 1, 179, "%.2f");
+				ImGui::PopID();
+
+				id = "##outter_"; id.append(_uuid);
+				ImGui::PushID(id.c_str());
+				ImGui::DragFloat("Outter Angle", &_outter_angle, 0.1f, 1, 179, "%.2f");
+				ImGui::PopID();
+
+			}
+
 		}
 
-		ImGui::EndColumns();
+		//ImGui::EndColumns();
 
 	}
 

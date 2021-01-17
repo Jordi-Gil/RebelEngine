@@ -33,9 +33,12 @@ public:
 	void AddComponent(std::unique_ptr<Component>&& comp, GAME_OBJECT_MASK mask = GO_MASK_NONE);
 	void SetName(const char* name);
 	void SetParent(GameObject* go);
+	void SetToDelete() { _delete = true; }
 	void AddMask(GAME_OBJECT_MASK mask);
 	bool HasComponent(type_component type) const;
 	bool HasMesh() const {  return (_mask & GO_MASK_MESH) != 0; }
+
+	void DeleteMarkedChildren();
 
 	void UpdateChildrenTransform();
 	bool ToJson(Json::Value& value, int pos);
@@ -75,6 +78,7 @@ private:
 
 	bool _active = false;
 	bool _selected = false;
+	bool _delete = false;
 
 	int _mask = GO_MASK_NONE;
 

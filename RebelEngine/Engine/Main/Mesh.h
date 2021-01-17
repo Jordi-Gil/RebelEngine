@@ -43,7 +43,7 @@ public:
 	~Mesh() {}
 
 	void LoadVBO(const aiMesh* mesh);
-	void LoadEBO(const aiMesh* mesh);
+	bool LoadEBO(const aiMesh* mesh);
 	void CreateVAO();
 
 	void Render(Material* material, const float4x4& model);

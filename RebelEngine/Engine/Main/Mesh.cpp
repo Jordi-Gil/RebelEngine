@@ -107,7 +107,7 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 
 }
 
-void Mesh::LoadEBO(const aiMesh* mesh) {
+bool Mesh::LoadEBO(const aiMesh* mesh) {
 
 	glGenBuffers(1, &_EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
@@ -119,8 +119,10 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 	if(!indices) LOG("glMapBuffer error", _ERROR);
 
 	Json::Value jValue(Json::arrayValue);
-	
+
+	bool correct = true;
 	for (unsigned i = 0; i < mesh->mNumFaces; ++i) {
+		if (mesh->mFaces[i].mNumIndices != 3) correct = false;
 		for (uint j = 0; j < mesh->mFaces[i].mNumIndices; j++) {
 			*(indices++) = mesh->mFaces[i].mIndices[j];
 			jValue.append(mesh->mFaces[i].mIndices[j]);
@@ -134,6 +136,8 @@ void Mesh::LoadEBO(const aiMesh* mesh) {
 	
 	_numFaces = mesh->mNumFaces;
 	_numIndices = mesh->mNumFaces * 3;
+
+	return correct;
 
 }
 
@@ -194,7 +198,7 @@ void Mesh::Render(Material* material, const float4x4& model) {
 
 	//Ambient Light
 	glUniform3f(glGetUniformLocation(program, "lights.ambientlight.ambient"), 0.8, 0.8, 0.8);
-	unsigned int num_points = 0;
+	unsigned int num_points = 0, num_spots = 0;
 	for (int i = 0; i < lights.size(); i++) {
 		ComponentLight* light = (ComponentLight*)lights[i]->GetComponent(type_component::LIGHT);
 
@@ -202,7 +206,8 @@ void Mesh::Render(Material* material, const float4x4& model) {
 		{
 		case light_type::DIRECTIONAL_LIGHT: {
 			glUniform1f(glGetUniformLocation(program, "lights.directionalLight.intensity"), light->GetIntensity());
-			float3 forward = (light->GetOwner()->GetGlobalMatrix()).RotatePart().Col(2);
+			float4x4 global = light->GetOwner()->GetGlobalMatrix();
+			float3 forward = global.WorldZ();
 			glUniform3f(glGetUniformLocation(program, "lights.directionalLight.direction"), forward.x, forward.y, forward.z);
 			float3 color = light->GetColor();
 			glUniform3f(glGetUniformLocation(program, "lights.directionalLight.baseLight.diffuse"), color.x, color.y, color.z);
@@ -211,23 +216,62 @@ void Mesh::Render(Material* material, const float4x4& model) {
 		}
 		case light_type::POINT_LIGHT: {
 			char location[1024];
-			sprintf_s(location, 1024, "lights.pointsLight[%d].position",num_points);
+			sprintf_s(location, 1024, "lights.pointLights[%d].position",num_points);
 			float3 position = light->GetOwner()->GetGlobalMatrix().TranslatePart();
 			glUniform3f(glGetUniformLocation(program, location), position.x, position.y, position.z);
-			sprintf_s(location, 1024, "lights.pointsLight[%d].att.constant", num_points);
+			sprintf_s(location, 1024, "lights.pointLights[%d].intensity", num_points);
+			glUniform1f(glGetUniformLocation(program, location), light->GetIntensity());
+			sprintf_s(location, 1024, "lights.pointLights[%d].att.constant", num_points);
 			glUniform1f(glGetUniformLocation(program, location), light->GetConstantAtt());
-			sprintf_s(location, 1024, "lights.pointsLight[%d].att.linear", num_points);
+			sprintf_s(location, 1024, "lights.pointLights[%d].att.linear", num_points);
 			glUniform1f(glGetUniformLocation(program, location), light->GetLinearAtt());
-			sprintf_s(location, 1024, "lights.pointsLight[%d].att.quadratic", num_points);
+			sprintf_s(location, 1024, "lights.pointLights[%d].att.quadratic", num_points);
 			glUniform1f(glGetUniformLocation(program, location), light->GetQuadraticAtt());
+			float3 color = light->GetColor();
+			sprintf_s(location, 1024, "lights.pointLights[%d].baseLight.diffuse", num_points);
+			glUniform3f(glGetUniformLocation(program, location), color.x, color.y, color.z);
+			sprintf_s(location, 1024, "lights.pointLights[%d].baseLight.specular", num_points);
+			glUniform3f(glGetUniformLocation(program, location), 0.8, 0.8, 0.8);
 			++num_points;
 			break;
 		}
-		}
+		case light_type::SPOT_LIGHT: {
+			char location[1024];
+			sprintf_s(location, 1024, "lights.spotLights[%d].position", num_spots);
+			float3 position = light->GetOwner()->GetGlobalMatrix().TranslatePart();
+			glUniform3f(glGetUniformLocation(program, location), position.x, position.y, position.z);
 
+			sprintf_s(location, 1024, "lights.spotLights[%d].aim", num_spots);
+			float4x4 global = light->GetOwner()->GetGlobalMatrix();
+			float3 forward = global.WorldZ();
+			glUniform3f(glGetUniformLocation(program, location), forward.x, forward.y, forward.z);
+
+			sprintf_s(location, 1024, "lights.spotLights[%d].intensity", num_spots);
+			glUniform1f(glGetUniformLocation(program, location), light->GetIntensity());
+
+			sprintf_s(location, 1024, "lights.spotLights[%d].innerAngle", num_spots);
+			glUniform1f(glGetUniformLocation(program, location), DegToRad(light->GetInnerAngle()));
+			sprintf_s(location, 1024, "lights.spotLights[%d].outterAngle", num_spots);
+			glUniform1f(glGetUniformLocation(program, location), DegToRad(light->GetOutterAngle()));
+
+			sprintf_s(location, 1024, "lights.spotLights[%d].att.constant", num_spots);
+			glUniform1f(glGetUniformLocation(program, location), light->GetConstantAtt());
+			sprintf_s(location, 1024, "lights.spotLights[%d].att.linear", num_spots);
+			glUniform1f(glGetUniformLocation(program, location), light->GetLinearAtt());
+			sprintf_s(location, 1024, "lights.spotLights[%d].att.quadratic", num_spots);
+			glUniform1f(glGetUniformLocation(program, location), light->GetQuadraticAtt());
+			float3 color = light->GetColor();
+			sprintf_s(location, 1024, "lights.spotLights[%d].baseLight.diffuse", num_spots);
+			glUniform3f(glGetUniformLocation(program, location), color.x, color.y, color.z);
+			sprintf_s(location, 1024, "lights.spotLights[%d].baseLight.specular", num_spots);
+			glUniform3f(glGetUniformLocation(program, location), 0.8, 0.8, 0.8);
+			++num_spots;
+		}
+		}
 	}
 
 	glUniform1ui(glGetUniformLocation(program, "lights.num_points"), num_points);
+	glUniform1ui(glGetUniformLocation(program, "lights.num_spots"), num_spots);
 
 	glBindVertexArray(_VAO);
 

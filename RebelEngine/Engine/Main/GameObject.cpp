@@ -184,6 +184,20 @@ void UpdateChildrenTransform_rec(GameObject& go) {
 	}
 }
 
+void GameObject::DeleteMarkedChildren() {
+
+	for (int i = 0; i < _children.size(); i++) {
+		if (_children[i]->_delete) {
+			auto it = std::find(_children.begin(), _children.end(), _children[i]);
+			_children.erase(it);
+		}
+		else {
+			_children[i]->DeleteMarkedChildren();
+		}
+	}
+
+}
+
 void GameObject::UpdateChildrenTransform() {
 	UpdateChildrenTransform_rec(*this);
 }

@@ -107,7 +107,7 @@ namespace ImGui {
 		std::string wName((open ? ICON_FA_FOLDER_OPEN " " : ICON_FA_FOLDER " "));
 		wName.append(directoryPath);
 		
-		open = ImGui::TreeNodeEx( directoryPath.c_str(), base_flags, wName.c_str());
+		open = ImGui::TreeNodeEx( directoryPath.c_str(), base_flags | ImGuiTreeNodeFlags_DefaultOpen, wName.c_str());
 
 		int count = 0;
 

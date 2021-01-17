@@ -158,8 +158,8 @@ void ComponentTransform::UpdateGlobalMatrix() {
 		else
 			_globalMatrix = _localMatrix;
 		
-		//if(App->scene->_octree != nullptr && (_owner->GetMask() & GO_MASK_MESH) != 0) 
-		//	App->scene->_octree->Update(App->scene->_octree->_root, _owner);
+		if(App->scene->_octree != nullptr && (_owner->GetMask() & GO_MASK_MESH) != 0) 
+			App->scene->_octree->Update(App->scene->_octree->_root, _owner);
 	}
 }
 

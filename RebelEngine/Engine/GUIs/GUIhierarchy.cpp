@@ -3,15 +3,31 @@
 #include <string>
 
 #include "ImGui/imgui_impl_sdl.h"
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
 #include "ImGui/IconsFontAwesome5.h"
 
+#include "GUIProject.h"
+
 #include "CoreModules/ModuleScene.h"
+#include "CoreModules/ModuleGUI.h"
+#include "CoreModules/ModuleModel.h"
+
 #include "Components/ComponentTransform.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
 #include "GUIInspector.h"
+
+bool Is3DModel(const std::string& extension) {
+
+	for (int i = 0; i < MARRAYSIZE(meshFormat); i++) {
+		if (_strcmpi(meshFormat[i], extension.c_str()) == 0) return true;
+	}
+	return false;
+}
+
 
 GUIHierarchy::GUIHierarchy(const char* name) {
 	_name = name;
@@ -98,14 +114,37 @@ void GUIHierarchy::Draw() {
 
 	std::string wName(ICON_FA_SITEMAP " "); wName.append(_name);
 	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
+
+	ImVec2 size = ImGui::GetWindowSize();
+	ImVec2 pos = ImGui::GetWindowPos();
+	ImGuiContext& g = *GImGui;
+	ImGuiID id = g.CurrentWindow->GetID(wName.c_str());
+	
+	ImRect rect(pos,ImVec2(size.x + pos.x, size.y + pos.y));
+
+	if (ImGui::BeginDragDropTargetCustom(rect, id)) {
+		std::filesystem::path pwd;
+		App->gui->_project->GetTexture(pwd);
+
+		const ImGuiPayload* payload_fbx = ImGui::AcceptDragDropPayload("explorer_drag_n_drop");
+		if (payload_fbx && Is3DModel(pwd.extension().string())) {
+
+			App->models->LoadModelFromFBX(pwd.string().c_str());
+
+		}
+
+		ImGui::EndDragDropTarget();
+
+	}
+
 	bool open = ImGui::TreeNodeEx("Hierarchy", ImGuiTreeNodeFlags_OpenOnArrow);
 	
 	if (ImGui::BeginDragDropSource()) { ImGui::EndDragDropSource(); }
 
 	if (ImGui::BeginDragDropTarget() && _dragged != -1) {
 
-		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("hierarchy_move");
-		if (payload) {
+		const ImGuiPayload* payload_hierarchy = ImGui::AcceptDragDropPayload("hierarchy_move");
+		if (payload_hierarchy) {
 
 			std::vector<std::unique_ptr<GameObject>>& dragged_children = _go_dragged->GetChildren();
 			if (IsNotRelative(*App->scene->_root, *dragged_children[_dragged])) {
@@ -115,6 +154,7 @@ void GUIHierarchy::Draw() {
 				_go_dragged = nullptr;
 			}
 		}
+
 		ImGui::EndDragDropTarget();
 	}
 
@@ -122,6 +162,7 @@ void GUIHierarchy::Draw() {
 		DrawHierarchy(*App->scene->_root, 0);
 		ImGui::TreePop();
 	}
+
 	ImGui::End();
 }
 

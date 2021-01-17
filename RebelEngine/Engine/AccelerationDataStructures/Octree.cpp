@@ -2,7 +2,7 @@
 
 #include "Utils/debugdraw.h"
 
-unsigned int Octree::_maxObjPerNode = 5;
+unsigned int Octree::_maxObjPerNode = 1;
 
 void OctreeNode::Shake() {
 

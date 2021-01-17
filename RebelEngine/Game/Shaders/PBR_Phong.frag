@@ -40,15 +40,31 @@ struct PointLight{
 	BaseLight baseLight;
 };
 
-#define NUM_POINT_LIGHT 8
+struct SpotLight{
+
+	float intensity;
+	float innerAngle;
+	float outterAngle;
+	vec3 position;
+	vec3 aim;
+	Attenuation att;
+	BaseLight baseLight;
+
+};
+
+#define NUM_POINT_LIGHTS 8
+#define NUM_SPOT_LIGHTS 8
 
 struct Lights {
 
 	AmbientLight ambientlight;
 	DirectionalLight directionalLight;
 
-	PointLight pointsLight[NUM_POINT_LIGHT];
+	PointLight pointLights[NUM_POINT_LIGHTS];
 	unsigned int num_points;
+
+	SpotLight spotLights[NUM_SPOT_LIGHTS];
+	unsigned int num_spots;
 
 };
 
@@ -106,7 +122,7 @@ vec3 Calculate_DirectionalLight_Part(DirectionalLight _light, vec3 N, vec3 V){
 
 	vec3 diffuse = Cd * matDiffuse * Kd;
 
-	vec3 L = normalize(_light.direction - fragPosition);
+	vec3 L = normalize(-_light.direction);
 	vec3 R = normalize(L - (2 * dot(L,N) * N));
 
 	float VdotR = max(0.0, dot(V, R));
@@ -129,10 +145,91 @@ vec3 Calculate_DirectionalLight_Part(DirectionalLight _light, vec3 N, vec3 V){
 
 }
 
-vec3 Calculate_PointLight_Part(unsigned int i){
+vec3 Calculate_PointLight_Part(PointLight _light, vec3 N, vec3 V){
 
-	return vec3(0.0);
+	float dist = length(fragPosition - _light.position);
 
+	float Kc = _light.att.constant;
+	float Kl = _light.att.linear;
+	float Kq = _light.att.quadratic;
+
+	float Fatt = 1/(Kc + (Kl * dist) + (Kq * dist * dist));
+
+	vec3 Cd = lights.ambientlight.ambient;
+	vec3 Li = _light.baseLight.diffuse * _light.intensity * Fatt;
+
+	vec3 diffuse = Cd * matDiffuse * Kd;
+
+	vec3 L = normalize(fragPosition - _light.position);
+	vec3 R = normalize(L - (2 * dot(L,N) * N));
+
+	float VdotR = max(0.0, dot(V, R));
+	float NdotL = max(0.0, dot(N, -L));
+
+	vec3 specular = matSpecular * Ks;
+	vec3 fresnel0 = specular * Schlick0();
+	vec3 fresnelT = specular * Schlick(NdotL);
+
+	//Lo = (Cd * (1-Rf(0)) + n+2/2 * Rf(theta) * (V dot R)^n ) * Li * (N dot L)
+	//Lo = [                  p1   * Rf(theta) *       VdotR   * Li *   NdotL
+	
+	vec3 BRDF = (
+			diffuse * (1 - fresnel0) + 
+			(n+2)/2 * fresnelT * pow(VdotR, n));
+
+	vec3 Lo = BRDF * Li * NdotL;
+
+	return Lo;
+
+}
+
+vec3 Calculate_SpotLight_Part(SpotLight _light, vec3 N, vec3 V) {
+	
+	vec3 D = normalize(fragPosition - _light.position);
+	float C = dot(_light.aim, D);
+
+	float dist = length(fragPosition - _light.position);
+
+	float Kc = _light.att.constant;
+	float Kl = _light.att.linear;
+	float Kq = _light.att.quadratic;
+
+	float Fatt = 1/(Kc + (Kl * dist) + (Kq * dist * dist));
+	float Catt = 1;
+
+	float cOutter = cos(_light.outterAngle);
+	float cInner = cos(_light.innerAngle);
+
+	if(C > cInner) Catt = 1;
+	else if( cInner > C &&  C > cOutter ) {
+		Catt = (C - cOutter) / (cInner - cOutter);
+	}
+
+	vec3 Cd = lights.ambientlight.ambient;
+	vec3 Li = _light.baseLight.diffuse * _light.intensity * Fatt * Catt;
+
+	vec3 diffuse = Cd * matDiffuse * Kd;
+
+	vec3 L = normalize(fragPosition - _light.position);
+	vec3 R = normalize(L - (2 * dot(L,N) * N));
+
+	float VdotR = max(0.0, dot(V, R));
+	float NdotL = max(0.0, dot(N, -L));
+
+	vec3 specular = matSpecular * Ks;
+	vec3 fresnel0 = specular * Schlick0();
+	vec3 fresnelT = specular * Schlick(NdotL);
+
+	//Lo = (Cd * (1-Rf(0)) + n+2/2 * Rf(theta) * (V dot R)^n ) * Li * (N dot L)
+	//Lo = [                  p1   * Rf(theta) *       VdotR   * Li *   NdotL
+	
+	vec3 BRDF = (
+			diffuse * (1 - fresnel0) + 
+			(n+2)/2 * fresnelT * pow(VdotR, n));
+
+	vec3 Lo = BRDF * Li * NdotL;
+
+	return Lo;
 }
 
 vec4 PBR_Phong(){
@@ -151,11 +248,13 @@ vec4 PBR_Phong(){
 	vec3 Lo = vec3(0.0);
 
 	Lo += Calculate_DirectionalLight_Part(lights.directionalLight, N, V);
-
+	
 	for(unsigned int i = 0; i < lights.num_points; i++){
-		float d = distance(lights.pointsLight[i].position, fragPosition);
+		Lo += Calculate_PointLight_Part(lights.pointLights[i], N, V);
+	}
 
-		Lo += Calculate_PointLight_Part(i);
+	for(unsigned int i = 0; i < lights.num_spots; i++){
+		Lo += Calculate_SpotLight_Part(lights.spotLights[i], N, V);
 	}
 
 	return vec4(Lo, 1);
@@ -164,5 +263,4 @@ vec4 PBR_Phong(){
 
 void main() {
    outColor = pow(PBR_Phong(), vec4(1/2.2));
-   //outColor = texture(specular_material.diffuse_map, uvF);
 }

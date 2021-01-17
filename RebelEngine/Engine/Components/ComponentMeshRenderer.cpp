@@ -71,16 +71,11 @@ void ComponentMeshRenderer::DebugDraw(){
 	assert(_owner != nullptr && "Component without and owner");
 	
 	if (_owner->IsSelected()) {
-		//AABB box;  _owner->GetAABB(box);
-		//OBB obb = box.Transform(_owner->GetGlobalMatrix());
-		//OBB obb;
-		//float4x4 global = _owner->GetGlobalMatrix();
-		//float3x3 rotation; float3 position, scale;
-		//global.Decompose(position, rotation, scale);
-		//AABB res = obb.MinimalEnclosingAABB();
-		//dd::aabb(res.minPoint, res.maxPoint, dd::colors::Orange);
-		/*float3 corners[8]; obb.GetCornerPoints(corners);
-		dd::box(corners,dd::colors::Orange);*/
+
+		OBB obb; _owner->GetOBB(obb);
+		
+		float3 corners[8]; obb.GetCornerPoints(corners);
+		dd::box(corners,dd::colors::Orange);
 	}
 }
 

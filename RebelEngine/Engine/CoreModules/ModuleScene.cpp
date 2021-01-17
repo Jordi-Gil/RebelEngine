@@ -109,7 +109,7 @@ bool ModuleScene::Start() {
 	IterateRoot(*_root);
 
 	_octree = new Octree();
-	_octree->_root->_bounds = AABB(_min, _max);
+	_octree->_root->_bounds = AABB(float3(-500, -500, -500), float3(500, 500, 500));
 
 	for (unsigned int i = 0; i < _objects.size(); ++i) {
 		_octree->Insert(_octree->_root, _objects[i]);
@@ -150,7 +150,7 @@ void ModuleScene::FrustumCulling() {
 
 update_status ModuleScene::PreUpdate() {
 
-	
+
 	if( (_mask & LINEAR_AABB) != 0 ) { FrustumCulling(); }
 	else if ((_mask & OCTREE) != 0) { 
 		FrustumCulling(_octree->_root);

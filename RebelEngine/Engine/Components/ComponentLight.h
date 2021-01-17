@@ -7,7 +7,6 @@ enum light_type {
 	DIRECTIONAL_LIGHT = 0,
 	SPOT_LIGHT,
 	POINT_LIGHT
-	//AREA
 };
 
 class ComponentLight : public Component {
@@ -15,19 +14,19 @@ class ComponentLight : public Component {
 public:
 
 	ComponentLight();
-	ComponentLight(light_type type, float intensity = 1.0f, float range = 10.0f, float angle = 30.0f);
+	ComponentLight(light_type type);
 	ComponentLight(const ComponentLight& copy);
 	ComponentLight(const Json::Value& value);
 
 	void SetIntensity(float intesity);
-	void SetRange(float range);
-	void SetSpotAngle(float angle);
+	void SetInnerAngle(float inner_angle);
+	void SetOutterAngle(float outter_angle);
 	void SetColor(const float3& color);
 	void ChangeType(light_type newType);
 
 	float GetIntensity() const { return _intensity; };
-	float GetRange() const { return _range; }
-	float GetSpotAngle() const { return _spot_angle; }
+	float GetInnerAngle() const { return _inner_angle; }
+	float GetOutterAngle() const { return _outter_angle; }
 	float GetConstantAtt() const { return _constant_att; }
 	float GetLinearAtt() const { return _linear_att; }
 	float GetQuadraticAtt() const { return _quadratic_att; }
@@ -43,8 +42,8 @@ public:
 private:
 
 	float _intensity = 1.0f;
-	float _range = 10.0f;
-	float _spot_angle = 30.0f;
+	float _inner_angle = 1.0f;
+	float _outter_angle = 20.0f;
 	float _constant_att = 1.0f; //Always 1
 	float _linear_att = 0.09;
 	float _quadratic_att = 0.032;
