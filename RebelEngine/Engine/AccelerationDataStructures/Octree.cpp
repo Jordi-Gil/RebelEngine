@@ -1,16 +1,23 @@
 #include "Octree.h"
 
+#include "Main/Application.h"
+
 #include "Utils/debugdraw.h"
 
-unsigned int Octree::_maxObjPerNode = 1;
+#include "CoreModules/ModuleScene.h"
+
+#include "Components/ComponentCamera.h"
+
+unsigned int Octree::_maxObjPerNode = 5;
+unsigned int Octree::_minSize = 100;
+
 
 void OctreeNode::Shake() {
 
 	for (auto it = _gos.begin(); it != _gos.end();) {
 
 		GameObject* go = *it;
-		AABB aabb; go->GetAABB(aabb);
-		OBB obb = aabb.Transform(go->GetGlobalMatrix());
+		OBB obb; go->GetOBB(obb);
 
 		bool intersects[8];
 		bool keep_node = true;
@@ -72,10 +79,11 @@ void OctreeNode::Split() {
 
 void OctreeNode::Insert(GameObject* go) {
 	
-	AABB aabb; go->GetAABB(aabb);
-	OBB obb = aabb.Transform(go->GetGlobalMatrix());
+	OBB obb; go->GetOBB(obb);
 
-	if (IsLeaf() && _gos.size() < Octree::_maxObjPerNode) {
+	if (IsLeaf() && _gos.size() < Octree::_maxObjPerNode &&
+		_bounds.HalfSize().LengthSq() <= Octree::_minSize
+		) {
 		_gos.push_back(go);
 	}
 	else {
@@ -91,13 +99,12 @@ void OctreeNode::Insert(GameObject* go) {
 
 void OctreeNode::Remove(GameObject* go) {
 
-	if (IsLeaf()) {
-		auto it = std::find( _gos.begin(), _gos.end(), go );
+	auto it = std::find( _gos.begin(), _gos.end(), go );
 
-		if (it != _gos.end()) { _gos.erase(it);	}
+	if (it != _gos.end()) { _gos.erase(it);	}
 
-	}
-	else {
+	
+	if(!IsLeaf()) {
 		for (int i = 0; i < 8; ++i) {
 			_children[i].Remove(go);
 		}
@@ -115,24 +122,24 @@ void Octree::Update(OctreeNode* node, GameObject* go) { node->Update(go); }
 
 void Octree::DebugDraw(OctreeNode* node) {
 
+	if (App->scene->_mainCamera->Intersects(node->_bounds)) {
 
-	dd::aabb(node->_bounds.minPoint, node->_bounds.maxPoint, dd::colors::LightGreen);
+		dd::aabb(node->_bounds.minPoint, node->_bounds.maxPoint, dd::colors::LightGreen);
 
-	if (node->_children.size() != 0) {
-		for (int i = 0; i < 8; i++) {
-			DebugDraw(&(node->_children[i]));
+		if (node->_children.size() != 0) {
+			for (int i = 0; i < 8; i++) {
+				DebugDraw(&(node->_children[i]));
+			}
 		}
-	}
-	else {
-		for (unsigned int i = 0; i < node->_gos.size(); i++) {
-			AABB box; node->_gos[i]->GetAABB(box);
-			OBB obb = box.Transform(node->_gos[i]->GetGlobalMatrix());
-			dd::aabb(
-				obb.MinimalEnclosingAABB().minPoint,
-				obb.MinimalEnclosingAABB().maxPoint,
-				dd::colors::Aquamarine
+		else {
+			for (unsigned int i = 0; i < node->_gos.size(); i++) {
+				OBB obb; node->_gos[i]->GetOBB(obb);
+				dd::aabb(
+					obb.MinimalEnclosingAABB().minPoint,
+					obb.MinimalEnclosingAABB().maxPoint,
+					dd::colors::Aquamarine
 				);
+			}
 		}
 	}
-
 }

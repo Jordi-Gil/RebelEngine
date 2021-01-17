@@ -28,7 +28,6 @@ bool Is3DModel(const std::string& extension) {
 	return false;
 }
 
-
 GUIHierarchy::GUIHierarchy(const char* name) {
 	_name = name;
 	_dragged = -1;

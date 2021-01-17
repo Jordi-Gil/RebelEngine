@@ -39,6 +39,7 @@ public:
 	bool HasMesh() const {  return (_mask & GO_MASK_MESH) != 0; }
 
 	void DeleteMarkedChildren();
+	void CollapseChildIntoParent();
 
 	void UpdateChildrenTransform();
 	bool ToJson(Json::Value& value, int pos);

@@ -64,6 +64,7 @@ public:
 	std::unique_ptr<GameObject> _root;
 	Skybox* _skybox;
 	Octree* _octree = nullptr;
+	ComponentCamera* _mainCamera = nullptr;
 
 private:
 
@@ -72,7 +73,6 @@ private:
 	int _mask = NO_FRUSTUM;
 
 	GameObject* _goSelected = nullptr;
-	ComponentCamera* _mainCamera = nullptr;
 
 	float3 _max = float3(FLT_MIN, FLT_MIN, FLT_MIN);
 	float3 _min = float3(FLT_MAX, FLT_MAX, FLT_MAX);

@@ -7,13 +7,13 @@
             "Background_type" : 0,
             "Color" : [ 0.10000000149011612, 0.10000000149011612, 0.10000000149011612, 1.0 ],
             "FOVHorizontal" : 1.1456030607223511,
-            "Front" : [ -0.65393936634063721, -0.72256118059158325, -0.22420676052570343 ],
+            "Front" : [ -0.86457866430282593, -0.46177941560745239, -0.19815008342266083 ],
             "MainCamera" : false,
             "Owner" : "",
-            "Position" : [ 1.3482875823974609, 2.5723903179168701, 0.25630372762680054 ],
+            "Position" : [ 9.3536539077758789, 6.5053563117980957, 2.2308471202850342 ],
             "Type" : 3,
-            "UP" : [ -0.68350452184677124, 0.69130665063858032, -0.23434343934059143 ],
-            "UUID" : "d061441d-7eaa-4b2d-bd3c-f173d6c6e717",
+            "UP" : [ -0.45010888576507568, 0.88699501752853394, -0.1031591072678566 ],
+            "UUID" : "290fc141-f0cb-4e9e-805e-187981e947f9",
             "ZFar" : 1000.0,
             "ZNear" : 0.0099999997764825821
          }
@@ -24,12 +24,12 @@
             "Components" : [
                {
                   "Active" : false,
-                  "Owner" : "100f05ab-d3f2-4eee-bb19-7059d4618e1a",
+                  "Owner" : "46719510-1c1e-4b1e-b7bb-7de36795d1e8",
                   "Position" : [ 0.0, 0.0, 0.0 ],
                   "Rotation" : [ 0.0, 0.0, 0.0 ],
                   "Scale" : [ 1.0, 1.0, 1.0 ],
                   "Type" : 1,
-                  "UUID" : "6dae391e-196d-4b5d-97b4-20ab673e98d3"
+                  "UUID" : "709367ba-2cf0-4891-9bc7-3348d36a71ff"
                }
             ],
             "GameObjects" : [
@@ -37,12 +37,12 @@
                   "Components" : [
                      {
                         "Active" : false,
-                        "Owner" : "8a1fa140-1888-41b5-b569-3c6ae998a0da",
+                        "Owner" : "ff77557b-aad9-4de0-8ff2-e5d34d31a11a",
                         "Position" : [ 0.0, 0.0, 0.0 ],
                         "Rotation" : [ 0.0, 0.0, 0.0 ],
                         "Scale" : [ 1.0, 1.0, 1.0 ],
                         "Type" : 1,
-                        "UUID" : "86e2f91d-26b0-4d0c-9978-b8baa7352037"
+                        "UUID" : "79f3c371-0adb-4992-a0d9-d727d1d41816"
                      },
                      {
                         "Active" : false,
@@ -52,29 +52,29 @@
                         "FOVHorizontal" : 1.5707963705062866,
                         "Front" : [ -0.0, -0.0, -1.0 ],
                         "MainCamera" : true,
-                        "Owner" : "8a1fa140-1888-41b5-b569-3c6ae998a0da",
+                        "Owner" : "ff77557b-aad9-4de0-8ff2-e5d34d31a11a",
                         "Position" : [ 0.0, 0.0, 0.0 ],
                         "Type" : 3,
                         "UP" : [ 0.0, 1.0, 0.0 ],
-                        "UUID" : "ee727c17-c6e6-4757-9344-d211ea9c86de",
+                        "UUID" : "2a73fd9b-62b3-4eec-91eb-6e8f8241356e",
                         "ZFar" : 250.0,
                         "ZNear" : 0.10000000149011612
                      }
                   ],
                   "GameObjects" : null,
                   "Name" : "Camera",
-                  "UUID" : "8a1fa140-1888-41b5-b569-3c6ae998a0da"
+                  "UUID" : "ff77557b-aad9-4de0-8ff2-e5d34d31a11a"
                },
                {
                   "Components" : [
                      {
                         "Active" : false,
-                        "Owner" : "12c6c4eb-3fc6-49bb-97ce-049c43166ebd",
+                        "Owner" : "aec0ab14-0fa3-4203-a930-0e2cf2b4afb8",
                         "Position" : [ 0.0, 0.0, 0.0 ],
                         "Rotation" : [ 0.0, 0.0, 0.0 ],
                         "Scale" : [ 1.0, 1.0, 1.0 ],
                         "Type" : 1,
-                        "UUID" : "d11ac827-74fe-4e98-b08d-345a5eb9a846"
+                        "UUID" : "480b854d-33c3-4f4e-b98a-27c8dc3d5070"
                      },
                      {
                         "Active" : false,
@@ -85,26 +85,34 @@
                         "Light type" : 0,
                         "Linear Attenuation" : 0.090000003576278687,
                         "Outter Angle" : 20.0,
-                        "Owner" : "12c6c4eb-3fc6-49bb-97ce-049c43166ebd",
+                        "Owner" : "aec0ab14-0fa3-4203-a930-0e2cf2b4afb8",
                         "Quadratic Attenuation" : 0.032000001519918442,
                         "Type" : 4,
-                        "UUID" : "27175a23-a504-4bad-946f-2190b9105081"
+                        "UUID" : "4b0704dc-7291-4ca5-801f-36c9d8e4ab7f"
                      }
                   ],
                   "GameObjects" : null,
                   "Name" : "Directional Light",
-                  "UUID" : "12c6c4eb-3fc6-49bb-97ce-049c43166ebd"
+                  "UUID" : "aec0ab14-0fa3-4203-a930-0e2cf2b4afb8"
                },
                {
                   "Components" : [
                      {
                         "Active" : false,
-                        "Owner" : "2d5f3e33-38e0-4208-b17c-0d842f6e7f6b",
-                        "Position" : [ 0.0, 0.0, 0.0 ],
-                        "Rotation" : [ 0.0, 0.0, 0.0 ],
-                        "Scale" : [ 1.0, 1.0, 1.0 ],
+                        "Owner" : "2d51d4f7-b84a-47a9-abe8-dd10e70101b8",
+                        "Position" : [ -5.5439672470092773, -1.1920928955078125e-07, 0.096770301461219788 ],
+                        "Rotation" : [ -0.0, 0.99999994039535522, -0.0 ],
+                        "Scale" : [ 0.0099999997764825821, 0.0099999997764825821, 0.0099999997764825821 ],
                         "Type" : 1,
-                        "UUID" : "b32f2cad-94f0-433f-8892-b33c1578b1c8"
+                        "UUID" : "b48a39bd-0c21-4585-8316-ae67ed75f145"
+                     },
+                     {
+                        "Active" : false,
+                        "MaterialPath" : "./Assets/Materials/Dollhouse_7ab8890a-1438-4baf-9060-53d6eea2688e.material",
+                        "MeshPath" : "./Assets/Models/Dollhouse.mesh",
+                        "Owner" : "2d51d4f7-b84a-47a9-abe8-dd10e70101b8",
+                        "Type" : 2,
+                        "UUID" : "00533da1-ae17-443b-b365-3a40d33d2ec2"
                      }
                   ],
                   "GameObjects" : [
@@ -112,91 +120,33 @@
                         "Components" : [
                            {
                               "Active" : false,
-                              "Owner" : "f73ec399-79e7-4dc2-947a-62639686adfb",
-                              "Position" : [ 0.0, 0.0, 0.0 ],
-                              "Rotation" : [ 0.0, 1.0, 0.0 ],
+                              "Owner" : "fec62195-6de3-4e96-8660-feda800f71af",
+                              "Position" : [ 1.600893497467041, 0.0, 11.08566951751709 ],
+                              "Rotation" : [ -0.0, 0.0, -0.0 ],
                               "Scale" : [ 1.0, 1.0, 1.0 ],
                               "Type" : 1,
-                              "UUID" : "6a01a1c0-989b-4291-a593-c004da2bd80e"
+                              "UUID" : "2ccd2356-35d7-4183-a102-6b2ca537ca6b"
                            },
                            {
                               "Active" : false,
-                              "MaterialPath" : "./Assets/Materials/Robot_23fa5b00-4a28-4747-b1fb-e2c738cea042.material",
+                              "MaterialPath" : "./Assets/Materials/Robot_317318fe-0be8-48f5-a4b8-6f7f9836d39e.material",
                               "MeshPath" : "./Assets/Models/Robot.mesh",
-                              "Owner" : "f73ec399-79e7-4dc2-947a-62639686adfb",
+                              "Owner" : "fec62195-6de3-4e96-8660-feda800f71af",
                               "Type" : 2,
-                              "UUID" : "2c52e3e9-6cb1-4874-b754-898f37b21482"
+                              "UUID" : "f536db99-3a90-4fe6-937d-b401dcb0b737"
                            }
                         ],
                         "GameObjects" : null,
                         "Name" : "Robot",
-                        "UUID" : "f73ec399-79e7-4dc2-947a-62639686adfb"
-                     }
-                  ],
-                  "Name" : "Robot",
-                  "UUID" : "2d5f3e33-38e0-4208-b17c-0d842f6e7f6b"
-               },
-               {
-                  "Components" : [
-                     {
-                        "Active" : false,
-                        "Owner" : "5d5bd570-b397-4829-86cd-c2b69e7de9ac",
-                        "Position" : [ 0.0, 0.0, 0.0 ],
-                        "Rotation" : [ 0.0, 0.0, 0.0 ],
-                        "Scale" : [ 1.0, 1.0, 1.0 ],
-                        "Type" : 1,
-                        "UUID" : "71d37908-dd1f-4eb8-8858-7038d706baf8"
-                     }
-                  ],
-                  "GameObjects" : [
-                     {
-                        "Components" : [
-                           {
-                              "Active" : false,
-                              "Owner" : "3d1bd596-88c1-4afc-9daa-a2698f93290b",
-                              "Position" : [ 0.0, 0.0, 0.0 ],
-                              "Rotation" : [ 0.0, 1.0, 0.0 ],
-                              "Scale" : [ 1.0, 1.0, 1.0 ],
-                              "Type" : 1,
-                              "UUID" : "6f5bba8d-bbea-4fe0-b0d3-af0aa2a2f79e"
-                           }
-                        ],
-                        "GameObjects" : [
-                           {
-                              "Components" : [
-                                 {
-                                    "Active" : false,
-                                    "Owner" : "c1212b97-4cea-4684-838c-f5886f419565",
-                                    "Position" : [ 0.0, 0.0, 0.0 ],
-                                    "Rotation" : [ 0.0, 1.0, 0.0 ],
-                                    "Scale" : [ 0.0010000000474974513, 0.0010000000474974513, 0.0010000000474974513 ],
-                                    "Type" : 1,
-                                    "UUID" : "f497588a-4d1a-44be-a141-64a32db1cd16"
-                                 },
-                                 {
-                                    "Active" : false,
-                                    "MaterialPath" : "./Assets/Materials/Dollhouse_dbf0db02-fb17-441c-b424-361608dc2ce5.material",
-                                    "MeshPath" : "./Assets/Models/Dollhouse.mesh",
-                                    "Owner" : "c1212b97-4cea-4684-838c-f5886f419565",
-                                    "Type" : 2,
-                                    "UUID" : "1677a69a-6389-4094-b37f-4b969d9027d6"
-                                 }
-                              ],
-                              "GameObjects" : null,
-                              "Name" : "Dollhouse",
-                              "UUID" : "c1212b97-4cea-4684-838c-f5886f419565"
-                           }
-                        ],
-                        "Name" : "Dollhouse",
-                        "UUID" : "3d1bd596-88c1-4afc-9daa-a2698f93290b"
+                        "UUID" : "fec62195-6de3-4e96-8660-feda800f71af"
                      }
                   ],
                   "Name" : "Dollhouse",
-                  "UUID" : "5d5bd570-b397-4829-86cd-c2b69e7de9ac"
+                  "UUID" : "2d51d4f7-b84a-47a9-abe8-dd10e70101b8"
                }
             ],
             "Name" : "Hierarchy",
-            "UUID" : "100f05ab-d3f2-4eee-bb19-7059d4618e1a"
+            "UUID" : "46719510-1c1e-4b1e-b7bb-7de36795d1e8"
          }
       ]
    }

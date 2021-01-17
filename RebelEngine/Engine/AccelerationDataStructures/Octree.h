@@ -46,5 +46,6 @@ public:
 	OctreeNode* _root = _root = nullptr;
 
 	static unsigned int _maxObjPerNode;
+	static unsigned int _minSize;
 
 };

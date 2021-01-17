@@ -109,7 +109,7 @@ bool ModuleScene::Start() {
 	IterateRoot(*_root);
 
 	_octree = new Octree();
-	_octree->_root->_bounds = AABB(float3(-500, -500, -500), float3(500, 500, 500));
+	_octree->_root->_bounds = AABB(float3(-100, -100, -100), float3(100, 100, 100));
 
 	for (unsigned int i = 0; i < _objects.size(); ++i) {
 		_octree->Insert(_octree->_root, _objects[i]);
@@ -123,8 +123,7 @@ void ModuleScene::FrustumCulling(OctreeNode* node) {
 	if (_mainCamera->Intersects(node->_bounds)) {
 
 		for (const auto& go : node->_gos) {
-			AABB box; go->GetAABB(box);
-			OBB obb = box.Transform(go->GetGlobalMatrix());
+			OBB obb; go->GetOBB(obb);
 			if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
 				_objectsToDraw.push_back(go);
 			}
@@ -141,7 +140,7 @@ void ModuleScene::FrustumCulling(OctreeNode* node) {
 
 void ModuleScene::FrustumCulling() {
 	for (const auto &go : _objects) {
-		AABB box;  go->GetAABB(box);  OBB obb = box.Transform(go->GetGlobalMatrix());
+		OBB obb; go->GetOBB(obb);
 		if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
 			_objectsToDraw.push_back(go);
 		}

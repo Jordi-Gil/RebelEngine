@@ -90,11 +90,11 @@ void GUIScene::Draw() {
 		math::float4x4 projMat;
 		App->editorCamera->GetOpenGLMatrix(matrix_type::PROJECTION_MATRIX, projMat);
 		ComponentTransform* focusedTransform = (ComponentTransform*)(focusedGo->GetComponent(type_component::TRANSFORM));
-		math::float4x4 compGlobalMat = focusedTransform->GetGlobalMatrix().Transposed();
+		math::float4x4 modelMatrix = focusedTransform->GetLocalMatrix().Transposed();
 
-		ImGuizmo::Manipulate(viewMat.ptr(), projMat.ptr(), (ImGuizmo::OPERATION)imguiOP, ImGuizmo::MODE::LOCAL, compGlobalMat.ptr());
+		ImGuizmo::Manipulate((const float*)&viewMat, (const float*) &projMat, (ImGuizmo::OPERATION)imguiOP, ImGuizmo::MODE::LOCAL, (float*)&modelMatrix);
 		if (ImGuizmo::IsUsing()) {
-				focusedTransform->SetTransform(compGlobalMat.Transposed());
+				focusedTransform->SetTransform(modelMatrix.Transposed());
 				focusedGo->UpdateChildrenTransform();
 		}
 	}

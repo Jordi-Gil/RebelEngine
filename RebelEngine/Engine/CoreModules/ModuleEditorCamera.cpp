@@ -291,9 +291,9 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 	for (uint i = 0; i < children.size(); i++) {
 		if(children[i]->HasMesh()){
 
-			math::AABB aabb;
-			children[i]->GetAABB(aabb);
-			OBB _obb = aabb.Transform(children[i]->GetGlobalMatrix());
+			OBB _obb;
+			children[i]->GetOBB(_obb);
+
 			float distanceIn;
 			bool hitted = false;
 

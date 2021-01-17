@@ -22,10 +22,10 @@ GameObject::GameObject(const char* name) {
 
 GameObject::GameObject(const GameObject& go) {
 
-	this->_active = go._active;
-	this->_name = go._name;
-	this->_parent = go._parent;
-	this->_uuid = go._uuid;
+	_active = go._active;
+	_name = go._name;
+	_parent = go._parent;
+	_uuid = go._uuid;
 
 	for (const auto& child : go._children) {
 		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
@@ -130,7 +130,8 @@ void GameObject::GetAABB(AABB& aabb) const {
 
 void GameObject::GetOBB(OBB& obb) const {
 	AABB box; GetAABB(box);
-	obb = box.Transform(GetGlobalMatrix());
+	obb = box;
+	obb.Transform(GetGlobalMatrix());
 }
 
 GameObject& GameObject::operator=(const GameObject& go) {
@@ -139,12 +140,14 @@ GameObject& GameObject::operator=(const GameObject& go) {
 	this->_name = go._name;
 	this->_parent = go._parent;
 
+	this->_children.clear();
 	for (const auto& child : go._children) {
 		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
 		*aux = *child;
 		this->_children.push_back(std::move(aux));
 	}
 
+	this->_components.clear();
 	for (const auto& component : go._components) {
 		switch (component->GetType())
 		{
@@ -196,6 +199,28 @@ void GameObject::DeleteMarkedChildren() {
 		}
 	}
 
+}
+
+//Call it when loading GameObject from FBX
+void GameObject::CollapseChildIntoParent() {
+	if (_children.size() == 1) {
+
+		if (_children[0]->_children.size() != 0) _children[0]->CollapseChildIntoParent();
+
+		_components.clear();
+		for (int j = 0; j < _children[0]->_components.size(); j++) {
+			_components.push_back(std::move(_children[0]->_components[j]));
+			_components.rbegin()->get()->SetOwner(this);
+		}
+		_meshRenderer = _children[0]->_meshRenderer;
+		_mask = _children[0]->_mask;
+		_children.clear();
+	}
+	else {
+		for (int i = 0; i < _children.size(); i++) {
+			_children[i]->CollapseChildIntoParent();
+		}
+	}
 }
 
 void GameObject::UpdateChildrenTransform() {

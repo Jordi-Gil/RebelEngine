@@ -101,6 +101,7 @@ void ModuleModel::LoadModelFromFBX(const char* fileName) {
 		LoadNodeHierarchy(fileName, father, *go, scene, lights, cameras, aiPos, aiQuat, aiScaling);
 
 		go->DeleteMarkedChildren();
+		go->CollapseChildIntoParent();
 		App->scene->_root->AddChild(std::move(go));
 
 		LOG(_INFO, "3D Model %s loaded", fn);
