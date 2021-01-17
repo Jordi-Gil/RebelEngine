@@ -75,9 +75,9 @@ bool ModuleGUI::Init() {
 	// merge in icons from Font Awesome
 	static const ImWchar icons_ranges_fa[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 	ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/" FONT_ICON_FILE_NAME_FAS, 12.0f, &icons_config, icons_ranges_fa);
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/" FONT_ICON_FILE_NAME_FAS, 12.0f, &icons_config, icons_ranges_fa);
 	static const ImWchar icons_ranges_fk[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/" FONT_ICON_FILE_NAME_FK, 12.0f, &icons_config, icons_ranges_fk);
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/" FONT_ICON_FILE_NAME_FK, 12.0f, &icons_config, icons_ranges_fk);
 	
 	fileDialog.SetTitle("title");
 

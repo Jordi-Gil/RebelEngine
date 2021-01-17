@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\Wall\\WallDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Stars_ab34a157-8ad1-484c-a834-36c3aade1887",
+      "Normal" : "Assets\\Models\\Unity\\Wall\\WallNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\Wall\\WallSpecular.tif",
+      "Type" : 1,
+      "UUID" : "ab34a157-8ad1-484c-a834-36c3aade1887"
+   }
+]

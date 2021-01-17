@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\Player\\GunDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Player_da25556c-75d1-4a7b-843e-ee26a3f57bea",
+      "Normal" : "Assets\\Models\\Unity\\Player\\GunNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\Player\\PlayerSpecular.tif",
+      "Type" : 1,
+      "UUID" : "da25556c-75d1-4a7b-843e-ee26a3f57bea"
+   }
+]

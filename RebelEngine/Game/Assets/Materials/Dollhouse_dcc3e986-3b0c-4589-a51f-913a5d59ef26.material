@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\DollHouse\\DollhouseDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Dollhouse_dcc3e986-3b0c-4589-a51f-913a5d59ef26",
+      "Normal" : "",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\DollHouse\\DollhouseSpecular.tif",
+      "Type" : 1,
+      "UUID" : "dcc3e986-3b0c-4589-a51f-913a5d59ef26"
+   }
+]

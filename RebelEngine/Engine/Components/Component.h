@@ -10,7 +10,8 @@ enum  class type_component {
 	NONE,
 	TRANSFORM,
 	MESHRENDERER,
-	CAMERA
+	CAMERA,
+	LIGHT
 };
 
 class Component {
@@ -28,7 +29,9 @@ public:
 	virtual void Disable() {}
 	virtual void DebugDraw() {}
 	virtual void OnEditor() {};
+
 	virtual type_component GetType() const { return _type; }
+	virtual GameObject* GetOwner() const { return _owner; }
 
 	virtual void SetOwner(GameObject* go) { _owner = go; }
 

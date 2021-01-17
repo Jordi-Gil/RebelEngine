@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\SpinningTop\\SpinningTopDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "SpinningTop_17771a86-55bb-4aae-a4dc-53f66e360adb",
+      "Normal" : "Assets\\Models\\Unity\\SpinningTop\\SpinningTopNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\SpinningTop\\SpinningTopOcclusion.png",
+      "Type" : 1,
+      "UUID" : "17771a86-55bb-4aae-a4dc-53f66e360adb"
+   }
+]

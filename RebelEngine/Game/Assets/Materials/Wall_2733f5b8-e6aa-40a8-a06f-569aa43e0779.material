@@ -1,0 +1,12 @@
+[
+   {
+      "Albedo" : "Assets\\Models\\Unity\\Wall\\WallDiffuse.png",
+      "Color" : [ 0.44999998807907104, 0.44999998807907104, 0.44999998807907104 ],
+      "Name" : "Wall_2733f5b8-e6aa-40a8-a06f-569aa43e0779",
+      "Normal" : "Assets\\Models\\Unity\\Wall\\WallNormals.png",
+      "Smoothness" : 1.0,
+      "Specular" : "Assets\\Models\\Unity\\Wall\\WallSpecular.tif",
+      "Type" : 1,
+      "UUID" : "2733f5b8-e6aa-40a8-a06f-569aa43e0779"
+   }
+]

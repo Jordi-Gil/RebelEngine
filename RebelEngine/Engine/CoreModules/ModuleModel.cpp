@@ -1,5 +1,7 @@
 #include "ModuleModel.h"
 
+#include <filesystem>
+
 #include <GL/GL.h>
 
 #include <assimp/cimport.h>
@@ -32,9 +34,28 @@ bool ModuleModel::Init() {
 	aiAttachLogStream(&stream);
 
 	//LoadModelFromFBX("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
+	LoadModelFromFBX("Assets/Models/Unity/Robot/Robot.FBX");
 	//LoadModelFromFBX("Assets/Models/WithoutDDS/Street_Environment/Street_environment_V01.FBX");
 	
 	return true;
+}
+
+bool LoadMesh(Mesh& mesh, const char* name, aiMesh* aimesh) {
+
+	mesh.SetName(name);
+	mesh.LoadVBO(aimesh);
+	if (!mesh.LoadEBO(aimesh)) return false;
+	mesh.CreateVAO();
+	mesh.WriteJsonFile();
+
+}
+
+void LoadMaterialSpec(MatStandard& material, const char* name, aiMaterial* aiMat, const char *fileName) {
+
+	std::string _name = name; _name.append("_"); _name.append(material.GetUUID());
+	material.SetName(_name);
+	material.LoadMaterialFromFBX(aiMat, fileName);
+
 }
 
 void ModuleModel::LoadModelFromFBX(const char* fileName) {
@@ -78,6 +99,9 @@ void ModuleModel::LoadModelFromFBX(const char* fileName) {
 		go->AddComponent(std::move(transform));
 
 		LoadNodeHierarchy(fileName, father, *go, scene, lights, cameras, aiPos, aiQuat, aiScaling);
+
+		go->DeleteMarkedChildren();
+		go->CollapseChildIntoParent();
 		App->scene->_root->AddChild(std::move(go));
 
 		LOG(_INFO, "3D Model %s loaded", fn);
@@ -137,18 +161,24 @@ void ModuleModel::LoadNodeHierarchy(const char* fileName, aiNode *node, GameObje
 				std::unique_ptr<ComponentMeshRenderer> renderer_mesh = std::make_unique<ComponentMeshRenderer>();
 
 				Mesh* mesh = new Mesh();
-
-				mesh->SetName(node->mChildren[i]->mName.C_Str());
-				mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
-				mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
-				mesh->CreateVAO();
-				mesh->WriteJsonFile();
-
+				bool result = LoadMesh(*mesh, node->mChildren[i]->mName.C_Str(), scene->mMeshes[node->mChildren[i]->mMeshes[0]]);
+				if(!result) go->SetToDelete();
+				
 				int mIdx = scene->mMeshes[node->mChildren[i]->mMeshes[0]]->mMaterialIndex;
 				//TODO: Load materials separately and search the material by name in the Resources manager
-				//		and assign it to the meshrenderer
-				MatStandard* material = new MatStandard(scene->mMaterials[mIdx]->GetName().C_Str());
-				material->LoadMaterialFromFBX(scene->mMaterials[mIdx], fileName);
+				//		and assign it to the meshrenderer. Name material equal than mesh
+				//		scene->mMaterials[mIdx]->GetName().C_Str()
+				MatStandard* material = new MatStandard();
+				LoadMaterialSpec(*material, node->mChildren[i]->mName.C_Str(), scene->mMaterials[mIdx], fileName);
+
+				if (!result) {
+					//Delete because the mesh loaded is incorrect
+					go->SetToDelete();
+					std::filesystem::path p = mesh->GetFilePath();
+					std::filesystem::remove(p);
+					p = material->GetFilePath();
+					std::filesystem::remove(p);
+				}
 
 				renderer_mesh->SetOwner(go.get());
 				renderer_mesh->SetMesh(mesh);
@@ -170,13 +200,26 @@ void ModuleModel::LoadNodeHierarchy(const char* fileName, aiNode *node, GameObje
 					renderer_mesh->SetOwner(go_mesh.get());
 
 					Mesh* mesh = new Mesh();
-					mesh->SetName(node->mChildren[i]->mName.C_Str());
-					mesh->LoadVBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
-					mesh->LoadEBO(scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
-					mesh->CreateVAO();
-					mesh->WriteJsonFile();
+					bool result = LoadMesh(*mesh, node->mChildren[i]->mName.C_Str(), scene->mMeshes[node->mChildren[i]->mMeshes[x]]);
+
+					int mIdx = scene->mMeshes[node->mChildren[i]->mMeshes[x]]->mMaterialIndex;
+					//TODO: Load materials separately and search the material by name in the Resources manager
+					//		and assign it to the meshrenderer. Name material equal than mesh
+					//		scene->mMaterials[mIdx]->GetName().C_Str()
+					MatStandard* material = new MatStandard();
+					LoadMaterialSpec(*material, node->mChildren[i]->mName.C_Str(), scene->mMaterials[mIdx], fileName);
+
+					if (!result) {
+						//Delete because the mesh loaded is incorrect
+						go_mesh->SetToDelete();
+						std::filesystem::path p = mesh->GetFilePath();
+						std::filesystem::remove(p);
+						p = material->GetFilePath();
+						std::filesystem::remove(p);
+					}
 
 					renderer_mesh->SetMesh(mesh);
+					renderer_mesh->SetMaterial(material);
 
 					go_mesh->AddComponent(std::move(transform_mesh));
 					go_mesh->AddComponent(std::move(renderer_mesh), GO_MASK_MESH);
