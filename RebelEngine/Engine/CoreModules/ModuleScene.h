@@ -46,7 +46,10 @@ public:
 	bool Load();
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);
-	
+	void TogglePlay();
+	bool IsBusy() { return _isSaving && _isLoading; };
+	bool IsPlaying() { return _isPlaying; }
+
 private:
 
 	void IterateRoot(GameObject &go);
@@ -56,6 +59,7 @@ private:
 	void FrustumCulling(OctreeNode* node);
 	void FrustumCulling();
 
+	
 public:
 
 	Pool<GameObject> _poolGameObjects;
@@ -78,5 +82,8 @@ private:
 	std::vector<GameObject*> _objects;
 	std::vector<GameObject *> _objectsToDraw;
 
+	bool _isPlaying = false;
+	bool _isSaving = false;
+	bool _isLoading = false;
 };
 
