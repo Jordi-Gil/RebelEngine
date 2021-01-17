@@ -217,18 +217,20 @@ void ModuleScene::UpdateMinMax(float3 min, float3 max) {
 
 bool ModuleScene::Save() 
 {
+	_isSaving = true;
 	Json::Value value;
 	this->ToJson(value,0);
 	Json::StyledWriter wr;
 	std::ofstream ofs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME DEFAULT_SCENE_EXT);
 	std::string st = wr.write(value);
 	ofs.write(st.c_str(), st.size());
-
+	ofs.close();
+	_isSaving = false;
 	return true;
 }
 
 bool ModuleScene::Load() {
-
+	_isLoading = true;
 	std::ifstream ifs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME DEFAULT_SCENE_EXT);
 	Json::CharReaderBuilder reader;
 	Json::Value obj;
@@ -237,11 +239,12 @@ bool ModuleScene::Load() {
 	if (!Json::parseFromStream(reader, ifs, &obj, &error))
 	{
 		LOG(_ERROR, "Error parsing file: %s", error);
+		_isLoading = false;
 		return false;
 	}
 
 	FromJson(obj[0]);
-
+	_isLoading = false;
 	return true;
 }
 
@@ -273,4 +276,17 @@ bool ModuleScene::FromJson(const Json::Value& value) {
 
 void ModuleScene::GetLights(std::vector<GameObject*>& lights) {
 	lights = _lights;
+}
+
+void ModuleScene::TogglePlay() {
+	if (!_isPlaying) {
+		if (!_isLoading) {
+			if(Save()) _isPlaying = !_isPlaying;
+		}
+	}
+	else {
+		if (!_isSaving) {
+			if (Load()) _isPlaying = !_isPlaying;
+		}
+	}
 }

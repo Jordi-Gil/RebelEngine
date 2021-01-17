@@ -10,7 +10,6 @@
 #include "CoreModules/ModuleInput.h"
 #include "CoreModules/ModuleModel.h"
 #include "CoreModules/ModuleScene.h"
-#include "CoreModules/ModuleSerializer.h"
 #include "GUIs/GUIConfiguration.h"
 #include "GUIs/GUITerminal.h"
 

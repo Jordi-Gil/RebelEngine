@@ -13,6 +13,7 @@
 #include "Components/ComponentTransform.h"
 
 #include "ImGui/IconsFontAwesome5.h"
+#include "ImGui/IconsForkAwesome.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_utils.h"
@@ -38,25 +39,33 @@ void GUIScene::Draw() {
 	std::string wName(ICON_FA_BORDER_ALL " "); wName.append(_name);
 	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
 
-	ImGui::BeginMenuBar();
-	static bool frustum_culling = false;
-	static bool frustum_culling_alg[2] = {false, false};
+	
+		ImGui::BeginMenuBar();
+		//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(500, 30));
+		static bool frustum_culling = false;
+		static bool frustum_culling_alg[2] = {false, false};
 
-	static int e = 0;
-	if (ImGui::RadioButton("No Frustum Culling", &e, 0)) { App->scene->SetMask(NO_FRUSTUM); }
-	ImGui::SameLine();
-	if(ImGui::RadioButton("Linear AABB Culling", &e, 1)) { App->scene->SetMask(LINEAR_AABB); }
-	ImGui::SameLine();
-	if(ImGui::RadioButton("Octree Frustum Culling", &e, 2)) { App->scene->SetMask(OCTREE); }
+		static int e = 0;
+		if (ImGui::RadioButton("No Frustum Culling", &e, 0)) { App->scene->SetMask(NO_FRUSTUM); }
+		ImGui::SameLine();
+		if(ImGui::RadioButton("Linear AABB Culling", &e, 1)) { App->scene->SetMask(LINEAR_AABB); }
+		ImGui::SameLine();
+		if(ImGui::RadioButton("Octree Frustum Culling", &e, 2)) { App->scene->SetMask(OCTREE); }
 
-	static int imguiOP = ImGuizmo::OPERATION::TRANSLATE;
-	if (ImGui::RadioButton("Translate", &imguiOP, 0)) {}
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Rotate", &imguiOP, 1)) {}
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Scale", &imguiOP, 2)) {}
+		static int imguiOP = ImGuizmo::OPERATION::TRANSLATE;
+		if (ImGui::RadioButton("Translate", &imguiOP, 0)) {}
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Rotate", &imguiOP, 1)) {}
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Scale", &imguiOP, 2)) {}
 
-	ImGui::EndMenuBar();
+		ImGui::SameLine();
+	
+		if (ImGui::Button(App->scene->IsPlaying()? ICON_FK_STOP : ICON_FK_PLAY, ImVec2(30.0f, 0.0f))) { App->scene->TogglePlay(); }
+		//ImGui::PopStyleVar();
+		ImGui::EndMenuBar();
+	
+
 	_sceneFocused = ImGui::IsWindowFocused();
 	_sceneHovered = ImGui::IsWindowHovered();
 	
