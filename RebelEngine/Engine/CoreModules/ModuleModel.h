@@ -20,13 +20,6 @@ public:
 	void LoadModelFromFBX(const char* fileName);
 	void LoadTexture(const char* fileName);
 
-	//TODO: Move to a proper class
-	//For this assigment this methods are implemented in this class
-	void SetMinFilter(int i);
-	void SetMagFilter(int i);
-	void SetWrapS(int i);
-	void SetWrapT(int i);
-
 private:
 
 	void LoadNodeHierarchy(const char* fileName, aiNode* node, GameObject &father, const aiScene* scene, 

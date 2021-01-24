@@ -29,18 +29,16 @@ public:
 
 	void Render();
 
-	type_component GetType() const override { return _type; }
+	ComponentType GetType() const override { return _type; }
 	uint32_t GetMorton() const { return _mesh->GetMorton(); }
-	void GetAABB(AABB& aabb) { 
-		//aabb.Enclose(_mesh->_aabb); 
-		aabb = _mesh->_aabb;
-	};
+	void GetAABB(AABB& aabb) {  aabb = _mesh->_aabb; }
 
 	bool ToJson(Json::Value& value, int pos) override;
 	bool FromJson(const Json::Value& value) override;
 
 public:
 
+	//TODO: Conver to unique ptr
 	Mesh* _mesh = nullptr;
 	Material* _material = nullptr;
 

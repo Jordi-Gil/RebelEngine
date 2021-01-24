@@ -22,10 +22,11 @@
 static constexpr char* FLOAT3_LABELS[3] = { {"X"},{"Y"},{"Z"} };
 
 ComponentTransform::ComponentTransform() {
-	_type = type_component::TRANSFORM;
+	_type = ComponentType::kTRANSFORM;
 }
 
 ComponentTransform::ComponentTransform(const ComponentTransform& comp) {
+
 	_owner = comp._owner;
 	_active = comp._active;
 	_type = comp._type;
@@ -41,7 +42,7 @@ ComponentTransform::ComponentTransform(const ComponentTransform& comp) {
 
 ComponentTransform::ComponentTransform(const float3 position, const float3 rotation, const float3 scale) {
 
-	_type = type_component::TRANSFORM;
+	_type = ComponentType::kTRANSFORM;
 
 	_position = position;
 	_rotation = rotation;
@@ -54,7 +55,7 @@ ComponentTransform::ComponentTransform(const float3 position, const float3 rotat
 
 ComponentTransform::ComponentTransform(const aiMatrix4x4& matrix) {
 
-	_type = type_component::TRANSFORM;
+	_type = ComponentType::kTRANSFORM;
 
 	aiVector3D pos, sca;
 	aiQuaternion rot;
@@ -86,7 +87,7 @@ void ComponentTransform::SetTransform(const float3 position, const Quat rotation
 ComponentTransform::ComponentTransform(const Json::Value& value) {
 
 	Component::FromJson(value);
-	_type = type_component::TRANSFORM;
+	_type = ComponentType::kTRANSFORM;
 	FromJson(value);
 }
 
@@ -244,7 +245,7 @@ void ComponentTransform::OnEditor() {
 		DrawDragFloat3("Scale", _scale);
 
 		if ((_owner->GetMask() & GO_MASK_CAMERA) != 0) {
-			ComponentCamera* cam = (ComponentCamera*) _owner->GetComponent(type_component::CAMERA);
+			ComponentCamera* cam = (ComponentCamera*) _owner->GetComponent(ComponentType::kCAMERA);
 			cam->Transform(_rotationQuat, _position);
 		}
 

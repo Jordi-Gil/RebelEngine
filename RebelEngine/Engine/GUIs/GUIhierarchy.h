@@ -18,9 +18,10 @@ public:
 
 private:
 
-	void DrawHierarchy(GameObject& go, uint depth);
+	void DrawHierarchy(GameObject& go);
 
 	uint _dragged;
-	uint _dragged_depth;
+	uint _popuped;
 	GameObject* _go_dragged;
+	
 };

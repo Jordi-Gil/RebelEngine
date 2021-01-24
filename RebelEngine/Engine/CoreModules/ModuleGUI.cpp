@@ -24,7 +24,6 @@
 #include "ImGui/ImGuizmo.h"
 
 ModuleGUI::ModuleGUI() {
-	
 }
 
 void ModuleGUI::PreInit() {

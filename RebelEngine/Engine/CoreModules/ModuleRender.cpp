@@ -59,9 +59,9 @@ bool ModuleRender::Init() {
 
 	LOG(_INFO, "Creating Renderer context");
 
-	mainContext = SDL_GL_CreateContext(App->window->window);
+	_mainContext = SDL_GL_CreateContext(App->window->window);
 
-	if (mainContext == nullptr) {
+	if (_mainContext == nullptr) {
 		LOG(_INFO, "OpenGL context could not be created!SDL Error : % s", SDL_GetError());
 		return false;
 	}
@@ -182,7 +182,7 @@ bool ModuleRender::CleanUp() {
 	if (RBO != 0) glDeleteFramebuffers(1, &RBO);
 	if (viewportTex != 0) glDeleteTextures(1, &viewportTex);
 
-	SDL_GL_DeleteContext(mainContext);
+	SDL_GL_DeleteContext(_mainContext);
 
 	return true;
 }

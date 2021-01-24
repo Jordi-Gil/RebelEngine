@@ -27,8 +27,8 @@ public:
 	void UpdateGlobalMatrix();
 	void UpdateLocalMatrix();
 
-	float4x4 GetGlobalMatrix() const { return _globalMatrix; }
-	float4x4 GetLocalMatrix() const { return _localMatrix; }
+	const float4x4& GetGlobalMatrix() const { return _globalMatrix; }
+	const float4x4& GetLocalMatrix() const { return _localMatrix; }
 
 	void DebugDraw() override;
 	void OnEditor() override;

@@ -62,8 +62,9 @@ void GUIScene::Draw() {
 
 	ImGui::SameLine();
 	
-	if (ImGui::Button(App->scene->IsPlaying()? ICON_FK_STOP : ICON_FK_PLAY, ImVec2(30.0f, 0.0f))) { App->scene->TogglePlay(); }
-		
+	if (ImGui::Button(App->scene->IsPlaying() ? ICON_FK_STOP : ICON_FK_PLAY, ImVec2(30.0f, 0.0f))) { App->scene->TogglePlay(); }
+	
+
 	ImGui::EndMenuBar();
 
 	_sceneFocused = ImGui::IsWindowFocused();
@@ -72,15 +73,15 @@ void GUIScene::Draw() {
 	_viewportPos =  ImGui::GetCursorScreenPos();
 	_viewportSize = ImVec2(_sceneWindowWidth, _sceneWindowHeight);
 	ImGui::GetWindowDrawList()->AddImage(
-		(void*)(intptr_t)App->renderer->GetViewportTexture(),
-		ImVec2(ImGui::GetCursorScreenPos()),
-		ImVec2(ImGui::GetCursorScreenPos().x + _sceneWindowWidth, ImGui::GetCursorScreenPos().y + _sceneWindowHeight),
-		ImVec2(0, 1),
-		ImVec2(1, 0));
+			(void*)(intptr_t)App->renderer->GetViewportTexture(),
+			ImVec2(ImGui::GetCursorScreenPos()),
+			ImVec2(ImGui::GetCursorScreenPos().x + _sceneWindowWidth, ImGui::GetCursorScreenPos().y + _sceneWindowHeight),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
 
 
-	if (_sceneWindowWidth != ImGui::GetWindowWidth() || _sceneWindowHeight != ImGui::GetWindowHeight())
-	{
+	if (_sceneWindowWidth != ImGui::GetWindowWidth() || _sceneWindowHeight != ImGui::GetWindowHeight()) {
 		_sceneWindowWidth = ImGui::GetWindowWidth(); sceneWidth = _sceneWindowWidth;
 		_sceneWindowHeight = ImGui::GetWindowHeight(); sceneHeight = _sceneWindowHeight;
 		App->editorCamera->WindowResized(_sceneWindowWidth, _sceneWindowHeight);
@@ -88,6 +89,7 @@ void GUIScene::Draw() {
 	
 	GameObject* focusedGo = App->gui->_inspector->GetFocusedGameObject();
 	if (focusedGo != nullptr) {
+		
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, _sceneWindowWidth, _sceneWindowHeight);
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::Enable(true);
@@ -98,7 +100,7 @@ void GUIScene::Draw() {
 		App->editorCamera->GetOpenGLMatrix(matrix_type::VIEW_MATRIX, viewMat);
 		math::float4x4 projMat;
 		App->editorCamera->GetOpenGLMatrix(matrix_type::PROJECTION_MATRIX, projMat);
-		ComponentTransform* focusedTransform = (ComponentTransform*)(focusedGo->GetComponent(type_component::TRANSFORM));
+		ComponentTransform* focusedTransform = (ComponentTransform*)(focusedGo->GetComponent(ComponentType::kTRANSFORM));
 		math::float4x4 modelMatrix = focusedTransform->GetLocalMatrix().Transposed();
 
 		ImGuizmo::Manipulate((const float*)&viewMat, (const float*) &projMat, (ImGuizmo::OPERATION)imguiOP, ImGuizmo::MODE::LOCAL, (float*)&modelMatrix);

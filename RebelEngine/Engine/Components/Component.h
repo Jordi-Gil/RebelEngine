@@ -6,12 +6,12 @@
 
 class GameObject;
 
-enum  class type_component {
-	NONE,
-	TRANSFORM,
-	MESHRENDERER,
-	CAMERA,
-	LIGHT
+enum  class ComponentType {
+	kNONE,
+	kTRANSFORM,
+	kMESHRENDERER,
+	kCAMERA,
+	kLIGHT
 };
 
 class Component {
@@ -30,7 +30,7 @@ public:
 	virtual void DebugDraw() {}
 	virtual void OnEditor() {};
 
-	virtual type_component GetType() const { return _type; }
+	virtual ComponentType GetType() const { return _type; }
 	virtual GameObject* GetOwner() const { return _owner; }
 
 	virtual void SetOwner(GameObject* go) { _owner = go; }
@@ -42,6 +42,6 @@ protected:
 
 	GameObject* _owner = nullptr;
 	bool _active = false;
-	type_component _type = type_component::NONE;
+	ComponentType _type = ComponentType::kNONE;
 	std::string _uuid;
 };

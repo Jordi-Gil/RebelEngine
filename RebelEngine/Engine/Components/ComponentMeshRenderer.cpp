@@ -20,7 +20,7 @@
 #include "GUIs/GUIProject.h"
 #include "Utils/debugdraw.h"
 
-//Actually only one, but in a future there will be more
+//Actually only one, but in a future there will be more (I hope)
 static const char* shaderTypes[1] = {"Standard (Specular)"};
 
 bool IsImage(const std::string& extension) {
@@ -32,21 +32,23 @@ bool IsImage(const std::string& extension) {
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer() {
-	_type = type_component::MESHRENDERER;
+	_type = ComponentType::kMESHRENDERER;
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer(const ComponentMeshRenderer& comp) {
-	this->_owner = comp._owner;
-	this->_active = comp._active;
-	this->_type = comp._type;
-	this->_uuid = comp._uuid;
-	this->_mesh = comp._mesh;
+
+	_owner = comp._owner;
+	_active = comp._active;
+	_type = comp._type;
+	_uuid = comp._uuid;
+	_mesh = comp._mesh;
+	_material = comp._material;
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer(const Json::Value& value) {
 	
 	Component::FromJson(value);
-	_type = type_component::MESHRENDERER;
+	_type = ComponentType::kMESHRENDERER;
 	FromJson(value);
 }
 
@@ -97,7 +99,8 @@ void ComponentMeshRenderer::DrawFrame(int frameId, unsigned int texId, MatStanda
 
 		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("explorer_drag_n_drop");
 		if (payload) {
-			//TODO: In a future --> The resource texture would be loaded, an then only
+
+			//TODO: In a future --> The resource texture would be loaded, and then only
 			// we need to change the resource texture
 			// for now we load the texture via DevIL
 			LOG(_INFO, "Loading texture: %s", pwd.filename().string());
@@ -157,6 +160,7 @@ void ComponentMeshRenderer::OnEditor() {
 		ImGui::Text("Main Maps");
 
 		ImGui::BeginColumns("##material", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
+		//First Column with the text names of widgets
 		{
 			float2 image_size(24, 24);
 			//Albedo
@@ -182,7 +186,9 @@ void ComponentMeshRenderer::OnEditor() {
 				ImGui::Text("Normal");
 			}
 		}
+
 		ImGui::NextColumn();
+		//Second column with the widgets
 		{
 
 			std::string id_c("##color_"); id_c.append(_uuid);
@@ -204,7 +210,10 @@ void ComponentMeshRenderer::OnEditor() {
 			ImGui::PopID();
 
 		}
+
+		ImGui::EndColumns();
 	}
+
 
 }
 
@@ -223,7 +232,7 @@ bool ComponentMeshRenderer::ToJson(Json::Value& value, int pos)  {
 	{
 	case SPECULAR_STANDARD:
 	{
-		MatStandard* aux = (MatStandard*)_material;
+		MatStandard* aux = (MatStandard*) _material;
 		aux->WriteJsonFile();
 	}
 	default:

@@ -1,22 +1,26 @@
 #include "ModuleScene.h"
 
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+
+#include "Main/Application.h"
+
 #include "Components/ComponentLight.h"
 #include "Components/ComponentCamera.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
 
-#include "AccelerationDataStructures/BVH.h"
+#include "GUIs/GUIInspector.h"
+
 #include "AccelerationDataStructures/Octree.h"
+
 #include "CoreModules/ModuleEditorCamera.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
 #include "Materials/Skybox.h"
-
-#include <algorithm>
-#include <iostream>
-#include <fstream>
 
 ModuleScene::ModuleScene() {
 
@@ -31,9 +35,6 @@ ModuleScene::~ModuleScene() {
 	delete _goSelected;
 	_goSelected = nullptr;
 
-	delete _skybox;
-	_skybox = nullptr;
-
 	delete _octree;
 	_octree = nullptr;
 
@@ -43,48 +44,8 @@ bool ModuleScene::Init() {
 
 	_poolGameObjects = Pool<GameObject>(1000);
 
-	_skybox = new Skybox();
+	_skybox = std::make_unique<Skybox>();
 	
-	/*
-	_root = _poolGameObjects.get();
-	_root->SetName("Hierarchy");
-	_root->AddMask(GO_MASK_ROOT_NODE);
-
-	std::unique_ptr<ComponentTransform> transform = std::make_unique<ComponentTransform>();
-	transform->SetOwner(_root.get());
-	_root->AddComponent(std::move(transform));
-
-	std::unique_ptr<GameObject> go = _poolGameObjects.get();
-	go->SetName("Camera");
-	transform = std::make_unique<ComponentTransform>();
-	std::unique_ptr<ComponentCamera> cam = std::make_unique<ComponentCamera>(); cam->SetZNear(0.1f); cam->SetPosition(0, 0, 10); cam->SetZFar(250.0f);
-
-	go->SetParent(_root.get());
-	transform->SetOwner(go.get());
-	cam->SetOwner(go.get());
-	cam->ToggleMainCamera();
-	cam->SetPosition(transform->GetPosition());
-	
-
-	go->AddComponent(std::move(transform));
-	go->AddComponent(std::move(cam), GO_MASK_CAMERA);
-
-	_mainCamera = static_cast<ComponentCamera *>(go->GetComponent(type_component::CAMERA));
-
-	_root->AddChild(std::move(go));
-
-	go = _poolGameObjects.get();
-	go->SetName("Directional Light");
-	transform = std::make_unique<ComponentTransform>();
-	transform->SetOwner(go.get());
-	std::unique_ptr<ComponentLight> light = std::make_unique<ComponentLight>(light_type::DIRECTIONAL_LIGHT);
-	light->SetOwner(go.get());
-	
-	go->AddComponent(std::move(transform));
-	go->AddComponent(std::move(light), GO_MASK_LIGHT);
-	
-	_root->AddChild(std::move(go));
-	*/
 	return true;
 }
 
@@ -129,6 +90,7 @@ void ModuleScene::FrustumCulling(OctreeNode* node) {
 }
 
 void ModuleScene::FrustumCulling() {
+
 	for (const auto &go : _objects) {
 		OBB obb; go->GetOBB(obb);
 		if (_mainCamera->Intersects(obb.MinimalEnclosingAABB())) {
@@ -138,7 +100,6 @@ void ModuleScene::FrustumCulling() {
 }
 
 update_status ModuleScene::PreUpdate() {
-
 
 	if( (_mask & LINEAR_AABB) != 0 ) { FrustumCulling(); }
 	else if ((_mask & OCTREE) != 0) { 
@@ -157,7 +118,7 @@ void ModuleScene::DrawRecursive(GameObject &go) {
 	}
 
 	for (auto const& component : go.GetComponents()) {
-		if (component->GetType() == type_component::MESHRENDERER) {
+		if (component->GetType() == ComponentType::kMESHRENDERER) {
 			static_cast<ComponentMeshRenderer*>(component.get())->Render();
 		}
 		component->DebugDraw();
@@ -169,7 +130,7 @@ void ModuleScene::DrawFrustumOutput() {
 
 	for (const auto& go : _objectsToDraw) {
 		for (auto const& component : go->GetComponents()) {
-			if (component->GetType() == type_component::MESHRENDERER) {
+			if (component->GetType() == ComponentType::kMESHRENDERER) {
 				static_cast<ComponentMeshRenderer*>(component.get())->Render();
 			}
 			component->DebugDraw();
@@ -213,8 +174,8 @@ void ModuleScene::UpdateMinMax(float3 min, float3 max) {
 
 }
 
-bool ModuleScene::Save() 
-{
+bool ModuleScene::Save() {
+
 	_isSaving = true;
 	Json::Value value;
 	this->ToJson(value,0);
@@ -228,14 +189,19 @@ bool ModuleScene::Save()
 }
 
 bool ModuleScene::Load() {
+
 	_isLoading = true;
+
+	App->gui->_inspector->ResetFocusedGameObject();
+
+	//TODO: Change into a temporary file
 	std::ifstream ifs(DEFAULT_SCENE_PATH DEFAULT_SCENE_NAME DEFAULT_SCENE_EXT);
 	Json::CharReaderBuilder reader;
 	Json::Value obj;
 	std::string error;
 
-	if (!Json::parseFromStream(reader, ifs, &obj, &error))
-	{
+	if (!Json::parseFromStream(reader, ifs, &obj, &error)) {
+
 		LOG(_ERROR, "Error parsing file: %s", error);
 		_isLoading = false;
 		return false;
@@ -262,8 +228,8 @@ bool ModuleScene::Load() {
 	return true;
 }
 
-bool ModuleScene::ToJson(Json::Value& value, int pos)
-{
+bool ModuleScene::ToJson(Json::Value& value, int pos) {
+
 	Json::Value childrenList;
 	_root->ToJson(childrenList, 0);
 	value[pos][JSON_TAG_NAME] = DEFAULT_SCENE_NAME;

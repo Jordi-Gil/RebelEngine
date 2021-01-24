@@ -33,13 +33,11 @@ public:
  		return std::move(ptr);
 	}
 
-	bool empty() const
-	{
+	bool empty() const {
 		return _pool.empty();
 	}
 
-	int size() const
-	{
+	int size() const {
 		return _pool.size();
 	}
 

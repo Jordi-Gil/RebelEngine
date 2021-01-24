@@ -13,15 +13,15 @@
 #include <ImGui/imgui_internal.h>
 
 static constexpr char* lightTypesLabel[3] = { "Directional Light", "Point Light", "Spot Light" };
-static constexpr light_type lightTypes[3] = { DIRECTIONAL_LIGHT, POINT_LIGHT, SPOT_LIGHT };
+static constexpr LightType lightTypes[3] = { LightType::kDIRECTIONAL_LIGHT, LightType::kPOINT_LIGHT, LightType::kSPOT_LIGHT };
 
 ComponentLight::ComponentLight() {
-	_type = type_component::LIGHT;
+	_type = ComponentType::kLIGHT;
 }
 
-ComponentLight::ComponentLight(light_type type) {
+ComponentLight::ComponentLight(LightType type) {
 
-	_type = type_component::LIGHT;
+	_type = ComponentType::kLIGHT;
 	_light_type = type;
 
 }
@@ -47,7 +47,7 @@ ComponentLight::ComponentLight(const ComponentLight& copy) {
 
 ComponentLight::ComponentLight(const Json::Value& value) {
 	Component::FromJson(value);
-	_type = type_component::LIGHT;
+	_type = ComponentType::kLIGHT;
 	FromJson(value);
 }
 
@@ -67,7 +67,7 @@ void ComponentLight::SetColor(const float3& color) {
 	_color = color;
 }
 
-void ComponentLight::ChangeType(light_type newType) {
+void ComponentLight::ChangeType(LightType newType) {
 	_light_type = newType;
 }
 
@@ -99,7 +99,7 @@ bool ComponentLight::FromJson(const Json::Value& value){
 		_constant_att = value[JSON_TAG_LIGHT_CONSTANT_ATT].asFloat();
 		_linear_att = value[JSON_TAG_LIGHT_LINEAR_ATT].asFloat();
 		_quadratic_att = value[JSON_TAG_LIGHT_QUADRATIC_ATT].asFloat();
-		_light_type = (light_type) value[JSON_TAG_LIGHT_TYPE].asInt();
+		_light_type = (LightType) value[JSON_TAG_LIGHT_TYPE].asInt();
 		_color = float3(
 				value[JSON_TAG_LIGHT_COLOR][0].asFloat(),
 				value[JSON_TAG_LIGHT_COLOR][1].asFloat(),
@@ -115,9 +115,10 @@ bool ComponentLight::FromJson(const Json::Value& value){
 void ComponentLight::DebugDraw() {
 
 	if(_owner->IsSelected()){
+
 		switch (_light_type) {
 
-			case SPOT_LIGHT: {
+			case LightType::kSPOT_LIGHT: {
 				float4x4 global = _owner->GetGlobalMatrix();
 				float3 position = global.TranslatePart();
 				float3 forward = global.WorldZ();
@@ -126,7 +127,7 @@ void ComponentLight::DebugDraw() {
 				break;
 			}
 
-			case POINT_LIGHT: {
+			case LightType::kPOINT_LIGHT: {
 
 				float3 position = _owner->GetGlobalMatrix().TranslatePart();
 				dd::sphere(position, dd::colors::Yellow, 1);
@@ -134,7 +135,7 @@ void ComponentLight::DebugDraw() {
 
 			}
 
-			case DIRECTIONAL_LIGHT: {
+			case LightType::kDIRECTIONAL_LIGHT: {
 
 				float4x4 global = _owner->GetGlobalMatrix();
 				float3 position = global.TranslatePart();
@@ -161,7 +162,7 @@ void ComponentLight::DebugDraw() {
 
 void ComponentLight::OnEditor() {
 
-	static int current = _light_type;
+	static int current = (int) _light_type;
 
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen)) {
 
@@ -183,7 +184,7 @@ void ComponentLight::OnEditor() {
 		ImGui::DragFloat("Intensity", &_intensity, 0.01f, 0, 500, "%.2f");
 		ImGui::PopID();
 
-		if (_light_type == POINT_LIGHT || _light_type == SPOT_LIGHT) {
+		if (_light_type == LightType::kPOINT_LIGHT || _light_type == LightType::kSPOT_LIGHT) {
 			
 			ImGui::NewLine();
 			
@@ -202,7 +203,7 @@ void ComponentLight::OnEditor() {
 			ImGui::DragFloat("Constant", &_quadratic_att, 0.001f, 0, 1, "%.2f");
 			ImGui::PopID();
 
-			if (_light_type == SPOT_LIGHT) {
+			if (_light_type == LightType::kSPOT_LIGHT) {
 				
 				id = "##inner_"; id.append(_uuid);
 				ImGui::PushID(id.c_str());
@@ -218,8 +219,8 @@ void ComponentLight::OnEditor() {
 
 		}
 
-		//ImGui::EndColumns();
 
 	}
+
 
 }

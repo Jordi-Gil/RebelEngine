@@ -20,10 +20,12 @@
 Application::Application() {
 
 	applicationTimer.start();
+
 #ifdef _DEBUG
 	terminalTimer.start();
 	logTimer.start();
 #endif
+
 	deltaTime = (float)applicationTimer.read();
 
 	// Order matters: they will Init/start/update in this order
@@ -67,6 +69,7 @@ update_status Application::Update() {
 	//dump openGL Log - Only in debug, because the log is only traced in debug mode
 	if (terminalTimer.read() >= 30000) { App->gui->_terminal->deletingOGLLog = true; gui->_terminal->ClearOpenGLLog(); terminalTimer.start(); }
 #endif
+
 	deltaTime = (float)applicationTimer.read() / 1000.0f;
 	applicationTimer.start();
 

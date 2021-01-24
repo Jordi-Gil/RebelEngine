@@ -12,10 +12,6 @@ class DDRenderInterfaceCoreGL final
 {
 public:
 
-    //
-    // dd::RenderInterface overrides:
-    //
-
     void drawPointList(const dd::DrawVertex * points, int count, bool depthEnabled) override {
 
         assert(points != nullptr);

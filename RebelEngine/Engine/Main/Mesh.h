@@ -52,7 +52,7 @@ public:
 
 	uint32_t GetMorton() const { return _mortonCode; }
 	void GetAABB(AABB& aabb) const { aabb = _aabb; }
-	const char* GetFilePath() { return _filePath; }
+	const char* GetFilePath() const { return _filePath; }
 
 	void SetName(const char* name) { _name = _strdup(name); }
 	void SetFilePath(const char* filePath) { sprintf_s(_filePath, "%s", filePath); }
@@ -60,14 +60,15 @@ public:
 	bool FromJson(const Json::Value& value);
 	bool WriteJsonFile();
 
-public:
-	std::vector<float3> _vertices;
-	std::vector<unsigned> _indices;
-
 private:
 
 	bool LoadVBOFromJson(const Json::Value& value);
 	bool LoadEBOFromJson(const Json::Value& value);
+
+public:
+
+	std::vector<float3> _vertices;
+	std::vector<unsigned> _indices;
 
 private:
 

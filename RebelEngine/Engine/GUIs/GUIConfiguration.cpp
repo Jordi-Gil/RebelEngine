@@ -24,6 +24,7 @@
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
 
+//TODO: Remove from here and add it to material
 constexpr char* minFilters[6] = { 
 	"Nearest",  "Linear", "Nearest Mipmap - Nearest", "Linear Mipmap - Nearest",
 	"Nearest Mipmap - Linear", "Linear Mipmap - Linear"
@@ -42,6 +43,7 @@ GUIConfiguration::GUIConfiguration(const char* name) {
 
 	_fpsHist = std::vector<float>(MAX_FRAMES, 0);
 	_msHist = std::vector<float>(MAX_FRAMES, 0);
+
 }
 
 void GUIConfiguration::Draw() {
@@ -115,12 +117,16 @@ void GUIConfiguration::Draw() {
 		ImGui::TextColored(ImVec4(0.9922f, 0.5490f, 0.0157f, 1.0000f), "%2.f FPS", ImGui::GetIO().Framerate);
 
 		if (ImGui::Checkbox("Fullscreen", &fullScreen)) { App->window->SetWindowFullScreen(fullScreen); fullScreenDesk = false; }
+		
 		ImGui::SameLine();
+		
 		if (fullScreen || fullScreenDesk) { ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true); ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f); }
 		if (ImGui::Checkbox("Resizable", &resizable)) App->window->SetWindowResizable(resizable);
 		if (ImGui::Checkbox("Borderless", &borderless)) App->window->SetWindowBorderless(borderless);
 		if (fullScreen || fullScreenDesk) { ImGui::PopItemFlag(); ImGui::PopStyleVar(); }
+		
 		ImGui::SameLine();
+
 		if (ImGui::Checkbox("Fullscreen Desktop", &fullScreenDesk)) { App->window->SetWindowFullScreenDesktop(fullScreenDesk); fullScreen = false; }
 	}
 	if (ImGui::CollapsingHeader("Render")) {
@@ -157,7 +163,7 @@ void GUIConfiguration::Draw() {
 				bool is_selected = (min_currentItem == minFilters[i]);
 				if (ImGui::Selectable(minFilters[i], is_selected)) {
 					min_currentItem = minFilters[i];
-					App->models->SetMinFilter(i);
+					//App->models->SetMinFilter(i);
 				}
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
@@ -173,7 +179,7 @@ void GUIConfiguration::Draw() {
 				bool is_selected = (mag_currentItem == magFilters[i]);
 				if (ImGui::Selectable(magFilters[i], is_selected)){
 					mag_currentItem = magFilters[i];
-					App->models->SetMagFilter(i);
+					//App->models->SetMagFilter(i);
 				}
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
@@ -189,7 +195,7 @@ void GUIConfiguration::Draw() {
 				bool is_selected = (wrapS_currentItem == wrap[i]);
 				if (ImGui::Selectable(wrap[i], is_selected)) {
 					wrapS_currentItem = wrap[i];
-					App->models->SetWrapS(i);
+					//App->models->SetWrapS(i);
 				}
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
@@ -205,7 +211,7 @@ void GUIConfiguration::Draw() {
 				bool is_selected = (wrapT_currentItem == wrap[i]);
 				if (ImGui::Selectable(wrap[i], is_selected)) {
 					wrapT_currentItem = wrap[i];
-					App->models->SetWrapT(i);
+					//App->models->SetWrapT(i);
 				}
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
@@ -217,6 +223,7 @@ void GUIConfiguration::Draw() {
 		ImGui::PopItemWidth();
 
 	}
+	
 	if (ImGui::CollapsingHeader("Camera")) {
 
 		//View only for editor camera
@@ -245,8 +252,11 @@ void GUIConfiguration::Draw() {
 		}
 
 	}
+	
 	if (ImGui::CollapsingHeader("Hardware information")) {
+		
 		ImVec4 yellow(1.0000f, 0.8275f, 0.4112f, 1.0000f);
+
 #pragma region CPU
 		if (ImGui::CollapsingHeader("CPU")) {
 			ImGui::Text("Vendor: "); ImGui::SameLine(); ImGui::TextColored(yellow, "%s", iware::cpu::vendor().c_str());
@@ -281,6 +291,7 @@ void GUIConfiguration::Draw() {
 
 			}
 		}
+		
 #pragma endregion CPU
 
 		ImGui::Separator();

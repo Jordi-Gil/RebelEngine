@@ -23,10 +23,12 @@ public:
 
 	ImVec2& GetViewportPos() { return _viewportPos; }
 	ImVec2& GetViewportSize() { return _viewportSize; }
+
 private:
 
 	bool _sceneFocused = false;
 	bool _sceneHovered = false;
+	bool _menubarHovered = false;
 	ImVec2 _viewportPos;
 	ImVec2 _viewportSize;
 };

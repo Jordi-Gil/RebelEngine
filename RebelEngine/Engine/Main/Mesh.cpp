@@ -200,11 +200,12 @@ void Mesh::Render(Material* material, const float4x4& model) {
 	glUniform3f(glGetUniformLocation(program, "lights.ambientlight.ambient"), 0.8, 0.8, 0.8);
 	unsigned int num_points = 0, num_spots = 0;
 	for (int i = 0; i < lights.size(); i++) {
-		ComponentLight* light = (ComponentLight*)lights[i]->GetComponent(type_component::LIGHT);
+		ComponentLight* light = (ComponentLight*)lights[i]->GetComponent(ComponentType::kLIGHT);
 
 		switch (light->GetLightType())
 		{
-		case light_type::DIRECTIONAL_LIGHT: {
+		case LightType::kDIRECTIONAL_LIGHT: {
+			
 			glUniform1f(glGetUniformLocation(program, "lights.directionalLight.intensity"), light->GetIntensity());
 			float4x4 global = light->GetOwner()->GetGlobalMatrix();
 			float3 forward = global.WorldZ();
@@ -214,7 +215,8 @@ void Mesh::Render(Material* material, const float4x4& model) {
 			glUniform3f(glGetUniformLocation(program, "lights.directionalLight.baseLight.specular"), 0.5f, 0.5f, 0.5f);
 			break;
 		}
-		case light_type::POINT_LIGHT: {
+		case LightType::kPOINT_LIGHT: {
+
 			char location[1024];
 			sprintf_s(location, 1024, "lights.pointLights[%d].position",num_points);
 			float3 position = light->GetOwner()->GetGlobalMatrix().TranslatePart();
@@ -235,7 +237,8 @@ void Mesh::Render(Material* material, const float4x4& model) {
 			++num_points;
 			break;
 		}
-		case light_type::SPOT_LIGHT: {
+		case LightType::kSPOT_LIGHT: {
+
 			char location[1024];
 			sprintf_s(location, 1024, "lights.spotLights[%d].position", num_spots);
 			float3 position = light->GetOwner()->GetGlobalMatrix().TranslatePart();

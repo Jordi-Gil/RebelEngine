@@ -46,4 +46,5 @@ public:
 private:
 
 	int currentWidth, currentHeight;
+	
 };

@@ -39,7 +39,7 @@ void MatStandard::LoadMaterialFromFBX(const aiMaterial* aiMat, const char* fbxPa
 
 	count = aiMat->GetTextureCount(aiTextureType_SPECULAR);
 	if (count > 0) {
-		//By default only one diffuse map
+		//By default only one specular map
 		if (aiMat->GetTexture(aiTextureType_SPECULAR, 0, &file) == AI_SUCCESS) {
 			if (App->texturer->LoadFromFBX(file.C_Str(), fbxPath, _maps[1])) { 
 				_mask = _mask | MatStandard_Flags_Specular_Map; 
@@ -49,9 +49,9 @@ void MatStandard::LoadMaterialFromFBX(const aiMaterial* aiMat, const char* fbxPa
 
 	count = aiMat->GetTextureCount(aiTextureType_NORMALS);
 	if (count > 0) {
-		//By default only one diffuse map
+		//By default only one normal map
 		if (aiMat->GetTexture(aiTextureType_NORMALS, 0, &file) == AI_SUCCESS) {
-			if (App->texturer->LoadFromFBX(file.C_Str(), fbxPath, _maps[3])) { 
+			if (App->texturer->LoadFromFBX(file.C_Str(), fbxPath, _maps[2])) { 
 				_mask = _mask | MatStandard_Flags_Normal_Map; 
 			}
 		}

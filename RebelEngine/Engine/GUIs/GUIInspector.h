@@ -16,16 +16,20 @@ public:
 
 	void Draw() override;
 	void DrawGameObject(){}
+
 	bool IsActive() const override { return _active; };
+
 	const char* GetName() const override { return _name; }
+	GameObject* GetFocusedGameObject() const { return _focused_go; }
 
 	void ToggleActive();
 
 	void SetFocusedGameObject(GameObject& focused);
-	void UnSetFocusedGameObject();
-	GameObject* GetFocusedGameObject() { return _focused_go; }
+	void ResetFocusedGameObject();
 	
 private:
+
 	 GameObject* _focused_go = nullptr;
+
 };
 

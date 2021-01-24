@@ -18,13 +18,13 @@
 
 #include <Brofiler.h>
 
-enum main_states
+enum class MainStates
 {
-	MAIN_CREATION,
-	MAIN_START,
-	MAIN_UPDATE,
-	MAIN_FINISH,
-	MAIN_EXIT
+	kMAIN_CREATION,
+	kMAIN_START,
+	kMAIN_UPDATE,
+	kMAIN_FINISH,
+	kMAIN_EXIT
 };
 
 Application* App = NULL;
@@ -32,49 +32,49 @@ Application* App = NULL;
 int main(int argc, char** argv) {
 	
 	int main_return = EXIT_FAILURE;
-	main_states state = MAIN_CREATION;
+	MainStates state = MainStates::kMAIN_CREATION;
 
-	while (state != MAIN_EXIT) {
+	while (state != MainStates::kMAIN_EXIT) {
 		
 		BROFILER_FRAME("Rebel Engine main thread");
 
 		switch (state) {
 
-		case MAIN_CREATION:
+		case MainStates::kMAIN_CREATION:
 
 			App = new Application();
 			LOG(_INFO, "Application Creation");
-			state = MAIN_START;
+			state = MainStates::kMAIN_START;
 			break;
 
-		case MAIN_START:
+		case MainStates::kMAIN_START:
 
 			LOG(_INFO, "Application Init");
 			if (App->Init() == false) {
 				LOG(_INFO, "Application Init exits with error");
-				state = MAIN_EXIT;
+				state = MainStates::kMAIN_EXIT;
 			}
 			else {
-				state = MAIN_UPDATE;
+				state = MainStates::kMAIN_UPDATE;
 				LOG(_INFO, "Application Update");
 			}
 
 			break;
 
-		case MAIN_UPDATE: {
+		case MainStates::kMAIN_UPDATE: {
 			int update_return = App->Update();
 
 			if (update_return == UPDATE_ERROR) {
 				LOG(_INFO, "Application Update exits with error");
-				state = MAIN_EXIT;
+				state = MainStates::kMAIN_EXIT;
 			}
 
 			if (update_return == UPDATE_STOP)
-				state = MAIN_FINISH;
+				state = MainStates::kMAIN_FINISH;
 		}
 						break;
 
-		case MAIN_FINISH:
+		case MainStates::kMAIN_FINISH:
 
 			LOG(_INFO, "Application CleanUp");
 			if (App->CleanUp() == false) {
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 			}
 			else main_return = EXIT_SUCCESS;
 
-			state = MAIN_EXIT;
+			state = MainStates::kMAIN_EXIT;
 
 			break;
 

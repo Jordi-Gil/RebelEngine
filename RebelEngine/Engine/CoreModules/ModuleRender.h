@@ -18,7 +18,7 @@ public:
 	void Draw(float width, float height);
 	void BindBuffers(float width, float height);
 
-	void* GetContext() { return mainContext; }
+	void* GetContext() { return _mainContext; }
 	unsigned int GetViewportTexture() { return viewportTex; }
 
 	void SetVSYNC(bool _VSYNC);
@@ -32,11 +32,10 @@ public:
 public:
 
 	float clearColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
-	
 
 private:
 
-	void* mainContext = nullptr;
+	void* _mainContext = nullptr;
 
 	unsigned int FBO = 0;
 	unsigned int RBO = 0;

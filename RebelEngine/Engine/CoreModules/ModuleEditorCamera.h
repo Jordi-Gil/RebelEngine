@@ -43,7 +43,6 @@ public:
 
 #pragma endregion setters
 	
-
 #pragma region getters
 
 	void GetMatrix(matrix_type _mType, float4x4& matrix);
@@ -82,6 +81,7 @@ private:
 
 private:
 
+	//TODO: Convert to unique pointer
 	ComponentCamera* camera = nullptr;
 
 	float movSpeed;

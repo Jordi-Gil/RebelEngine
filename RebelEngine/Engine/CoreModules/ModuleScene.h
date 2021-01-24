@@ -67,7 +67,7 @@ public:
 
 	Pool<GameObject> _poolGameObjects;
 	std::unique_ptr<GameObject> _root;
-	Skybox* _skybox;
+	std::unique_ptr<Skybox> _skybox;
 	Octree* _octree = nullptr;
 	ComponentCamera* _mainCamera = nullptr;
 
@@ -90,5 +90,7 @@ private:
 	bool _isSaving = false;
 	bool _isLoading = false;
 	bool _drawOctree = false;
+	bool _toogleSkybox = false;
+	
 };
 

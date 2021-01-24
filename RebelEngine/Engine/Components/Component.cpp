@@ -12,6 +12,7 @@ Component::Component(const Component& comp) {
 	_type = comp._type;
 	_uuid = comp._uuid;
 }
+
 Component::Component(const Json::Value& value) {
 	FromJson(value);
 }
@@ -30,7 +31,7 @@ bool Component::FromJson(const Json::Value& value)
 {
 	if (!value.isNull()) {
 		_active = value[JSON_TAG_ACTIVE].asBool();
-		_type = type_component::NONE;
+		_type = ComponentType::kNONE;
 		_uuid = value[JSON_TAG_UUID].asCString();
 	}
 	else {

@@ -32,10 +32,6 @@ bool ModuleModel::Init() {
 	struct aiLogStream stream;
 	stream.callback = LogAssimp;
 	aiAttachLogStream(&stream);
-
-	//LoadModelFromFBX("Assets/Models/WithDDS/BakerHouse/BakerHouse.fbx");
-	//LoadModelFromFBX("Assets/Models/Unity/Robot/Robot.FBX");
-	//LoadModelFromFBX("Assets/Models/WithoutDDS/Street_Environment/Street_environment_V01.FBX");
 	
 	return true;
 }
@@ -135,8 +131,7 @@ void ModuleModel::LoadNodeHierarchy(const char* fileName, aiNode *node, GameObje
 			aiTrans_aux = aiTrans_aux + aiTrans;
 			aiQuaternion aiQuat_aux2 = aiQuat_aux * aiQuat;
 
-			LoadNodeHierarchy(fileName, node->mChildren[i], father, scene, lights, cameras, 
-				aiTrans_aux, aiQuat_aux2, aiScaling_aux);
+			LoadNodeHierarchy(fileName, node->mChildren[i], father, scene, lights, cameras,  aiTrans_aux, aiQuat_aux2, aiScaling_aux);
 		}
 		else {
 
@@ -241,28 +236,4 @@ bool ModuleModel::CleanUp() {
 	aiDetachAllLogStreams();
 
 	return true;
-}
-
-void ModuleModel::SetMinFilter(int i) {
-	//for (unsigned int j = 0; j < textures.size(); j++) {
-	//	App->texturer->SetMinFilter(i, textures[j].first);
-	//}
-}
-
-void ModuleModel::SetMagFilter(int i) {
-	//for (unsigned int j = 0; j < textures.size(); j++) {
-	//	App->texturer->SetMagFilter(i, textures[j].first);
-	//}
-}
-
-void ModuleModel::SetWrapS(int i) {
-	//for (unsigned int j = 0; j < textures.size(); j++) {
-	//	App->texturer->SetWrapS(i, textures[j].first);
-	//}
-}
-
-void ModuleModel::SetWrapT(int i) {
-	//for (unsigned int j = 0; j < textures.size(); j++) {
-	//	App->texturer->SetWrapT(i, textures[j].first);
-	//}
 }

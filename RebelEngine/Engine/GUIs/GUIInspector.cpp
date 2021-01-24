@@ -32,16 +32,32 @@ GUIInspector::GUIInspector(const char* name) {
 
 void GUIInspector::Draw() {
 
-	ImGui::SetNextWindowSizeConstraints(ImVec2(500, 100), ImVec2(2000, 2000));
 	std::string wName(ICON_FA_INFO " "); wName.append(_name);
 	ImGui::Begin(wName.c_str(), &_active, ImGuiWindowFlags_NoCollapse);
-	ImVec4 yellow(1.0000f, 0.8275f, 0.4112f, 1.0000f);
 
 	if (_focused_go) {
+
+		ImGui::BeginGroup();
+
 		for (auto& ct : _focused_go->GetComponents()) {
 			ct->OnEditor();
 		}
+
+		ImGui::EndGroup();
+
+		ImGui::Separator();
+
+		ImGui::BeginGroup();
+		
+
+		if (ImGui::Button("Add Component")) {
+			
+		}
+
+		ImGui::EndGroup();
+
 	}
+	
 	ImGui::End();
 }
 
@@ -55,7 +71,7 @@ void GUIInspector::SetFocusedGameObject(GameObject& focused){
 	_focused_go->ToggleSelected();
 }
 
-void GUIInspector::UnSetFocusedGameObject() {
+void GUIInspector::ResetFocusedGameObject() {
 	if (_focused_go) _focused_go->ToggleSelected();
 	_focused_go = nullptr;
 }

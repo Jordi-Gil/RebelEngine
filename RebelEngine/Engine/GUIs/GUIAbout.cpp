@@ -25,7 +25,7 @@ const std::vector<std::string> MyReadFile(const char* path) {
 	return res;
 }
 
-//Can a file be read at compile time? In C++20, but before?
+//Can a file be read at compile time? In C++20, but in early versions?
 const std::vector<std::string> libs = MyReadFile("Windows/libraries.txt");
 const unsigned int size = libs.size();
 

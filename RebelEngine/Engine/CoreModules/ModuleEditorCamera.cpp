@@ -198,7 +198,7 @@ update_status ModuleEditorCamera::Update() {
 		RotateKeyboard();
 		RotateMouse(x, y);
 		OrbitCenterScene(x, y);
-		if(App->gui->_scene->IsSceneHovered() && !ImGuizmo::IsOver()) GetObjectPicked();
+		if(App->gui->_scene->IsSceneHovered() && !ImGuizmo::IsOver() && !App->scene->IsBusy()) GetObjectPicked();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN) {
@@ -273,7 +273,7 @@ bool ModuleEditorCamera::GetObjectPicked() {
 
 		GameObject* closest_go = GetObjectPickedRec(ray, hit, minDistance, *App->scene->_root);
 
-		if (!hit) App->gui->_inspector->UnSetFocusedGameObject();
+		if (!hit) App->gui->_inspector->ResetFocusedGameObject();
 		else App->gui->_inspector->SetFocusedGameObject(*closest_go);
 
 		return hit;
@@ -299,11 +299,11 @@ GameObject* ModuleEditorCamera::GetObjectPickedRec(LineSegment& ray, bool& hit, 
 
 			if (ray.Intersects(_obb.MinimalEnclosingAABB())) {
 
-				Mesh* mesh = ((ComponentMeshRenderer*) children[i]->GetComponent(type_component::MESHRENDERER))->_mesh;
+				Mesh* mesh = ((ComponentMeshRenderer*) children[i]->GetComponent(ComponentType::kMESHRENDERER))->_mesh;
 				LineSegment triangleRay(ray);
 				triangleRay.Transform(children[i]->GetGlobalMatrix().Inverted());
 
-				for (int j = 0; j < mesh->_indices.size();) {
+				for (unsigned int j = 0; j < mesh->_indices.size();) {
 					Triangle tri = Triangle(mesh->_vertices[mesh->_indices[j++]],
 						mesh->_vertices[mesh->_indices[j++]],
 						mesh->_vertices[mesh->_indices[j++]]);

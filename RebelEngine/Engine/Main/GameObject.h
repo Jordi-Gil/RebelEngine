@@ -29,19 +29,24 @@ public:
 	GameObject(const Json::Value& value);
 
 	void Update(){}
+	
 	void AddChild(std::unique_ptr<GameObject>&& go);
 	void AddComponent(std::unique_ptr<Component>&& comp, GAME_OBJECT_MASK mask = GO_MASK_NONE);
+	void AddMask(GAME_OBJECT_MASK mask);
+
 	void SetName(const char* name);
 	void SetParent(GameObject* go);
 	void SetToDelete() { _delete = true; }
-	void AddMask(GAME_OBJECT_MASK mask);
-	bool HasComponent(type_component type) const;
+	
+	bool HasComponent(ComponentType type) const;
 	bool HasMesh() const {  return (_mask & GO_MASK_MESH) != 0; }
 
+	void DeleteChild(std::unique_ptr<GameObject>& go);
 	void DeleteMarkedChildren();
 	void CollapseChildIntoParent();
 
 	void UpdateChildrenTransform();
+	
 	bool ToJson(Json::Value& value, int pos);
 	bool FromJson(const Json::Value& value);
 
@@ -52,7 +57,7 @@ public:
 	const char* GetName() const { return _name.c_str(); }
 	int GetNumChildren() const { return _children.size(); };
 	GameObject* GetParent() const { return _parent; }
-	Component* GetComponent(type_component type) const;
+	Component* GetComponent(ComponentType type) const;
 	std::vector<std::unique_ptr<Component>>& GetComponents() { return _components; }
 	const std::vector<std::unique_ptr<GameObject>>& GetChildren() const { return _children; }
 	std::vector<std::unique_ptr<GameObject>>& GetChildren() { return _children; }

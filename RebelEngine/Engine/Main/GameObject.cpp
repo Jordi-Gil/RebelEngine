@@ -25,19 +25,19 @@ GameObject::GameObject(const GameObject& go) {
 	_active = go._active;
 	_name = go._name;
 	_parent = go._parent;
-	_uuid = go._uuid;
+	_uuid = RUUID::generate_uuid_v4();
 
 	for (const auto& child : go._children) {
 		std::unique_ptr<GameObject> aux = App->scene->_poolGameObjects.get();
 		*aux = *child;
-		this->_children.push_back(std::move(aux));
+		_children.push_back(std::move(aux));
 	}
 
 	for (const auto& component : go._components) {
-		this->_components.push_back(std::make_unique<Component>(*component));
+		_components.push_back(std::make_unique<Component>(*component));
 	}
 
-	this->_mask = go._mask;
+	_mask = go._mask;
 
 }
 
@@ -46,7 +46,7 @@ GameObject::GameObject(GameObject&& go) {
 	_active = go._active;
 	_name = go._name;
 	_parent = go._parent;
-	_uuid = go._uuid;
+	_uuid = RUUID::generate_uuid_v4();
 
 	go._parent = nullptr;
 	go._name = nullptr;
@@ -55,6 +55,7 @@ GameObject::GameObject(GameObject&& go) {
 		(*it)->_parent = this;
 		_children.emplace_back(std::move(*it));
 	}
+
 	go._children.clear();
 	go._children.shrink_to_fit();
 
@@ -93,7 +94,7 @@ void GameObject::AddMask(GAME_OBJECT_MASK mask){
 	_mask |= mask;
 }
 
-bool GameObject::HasComponent(type_component type) const {
+bool GameObject::HasComponent(ComponentType type) const {
 
 	for (auto const &component : _components) {
 		if (component->GetType() == type) return true;
@@ -102,7 +103,7 @@ bool GameObject::HasComponent(type_component type) const {
 	return false;
 }
 
-Component* GameObject::GetComponent(type_component type) const {
+Component* GameObject::GetComponent(ComponentType type) const {
 	for (auto const& component : _components) {
 		if (component->GetType() == type) return component.get();
 	}
@@ -110,12 +111,12 @@ Component* GameObject::GetComponent(type_component type) const {
 }
 
 float4x4 GameObject::GetGlobalMatrix() const {
-	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
+	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(ComponentType::kTRANSFORM));
 	return transform->GetGlobalMatrix();
 }
 
 float4x4 GameObject::GetLocalMatrix() const {
-	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(type_component::TRANSFORM));
+	ComponentTransform* transform = static_cast<ComponentTransform*>(GetComponent(ComponentType::kTRANSFORM));
 	return transform->GetLocalMatrix();
 }
 
@@ -139,6 +140,7 @@ GameObject& GameObject::operator=(const GameObject& go) {
 	_active = go._active;
 	_name = go._name;
 	_parent = go._parent;
+	_uuid = RUUID::generate_uuid_v4();
 
 	_children.clear();
 	for (const auto& child : go._children) {
@@ -151,45 +153,54 @@ GameObject& GameObject::operator=(const GameObject& go) {
 	for (const auto& component : go._components) {
 		switch (component->GetType())
 		{
-		case type_component::CAMERA:{
+		case ComponentType::kCAMERA:{
 			ComponentCamera* compAux = (ComponentCamera*)(component.get());
 			_components.push_back(std::make_unique<ComponentCamera>(*compAux));
 			break;
 			}
-		case type_component::MESHRENDERER: {
+		case ComponentType::kMESHRENDERER: {
 			ComponentMeshRenderer* compAux = (ComponentMeshRenderer*)(component.get());
 			_components.push_back(std::make_unique<ComponentMeshRenderer>(*compAux));
 			break;
 		}
-		case type_component::TRANSFORM: {
+		case ComponentType::kTRANSFORM: {
 			ComponentTransform* compAux = (ComponentTransform*)(component.get());
 			_components.push_back(std::make_unique<ComponentTransform>(*compAux));
 			break;
 		}
-		case type_component::LIGHT: {
+		case ComponentType::kLIGHT: {
 			ComponentLight* compAux = (ComponentLight*)(component.get());
 			_components.push_back(std::make_unique<ComponentLight>(*compAux));
 			break;
 		}
 		default:
-			this->_components.push_back(std::make_unique<Component>(*component));
+			_components.push_back(std::make_unique<Component>(*component));
 			break;
 		}
 		
 	}
 
-	this->_mask = go._mask;
+	_mask = go._mask;
 
 	return *this;
 }
 
 void UpdateChildrenTransform_rec(GameObject& go) {
 
-	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(type_component::TRANSFORM);
+	ComponentTransform* comp = (ComponentTransform*)go.GetComponent(ComponentType::kTRANSFORM);
 	comp->UpdateGlobalMatrix();
 	for (auto const& child : go.GetChildren()) {
 		UpdateChildrenTransform_rec(*child);
 	}
+}
+
+void GameObject::DeleteChild(std::unique_ptr<GameObject>& go) {
+
+	auto it = std::find(_children.begin(), _children.end(), go);
+
+	if (it != _children.end()) 
+		_children.erase(it);
+
 }
 
 void GameObject::DeleteMarkedChildren() {
@@ -274,17 +285,17 @@ bool GameObject::FromJson(const Json::Value& value)  {
 
 		for (Json::Value jsonComp : value[JSON_TAG_COMPONENTS])
 		{
-			type_component type = (type_component)jsonComp[JSON_TAG_TYPE].asInt();
+			ComponentType type = (ComponentType) jsonComp[JSON_TAG_TYPE].asInt();
 			std::unique_ptr<Component> comp;
 			switch (type)
 			{
-				case type_component::NONE:
+				case ComponentType::kNONE:
 				{
 					comp = std::make_unique<Component>(jsonComp);
 					AddMask(GAME_OBJECT_MASK::GO_MASK_NONE);
 					break;
 				}
-				case type_component::CAMERA:
+				case ComponentType::kCAMERA:
 				{
 					comp = std::make_unique<ComponentCamera>(jsonComp);
 					AddMask(GAME_OBJECT_MASK::GO_MASK_CAMERA);
@@ -293,40 +304,40 @@ bool GameObject::FromJson(const Json::Value& value)  {
 						App->scene->SetMainCamera(*aux);
 					break;
 				}
-				case type_component::MESHRENDERER:
+				case ComponentType::kMESHRENDERER:
 				{
 					comp = std::make_unique<ComponentMeshRenderer>(jsonComp);
 					AddMask(GAME_OBJECT_MASK::GO_MASK_MESH);
 					_meshRenderer = static_cast<ComponentMeshRenderer*>(comp.get());
 					break;
 				}
-				case type_component::TRANSFORM: {
+				case ComponentType::kTRANSFORM: {
 					comp = std::make_unique<ComponentTransform>(jsonComp);
 					break;
 				}
-				case type_component::LIGHT:{
+				case ComponentType::kLIGHT:{
 					comp = std::make_unique<ComponentLight>(jsonComp);
 					AddMask(GAME_OBJECT_MASK::GO_MASK_LIGHT);
 					break;
 				}
 			}
+
 			comp->SetOwner(this);
 
 			AddComponent(std::move(comp));
 		}
 
-		for (Json::Value jsonGo : value[JSON_TAG_GAMEOBJECTS])
-		{
+		for (Json::Value jsonGo : value[JSON_TAG_GAMEOBJECTS]) {
+
 			std::unique_ptr<GameObject> go = App->scene->_poolGameObjects.get();
 			go->SetParent(this);
 			go->FromJson(jsonGo);
 			AddChild(std::move(go));
 		}
-
 		
 	}
 	else {
-		//TODO: JSON ERROR
+		LOG(_ERROR, "Error loading Jvalue");
 	}
 	return true;
 }

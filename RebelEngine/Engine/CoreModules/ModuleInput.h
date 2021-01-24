@@ -39,7 +39,9 @@ private:
 
 	KeyState* keyboard;
 	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
+	
 	int mouseWheel;
+
 	float2 mouse_motion = { 0, 0 };
 	float2 mouse = { 0, 0 };
 };

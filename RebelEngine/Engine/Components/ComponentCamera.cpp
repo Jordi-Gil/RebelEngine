@@ -18,13 +18,14 @@ ComponentCamera::ComponentCamera() {
 	_frustum.SetFront(-float3::unitZ);
 	_frustum.SetUp(float3::unitY);
 
-	_type = type_component::CAMERA;
+	_type = ComponentType::kCAMERA;
 
 	GenerateFrustumPlanes();
 
 }
 
 ComponentCamera::ComponentCamera(const ComponentCamera& comp) {
+
 	_owner = comp._owner;
 	_active = comp._active;
 	_type = comp._type;
@@ -74,7 +75,7 @@ void ComponentCamera::ToggleMainCamera() {
 
 ComponentCamera::ComponentCamera(const Json::Value& value)  {
 	Component::FromJson(value);
-	_type = type_component::CAMERA;
+	_type = ComponentType::kCAMERA;
 	FromJson(value);
 }
 
@@ -180,7 +181,9 @@ void ComponentCamera::DebugDraw() {
 }
 
 bool ComponentCamera::ToJson(Json::Value& value, int pos) {
+
 	Component::ToJson(value, pos);
+	
 	value[pos][JSON_TAG_BACKGROUND_TYPE] = (int) _back_type;
 	Json::Value jValue(Json::arrayValue);
 
